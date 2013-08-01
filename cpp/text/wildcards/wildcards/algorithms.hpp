@@ -1,50 +1,45 @@
 // sandbox - cpp/text/wildcards
 // b0da341, 0100295,  - bitbucket.org/3F/flightsdc/commits/b0da3416478c55f184d65fde1eec8e06c3689d68
 
+/*
+  * Copyright (c) 2013 Developed by reg <entry.reg@gmail.com>
+  * 
+  * Distributed under the Boost Software License, Version 1.0
+  * (see accompanying file LICENSE or a copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
 #pragma once
-
 #include "typedefs.hpp"
-#include <time.h>
 
-class Algorithms
-{
-public:
-    static bool findGetlineFind(const tstring& text, const tstring& filter);
-    static bool findIteratorFind(const tstring& text, const tstring& filter);
-    static bool findRegexpCpp11m(const tstring& text, const tstring& filter);
-    static bool findRegexpCpp11s(const tstring& text, const tstring& filter);
-    static bool findFindFind(const tstring& text, const tstring& filter);
-    static bool findIteratorSubstr(const tstring& text, const tstring& filter);
-    static bool findIteratorIterator(const tstring& text, const tstring& filter);
-    static bool main(const tstring& text, const tstring& filter);
+namespace reg { namespace sandbox { namespace cpp { namespace text { namespace wildcards {
 
-    static void mainAsserts();
-
-    static void startTime()
+    /**
+     * comparison of implementations
+     */
+    class Algorithms
     {
-        _started = clock();
-    }
+    public:
+        bool findGetlineFind(const tstring& text, const tstring& filter);
+        bool findIteratorFind(const tstring& text, const tstring& filter);
+        bool findRegexpCpp11m(const tstring& text, const tstring& filter);
+        bool findRegexpCpp11s(const tstring& text, const tstring& filter);
+        bool findFindFind(const tstring& text, const tstring& filter);
+        bool findIteratorSubstr(const tstring& text, const tstring& filter);
+        bool findIteratorIterator(const tstring& text, const tstring& filter);
 
-    static int deltaTime()
-    {
-        return clock() - _started;
-    }
+        bool main(const tstring& text, const tstring& filter);
 
-    template<class strType>
-    static inline strType strReplace(const strType& replace, const strType& replacement, const strType& str)
-    {
-        strType _str    = str;
-        size_t pos      = 0;
-        while((pos = _str.find(replace, pos)) != strType::npos){
-            _str.replace(pos, replace.length(), replacement);
-            pos += replacement.length();
-        }
-        return _str;
+        Algorithms(void)
+        {
+            _assertsMain();
+        };
+
+        ~Algorithms(void){};
+
+    protected:
+        void _assertsMain();
     };
 
-private:
-    static int _started;
+    typedef bool(Algorithms::*talgorithm)(const tstring&, const tstring&);
 
-    Algorithms(void){};
-    ~Algorithms(void){};
-};
+}}}}};

@@ -1,70 +1,81 @@
 // sandbox - cpp/text/wildcards
 // b0da341, 0100295,  - bitbucket.org/3F/flightsdc/commits/b0da3416478c55f184d65fde1eec8e06c3689d68
 
-#include "algorithms.hpp"
+/*
+  * Copyright (c) 2013 Developed by reg <entry.reg@gmail.com>
+  * 
+  * Distributed under the Boost Software License, Version 1.0
+  * (see accompanying file LICENSE or a copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
+#include "typedefs.hpp"
+#include "Algorithms.hpp"
+#include "AlgorithmExt.hpp"
+#include "Meter.hpp"
+#include "Util.hpp"
 #include <iostream>
 
-void analysis(string caption, bool(*method)(const tstring&, const tstring&), int iterations, tstring& data, tstring& filter)
-{
-    cout << caption;
-    Algorithms::startTime();
-    for(int i = 0; i < iterations; ++i){
-        if(method(data, filter)){
+using namespace reg::sandbox::cpp::text::wildcards;
 
+void analysis(const string& caption, const tstring& data, const tstring& filter, int iterations, talgorithm method, Algorithms& alg)
+{
+    Meter meter;
+
+    cout << caption;
+    meter.start();
+    for(int i = 0; i < iterations; ++i){
+        if((alg.*method)(data, filter)){
+            //...
         }
     }
-    cout << Algorithms::deltaTime();
+    cout << meter.delta();
     cout << "\n";
+}
+
+void analysis()
+{
+    tstring data    = _T("F:/ÐšÐ¸Ð½Ð¾Ñ‚ÐµÐºÐ°/Anime/Kyoto Animation/Ð¥Ð°Ñ€ÑƒÑ…Ð¸ Ð¡ÑƒÐ´Ð·ÑƒÐ¼Ð¸Ð¸ (Suzumiya Haruhi)/2009 ÐœÐµÐ»Ð°Ð½Ñ…Ð¾Ð»Ð¸Ñ Ð¥Ð°Ñ€ÑƒÑ…Ð¸ Ð¥Ð°Ñ€ÑƒÑ…Ð¸ 111Ð¡ÑƒÐ´Ð·ÑƒÐ¼Ð¸Ð¸  ÐœÐµÐ»Ð°Ð½Ñ…Ð¾Ð»Ð¸Ñ Ð¥Ð°Ñ€ÑƒÑ…Ð¸ Ð¡ÑƒÐ´Ð·ÑƒÐ¼Ð¸Ð¸ 2/Ð¥Ñ€ÑƒÑ…Ð¸ Ð¡ÑƒÐ´Ð·ÑƒÐ¼Ð¸Ð¸ 2/Ð¥Ð°Ñ€ÑƒÑ…Ð¸ Ð¡ÑƒÐ´Ð·ÑƒÐ¼Ð¸Ð¸ (Suzumiya Haruhi)/2009 ÐœÐµÐ»Ð°Ð½Ñ…Ð¾Ð»Ð¸Ñ Ð¥Ð°Ñ€ÑƒÑ…Ð¸ Ð¡ÑƒÐ´Ð·ÑƒÐ¼Ð¸Ð¸ 2/Suzumiya Haruhi no Yuuutsu (2009) - 02 [BD 720p x264]_12_AniDub(Ancord).mkv"); //300
+    tstring filter  = _T("nime**haru*02*mkv");
+    int lim         = 10000;
+
+    Algorithms alg;
+
+    //result: 10000: ~160ms
+    analysis("Iterator + Find: ", data, filter, lim, &Algorithms::findIteratorFind, alg);
+ 
+    //result: 10000: ~172ms
+    analysis("Getline + Find: ", data, filter, lim, &Algorithms::findGetlineFind, alg);
+ 
+    //result: 10000: ~153ms
+    analysis("Find + Find: ", data, filter + _T("*"), lim, &Algorithms::findFindFind, alg);
+  
+    //result: 10000: ~263ms
+    analysis("Iterator + Substr: ", data, filter + _T("*"), lim, &Algorithms::findIteratorSubstr, alg);
+ 
+    //result: 10000: ~231ms
+    analysis("Iterator + Iterator: ", data, filter + _T("*"), lim, &Algorithms::findIteratorIterator, alg);
+
+    //result: 10000: ~56ms - unusable...
+    analysis("regexp-c++11(match^$): ", data, Util::strReplace((tstring)_T("*"), (tstring)_T(".*"), filter), lim, &Algorithms::findRegexpCpp11m, alg);
+
+    //result: 10000: ~81675ms
+    analysis("regexp-c++11(search): ", data, Util::strReplace((tstring)_T("*"), (tstring)_T(".*"), filter), lim, &Algorithms::findRegexpCpp11s, alg);
+
+    //result: 10000: ~89163ms
+    analysis("regexp-c++11(match*): ", data, _T(".*") + Util::strReplace((tstring)_T("*"), (tstring)_T(".*"), filter) + _T(".*?"), lim, &Algorithms::findRegexpCpp11m, alg);
+
+    cout << "\n-----------\n";
+    //result: 10000: ~146ms
+    analysis("main :: based on Iterator + Find: ", data, filter, lim, &Algorithms::main, alg);
+
+    //https://bitbucket.org/3F/flightsdc/commits/0fc73542e2bc8c77bd2fe794b0b1ce1abf090a0a#comment-337260
+    //https://bitbucket.org/3F/sandbox/commits/b04e5983716e0434ea1e6acb2a862e1dd2eadab5
 }
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-    Algorithms::mainAsserts();
-
-    tstring data    = _T("F:/Êèíîòåêà/Anime/Kyoto Animation/Õàðóõè Ñóäçóìèè (Suzumiya Haruhi)/2009 Ìåëàíõîëèÿ Õàðóõè Õàðóõè 111Ñóäçóìèè  Ìåëàíõîëèÿ Õàðóõè Ñóäçóìèè 2/Õðóõè Ñóäçóìèè 2/Õàðóõè Ñóäçóìèè (Suzumiya Haruhi)/2009 Ìåëàíõîëèÿ Õàðóõè Ñóäçóìèè 2/Suzumiya Haruhi no Yuuutsu (2009) - 02 [BD 720p x264]_12_AniDub(Ancord).mkv"); //300
-    tstring filter  = _T("nime**haru*02*mkv");
-    int maxRc       = 10000;
+    analysis();
  
-    // -------
- 
-    //result: 10000: ~240ms
-    analysis("Iterator + Find: ", &Algorithms::findIteratorFind, maxRc, data, filter);
-  
-    // -------
- 
-    //result: 10000: ~296ms
-    analysis("Getline + Find: ", &Algorithms::findGetlineFind, maxRc, data, filter);
- 
-    // -------
- 
-    //result: 10000: ~250ms
-    analysis("Find + Find: ", &Algorithms::findFindFind, maxRc, data, filter + _T("*"));
- 
-    // -------
- 
-    //result: 10000: ~370ms
-    analysis("Iterator + Substr: ", &Algorithms::findIteratorSubstr, maxRc, data, filter + _T("*"));
- 
-    // -------
- 
-    //result: 10000: ~320ms
-    analysis("Iterator + Iterator: ", &Algorithms::findIteratorIterator, maxRc, data, filter + _T("*"));
-
-    // -------
-    //result: 10000: ~970ms
-    analysis("regexp-c++11(match^$): ", &Algorithms::findRegexpCpp11m, maxRc, data, Algorithms::strReplace((tstring)_T("*"), (tstring)_T(".*"), filter));
-
-    //result: 10000: ~970ms
-    analysis("regexp-c++11(search): ", &Algorithms::findRegexpCpp11s, maxRc, data, Algorithms::strReplace((tstring)_T("*"), (tstring)_T(".*"), filter));
-
-    //result: 10000: ~970ms
-    analysis("regexp-c++11(match*): ", &Algorithms::findRegexpCpp11m, maxRc, data, _T(".*") + Algorithms::strReplace((tstring)_T("*"), (tstring)_T(".*"), filter) + _T(".*?"));
-    
-    // -------
-
-    cout << "\n-----------\n";
-    analysis("main :: based on Iterator + Find: ", &Algorithms::main, maxRc, data, filter);
-
 
     system("pause");
 	return 0;

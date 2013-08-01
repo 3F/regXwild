@@ -74,11 +74,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="algorithms.hpp" />
+    <ClInclude Include="AlgorithmExt.hpp" />
+    <ClInclude Include="Algorithms.hpp" />
+    <ClInclude Include="Meter.hpp" />
     <ClInclude Include="typedefs.hpp" />
+    <ClInclude Include="Util.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="algorithms.cpp" />
+    <ClCompile Include="AlgorithmExt.cpp" />
+    <ClCompile Include="Algorithms.cpp" />
     <ClCompile Include="wildcards.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

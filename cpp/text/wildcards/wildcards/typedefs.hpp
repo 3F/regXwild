@@ -1,46 +1,45 @@
 // sandbox - cpp/text/wildcards
 // b0da341, 0100295,  - bitbucket.org/3F/flightsdc/commits/b0da3416478c55f184d65fde1eec8e06c3689d68
 
-#pragma once
+/*
+  * Copyright (c) 2013 Developed by reg <entry.reg@gmail.com>
+  * 
+  * Distributed under the Boost Software License, Version 1.0
+  * (see accompanying file LICENSE or a copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
 
-#include <string>
+#pragma once
 #include <tchar.h>
+#include <string>
 #include <vector>
-#include <algorithm>
 #include <regex>
 #include <sstream>
 
 using namespace std;
 
-typedef vector<string> StringList;
-typedef StringList::iterator StringIter;
-typedef StringList::const_iterator StringIterC;
-typedef vector<wstring> WStringList;
+namespace reg { namespace sandbox { namespace cpp { namespace text { namespace wildcards {
 
-#ifdef UNICODE
+    #ifdef UNICODE
 
-    typedef wstring tstring;
-    typedef WStringList TStringList;
+        typedef wstring tstring;
+        typedef wstringstream tstringStream;
 
-    typedef basic_regex<char>    regex;
-    typedef basic_regex<wchar_t> wregex;
+        //<tchar.h>
+        //typedef wchar_t TCHAR;
+        //#define _T(x)  L ## x
 
-    #define __T(x)  L ## x
+    #else
 
-    inline const tstring uppercase(tstring p_str) throw()
-    {
-	    transform(p_str.begin(), p_str.end(), p_str.begin(), towupper);
-	    return p_str;
-    }
+        typedef string tstring;
+        typedef stringstream tstringStream;
 
-#else
+        //<tchar.h>
+        //typedef char TCHAR;
+        //#define _T(x)  ## x
 
-    typedef char TCHAR;
-    #define __T(x)  ## x
-    typedef string tstring;
-    typedef StringList TStringList;
+    #endif
 
-#endif
+    typedef vector<tstring> tstringList;
+    typedef basic_regex<TCHAR> tregex;
 
-#define _T(x)       __T(x)
-#define _TEXT(x)    __T(x)
+}}}}};
