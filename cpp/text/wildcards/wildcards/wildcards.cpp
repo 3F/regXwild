@@ -20,16 +20,20 @@ using namespace reg::sandbox::cpp::text::wildcards;
 void analysis(const string& caption, const tstring& data, const tstring& filter, int iterations, talgorithm method, Algorithms& alg)
 {
     Meter meter;
+    //int results = 0;
+    //int max     = 110;
 
-    cout << caption;
-    meter.start();
-    for(int i = 0; i < iterations; ++i){
-        if((alg.*method)(data, filter)){
-            //...
+    //for(int total = 0; total < max; ++total){
+        meter.start();
+        for(int i = 0; i < iterations; ++i){
+            if((alg.*method)(data, filter)){
+                //...
+            }
         }
-    }
-    cout << meter.delta();
-    cout << "\n";
+    //    results += meter.delta();
+    //}
+    //cout << caption << "~" << (results / max) << "ms\n";
+    cout << caption << "~" << meter.delta() << "ms\n";
 }
 
 void analysis()
@@ -55,27 +59,29 @@ void analysis()
     //result: 10000: ~231ms
     analysis("Iterator + Iterator: ", data, filter + _T("*"), lim, &Algorithms::findIteratorIterator, alg);
 
-    //result: 10000: ~56ms - unusable...
-    analysis("regexp-c++11(match^$): ", data, Util::strReplace((tstring)_T("*"), (tstring)_T(".*"), filter), lim, &Algorithms::findRegexpCpp11m, alg);
+    //result: 10000: ~146ms
+    analysis("main :: based on Iterator + Find: ", data, filter, lim, &Algorithms::main, alg);
+
+    cout << "\n-----------\n";
+
+    //result: 10000: ~56ms
+    analysis("regexp-c++11(match^$) unusable..: ", data, Util::strReplace((tstring)_T("*"), (tstring)_T(".*"), filter), lim, &Algorithms::findRegexpCpp11m, alg);
 
     //result: 10000: ~81675ms
     analysis("regexp-c++11(search): ", data, Util::strReplace((tstring)_T("*"), (tstring)_T(".*"), filter), lim, &Algorithms::findRegexpCpp11s, alg);
 
     //result: 10000: ~89163ms
     analysis("regexp-c++11(match*): ", data, _T(".*") + Util::strReplace((tstring)_T("*"), (tstring)_T(".*"), filter) + _T(".*?"), lim, &Algorithms::findRegexpCpp11m, alg);
-
-    cout << "\n-----------\n";
-    //result: 10000: ~146ms
-    analysis("main :: based on Iterator + Find: ", data, filter, lim, &Algorithms::main, alg);
-
+    
     //https://bitbucket.org/3F/flightsdc/commits/0fc73542e2bc8c77bd2fe794b0b1ce1abf090a0a#comment-337260
     //https://bitbucket.org/3F/sandbox/commits/b04e5983716e0434ea1e6acb2a862e1dd2eadab5
 }
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-    analysis();
- 
+    //analysis();
+
+    AlgorithmExt algExt;
 
     system("pause");
 	return 0;
