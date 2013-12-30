@@ -8,10 +8,12 @@
   * (see accompanying file LICENSE or a copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#pragma once
+#ifndef WILDCARDS_COMMON_METER__H
+#define WILDCARDS_COMMON_METER__H
+
 #include <time.h>
 
-namespace reg { namespace sandbox { namespace cpp { namespace text { namespace wildcards {
+namespace net { namespace r_eg { namespace text { namespace wildcards {
 
     class Meter
     {
@@ -21,7 +23,7 @@ namespace reg { namespace sandbox { namespace cpp { namespace text { namespace w
             _started = clock();
         }
 
-        int delta()
+        clock_t delta()
         {
             return clock() - _started;
         }
@@ -30,7 +32,9 @@ namespace reg { namespace sandbox { namespace cpp { namespace text { namespace w
         ~Meter(void){};
     
     private:
-        int _started;
+        clock_t _started;
     };
 
-}}}}};
+}}}}
+
+#endif // WILDCARDS_COMMON_METER__H

@@ -8,10 +8,12 @@
   * (see accompanying file LICENSE or a copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#pragma once
-#include "typedefs.hpp"
+#ifndef WILDCARDS_CMP_METHODS_ALGORITHMS__H
+#define WILDCARDS_CMP_METHODS_ALGORITHMS__H
 
-namespace reg { namespace sandbox { namespace cpp { namespace text { namespace wildcards {
+#include "../../common/typedefs.h"
+
+namespace net { namespace r_eg { namespace text { namespace wildcards {
 
     /**
      * comparison of implementations
@@ -29,17 +31,27 @@ namespace reg { namespace sandbox { namespace cpp { namespace text { namespace w
 
         bool main(const tstring& text, const tstring& filter);
 
-        Algorithms(void)
-        {
-            _assertsMain();
-        };
-
-        ~Algorithms(void){};
-
     protected:
         void _assertsMain();
     };
 
     typedef bool(Algorithms::*talgorithm)(const tstring&, const tstring&);
 
-}}}}};
+
+    class AlgorithmsTestCase
+    {
+    public:
+
+        void assertsMainModeAny();
+        void assertsMainModeSplit();
+        void assertsMainModeOne();
+        void analysis();
+        void analysis(const string& caption, const tstring& data, const tstring& filter, int iterations, talgorithm method, Algorithms& alg);
+
+    protected:
+        Algorithms alg;
+    };
+
+}}}}
+
+#endif // WILDCARDS_CMP_METHODS_ALGORITHMS__H

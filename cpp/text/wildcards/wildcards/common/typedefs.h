@@ -8,16 +8,20 @@
   * (see accompanying file LICENSE or a copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#pragma once
+#ifndef WILDCARDS_COMMON_TYPEDEFS__H
+#define WILDCARDS_COMMON_TYPEDEFS__H
+
 #include <tchar.h>
 #include <string>
 #include <vector>
 #include <regex>
 #include <sstream>
+#include <iostream>
+#include <assert.h>
 
 using namespace std;
 
-namespace reg { namespace sandbox { namespace cpp { namespace text { namespace wildcards {
+namespace net { namespace r_eg { namespace text { namespace wildcards {
 
     #ifdef UNICODE
 
@@ -42,4 +46,8 @@ namespace reg { namespace sandbox { namespace cpp { namespace text { namespace w
     typedef vector<tstring> tstringList;
     typedef basic_regex<TCHAR> tregex;
 
-}}}}};
+#define TRACE(str){ std::cout << str; }
+
+}}}}
+
+#endif // WILDCARDS_COMMON_TYPEDEFS__H

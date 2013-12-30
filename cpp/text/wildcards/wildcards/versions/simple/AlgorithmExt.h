@@ -9,10 +9,12 @@
   * (see accompanying file LICENSE or a copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#pragma once
-#include "typedefs.hpp"
+#ifndef WILDCARDS_VERSIONS_SIMPLE_ALGORITHM_EXT__H
+#define WILDCARDS_VERSIONS_SIMPLE_ALGORITHM_EXT__H
 
-namespace reg { namespace sandbox { namespace cpp { namespace text { namespace wildcards {
+#include "../../common/typedefs.h"
+
+namespace net { namespace r_eg { namespace text { namespace wildcards {
 
     class AlgorithmExt
     {
@@ -40,23 +42,7 @@ namespace reg { namespace sandbox { namespace cpp { namespace text { namespace w
 
         bool main(const tstring& text, const tstring& filter);
 
-        AlgorithmExt(void)
-        {
-            _asserts();
-        };
-        ~AlgorithmExt(void){};
-
     protected:
-        /** verify MetaOperation::ANY */
-        void _assertsAny();
-        /** verify MetaOperation::SPLIT */
-        void _assertsSplit();
-        /** verify MetaOperation::ONE */
-        void _assertsOne();
-        /** verify MetaOperation::ANYSP */
-        void _assertsAnySP();
-        /** wrapper */
-        void _asserts();
 
         struct Mask{
             MetaOperation curr;
@@ -92,6 +78,35 @@ namespace reg { namespace sandbox { namespace cpp { namespace text { namespace w
          * {word} ... {word}
          */
         size_t _handlerInterval(Item& item, Words& words, const tstring& text);
+
+    private:
+
+        inline tstring _lowercase(tstring str) throw()
+        {
+            transform(str.begin(), str.end(), str.begin(), towlower);
+            return str;
+        };
     };
 
-}}}}};
+    class AlgorithmExtTestCase
+    {
+    public:
+
+        /** verify MetaOperation::ANY */
+        void assertsAny();
+        /** verify MetaOperation::SPLIT */
+        void assertsSplit();
+        /** verify MetaOperation::ONE */
+        void assertsOne();
+        /** verify MetaOperation::ANYSP */
+        void assertsAnySP();
+        /** wrapper */
+        void asserts();
+
+    protected:
+        AlgorithmExt alg;
+    };
+
+}}}}
+
+#endif // WILDCARDS_VERSIONS_SIMPLE_ALGORITHM_EXT__H
