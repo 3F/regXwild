@@ -40,6 +40,12 @@
     <Filter Include="Source Files\comparison\methods">
       <UniqueIdentifier>{7f3f7fe1-2737-45e4-bff5-68937c3068ed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\versions\essential">
+      <UniqueIdentifier>{a862a019-d680-4dfd-93ab-54baa371dc45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\versions\essential">
+      <UniqueIdentifier>{c911a432-e2e9-4e1d-b935-97edefad7ead}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common\Meter.h">
@@ -57,6 +63,12 @@
     <ClInclude Include="comparison\methods\Algorithms.h">
       <Filter>Header Files\comparison\methods</Filter>
     </ClInclude>
+    <ClInclude Include="versions\essential\AlgorithmEss.h">
+      <Filter>Header Files\versions\essential</Filter>
+    </ClInclude>
+    <ClInclude Include="comparison\AlgorithmEssCmpExt.h">
+      <Filter>Header Files\comparison</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -73,6 +85,12 @@
     </ClCompile>
     <ClCompile Include="versions\simple\AlgorithmExtTestCase.cpp">
       <Filter>Source Files\versions\simple</Filter>
+    </ClCompile>
+    <ClCompile Include="versions\essential\AlgorithmEss.cpp">
+      <Filter>Source Files\versions\essential</Filter>
+    </ClCompile>
+    <ClCompile Include="versions\essential\AlgorithmEssTestCase.cpp">
+      <Filter>Source Files\versions\essential</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

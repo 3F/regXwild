@@ -24,9 +24,28 @@ Data:
 300 символов юникода, 10000 строк, Фильтр L"nime**haru*02*mkv"
 
 */
+/*
+
+[Intel Core i7-3630QM @ 2.40GHz] - EXT vs ESS:
+
+ Operation (+icase)                     | EXT             | ESS             
+----------------------------------------------------------------------------
+   ANY                                  | ~119ms          | ~118ms          
+   ANYSP                                | ~124ms          | ~121ms          
+   ONE                                  | ~121ms          | ~120ms          
+   SPLIT                                | ~188ms          | ~188ms          
+   BEGIN                                |      ---        |  TODO           
+   END                                  |      ---        |  TODO           
+   MORE                                 |      ---        |  TODO           
+   SINGLE                               |      ---        |  TODO           
+----------------------------------------------------------------------------
+( 350 x 10000 )
+*/
 
 #include "comparison/methods/Algorithms.h"
 #include "versions/simple/AlgorithmExt.h"
+#include "versions/essential/AlgorithmEss.h"
+#include "comparison/AlgorithmEssCmpExt.h"
 
 using namespace net::r_eg::text::wildcards;
 
@@ -38,12 +57,24 @@ int _tmain(int argc, _TCHAR* argv[])
     algorithms.assertsMainModeOne();
     algorithms.analysis();
 
-
     //AlgorithmExtTestCase algExt;
     //algExt.assertsAny();
     //algExt.assertsAnySP();
     //algExt.assertsOne();
     //algExt.assertsSplit();
+
+    //AlgorithmEssTestCase algEss;
+    //algEss.assertsAny();
+    //algEss.assertsAnySP();
+    //algEss.assertsOne();
+    //algEss.assertsSplit();
+    //algEss.assertsBegin();
+    //algEss.assertsEnd();
+    //algEss.assertsMore();
+    //algEss.assertsSingle();
+
+    //AlgorithmEssCmpExt cmpEss;
+    //cmpEss.compare();
 
     system("pause");
     return 0;

@@ -79,13 +79,17 @@
     <ClInclude Include="common\Meter.h" />
     <ClInclude Include="common\typedefs.h" />
     <ClInclude Include="common\Util.h" />
+    <ClInclude Include="comparison\AlgorithmEssCmpExt.h" />
     <ClInclude Include="comparison\methods\Algorithms.h" />
+    <ClInclude Include="versions\essential\AlgorithmEss.h" />
     <ClInclude Include="versions\simple\AlgorithmExt.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="comparison\methods\Algorithms.cpp" />
     <ClCompile Include="comparison\methods\AlgorithmsTestCase.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="versions\essential\AlgorithmEss.cpp" />
+    <ClCompile Include="versions\essential\AlgorithmEssTestCase.cpp" />
     <ClCompile Include="versions\simple\AlgorithmExt.cpp" />
     <ClCompile Include="versions\simple\AlgorithmExtTestCase.cpp" />
   </ItemGroup>
