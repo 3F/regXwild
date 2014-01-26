@@ -131,7 +131,7 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
 
         if(item.mask.curr & END)
         {
-            if(_text.substr(_text.length() - item.delta).compare(item.curr) == 0)
+            if(item.delta >= _text.length() && _text.substr(_text.length() - item.delta).compare(item.curr) == 0)
             {
                 if(it + 1 == itEnd){ return true; /*EOL*/ }
 
