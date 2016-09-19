@@ -1,8 +1,0 @@
-#include "resource.h"
-#include "atlres.h"
-
-IDD_MAINFRM DIALOGEX 0, 0, 180, 110
-STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_SYSMENU
-FONT 10, "MS Sans Serif", 0, 0, 0x0
-BEGIN
-END

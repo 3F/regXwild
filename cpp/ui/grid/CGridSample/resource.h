@@ -1,1 +1,0 @@
-#define IDD_MAINFRM  1024
