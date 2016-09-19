@@ -28,6 +28,7 @@ namespace regXwildTest
             Assert::AreEqual(true, searchEss(data, _T("*")));
             Assert::AreEqual(true, searchEss(data, _T("***")));
             Assert::AreEqual(true, searchEss(_T("new str"), _T("new str")));
+            Assert::AreEqual(true, searchEss(_T(""), _T("")));
         }
 
         TEST_METHOD(filterAnyTest2)
@@ -585,7 +586,6 @@ namespace regXwildTest
         TEST_METHOD(filterEndTest1)
         {
             tstring data = _T("new tes;ted project-12, and 75_protection of various systems");
-            tstring datam = _T("main systems 1272/is ok");
 
             // word$
             {
@@ -843,6 +843,20 @@ namespace regXwildTest
                 Assert::AreEqual(false, searchEss(data, _T("systems$ |notfound|systems$ ")));
                 Assert::AreEqual(false, searchEss(data, _T("systems$ |systems$ |notfound")));
                 Assert::AreEqual(false, searchEss(data, _T("systems$*|notfound")));
+            }
+        }
+
+        TEST_METHOD(filterEndTest11)
+        {
+            // test of filter length
+            {
+                Assert::AreEqual(false, searchEss(_T("system"), _T("systems$")));
+                Assert::AreEqual(false, searchEss(_T("systems"), _T("system$")));
+                Assert::AreEqual(true, searchEss(_T("s"), _T("s$")));
+                Assert::AreEqual(false, searchEss(_T(""), _T("s$")));
+
+                //Assert::AreEqual(false, searchEss(_T("s"), _T("$")));
+                //Assert::AreEqual(false, searchEss(_T(""), _T("$")));
             }
         }
 
