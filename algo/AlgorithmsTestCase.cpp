@@ -22,15 +22,87 @@
 * THE SOFTWARE.
 */
 
-#include "AlgorithmExt.h"
+#include "stdafx.h"
+#include "Algorithms.h"
+#include "Meter.h"
+#include "Util.h"
 
 namespace net { namespace r_eg { namespace regXwild {
 
-void AlgorithmExtTestCase::assertsAny()
+void AlgorithmsTestCase::analysis(const string& caption, const tstring& data, const tstring& filter, int iterations, talgorithm method, Algorithms& alg)
+{
+    Meter meter;
+    //int results = 0;
+    //int max     = 110;
+
+    //for(int total = 0; total < max; ++total){
+        meter.start();
+        for(int i = 0; i < iterations; ++i){
+            if((alg.*method)(data, filter)){
+                //...
+            }
+        }
+    //    results += meter.delta();
+    //}
+    //TRACE(caption << "~" << (results / max) << "ms\n");
+    TRACE(caption << "~" << meter.delta() << "ms\n");
+}
+
+void AlgorithmsTestCase::analysis()
+{
+    tstring data    = _T("#//Anime/Kyoto Animation/Clannad TV -/Suzumiya Haruhi/Lucky Star/Full Metal Panic Fumoffu/P.A. Works/Angel Beats!/A-1 Pictures/Ano Hi Mita Hana no Namae wo Bokutachi wa Mada Shira nai/Макото Синкай [2002] Kanojo to kanojo no neko/ Kino no Tabi @ ... World/White Fox/Врата Штайнера (Врата Штейна (Steins Gate))/SHAFT/Maho Shojo Madoka Magica"); //340
+    tstring filter  = _T("nime**haru*02*Magica");
+    int lim         = 10000;
+
+    Algorithms alg;
+
+    //result: 10000: ~58ms
+    analysis("Find + Find: ", data, filter + _T("*"), lim, &Algorithms::findFindFind, alg);
+
+    //result: 10000: ~57ms
+    analysis("Iterator + Find: ", data, filter, lim, &Algorithms::findIteratorFind, alg);
+ 
+    //result: 10000: ~59ms
+    analysis("Getline + Find: ", data, filter, lim, &Algorithms::findGetlineFind, alg);
+  
+    //result: 10000: ~165ms
+    analysis("Iterator + Substr: ", data, filter + _T("*"), lim, &Algorithms::findIteratorSubstr, alg);
+ 
+    //result: 10000: ~136ms
+    analysis("Iterator + Iterator: ", data, filter + _T("*"), lim, &Algorithms::findIteratorIterator, alg);
+
+    //result: 10000: ~53ms
+    analysis("main :: based on Iterator + Find: ", data, filter, lim, &Algorithms::main, alg);
+
+    TRACE("\n-----------\n");
+    
+    //result: 10000: ~64063ms
+    TRACE("regexp-c++11(search):");
+    analysis(" ", data, Util::strReplace((tstring)_T("*"), (tstring)_T(".*"), filter), lim, &Algorithms::findRegexpCpp11s, alg);
+    
+    //result: 10000: ~34ms
+    TRACE("regexp-c++11(only with ^match$ like a '==' - rapid but unusable):");
+    analysis(" ", data, Util::strReplace((tstring)_T("*"), (tstring)_T(".*"), filter), lim, &Algorithms::findRegexpCpp11m, alg);
+    
+    //result: 10000: ~64329ms
+    TRACE("regexp-c++11(match*):");
+    analysis(" ", data, _T(".*") + Util::strReplace((tstring)_T("*"), (tstring)_T(".*"), filter) + _T(".*?"), lim, &Algorithms::findRegexpCpp11m, alg);
+
+}
+
+
+
+/* TODO: All tests below was before main library to support main logic from errors and typos, 
+        i.e. it used only for current algo !  
+
+        All Unit-tests see in regXwildTest.
+*/
+
+void AlgorithmsTestCase::assertsMainModeAny()
 {
     tstring data = _T("new tes;ted project-12, and 75_protection of various systems.");
 
-    /* should be found: */
+    // should be found:
     assert(alg.main(data, _T("protection of various")) == true);      // __ __ __
     assert(alg.main(data, _T("pro*system")) == true);                 // __ * __
     assert(alg.main(data, _T("*pro*system*")) == true);               // * __ * __ *
@@ -38,7 +110,7 @@ void AlgorithmExtTestCase::assertsAny()
     assert(alg.main(data, _T("new*7*systems")) == true);              // __ * __ * __
     assert(alg.main(data, _T("")) == true);                           // empty
 
-    /* should not be found: */
+    // should not be found:
     assert(alg.main(data, _T("project 12 and")) == false);            // __ _x_ __
     assert(alg.main(data, _T("new*express")) == false);               // __ * _x_
     assert(alg.main(data, _T("tes*ting*project")) == false);          // __ * _x_ * __
@@ -48,11 +120,11 @@ void AlgorithmExtTestCase::assertsAny()
     assert(alg.main(data, _T("**open**close")) == false);             // ** _x_ ** _x_
 }
 
-void AlgorithmExtTestCase::assertsSplit()
+void AlgorithmsTestCase::assertsMainModeSplit()
 {
     tstring data = _T("new tes;ted project-12, and 75_protection of various systems.");
 
-    /* should be found: */
+    // should be found:
     assert(alg.main(data, _T("protection of|new tes")) == true);       // __ __ | __ __
     assert(alg.main(data, _T("some project|of various")) == true);     // _x_ __ | __ __
     assert(alg.main(data, _T("various systems|new 237")) == true);     // __ __ | __ _x_
@@ -81,7 +153,7 @@ void AlgorithmExtTestCase::assertsSplit()
     assert(alg.main(data, _T("|*")) == true);                          // |*
     assert(alg.main(data, _T("seems|open*and*star|*system")) == true); // _x_ | _x_ * __ * _x_ | * __
 
-    /* should not be found: */
+    // should not be found:        
     assert(alg.main(data, _T("above|fails|with")) == false);           // _x_ | _x_ | _x_
     assert(alg.main(data, _T("let*proj|project*deep")) == false);      // _x_ * __ | __ * _x_
     assert(alg.main(data, _T("operator*|*zeep")) == false);            // _x_ *|* _x_
@@ -90,72 +162,22 @@ void AlgorithmExtTestCase::assertsSplit()
     assert(alg.main(data, _T("be|pen*and*star|*my*system")) == false); // _x_ | _x_ * __ * _x_ | * _x_ * __
 }
 
-void AlgorithmExtTestCase::assertsOne()
+void AlgorithmsTestCase::assertsMainModeOne()
 {
     tstring data = _T("new tes;ted project-12, and 75_protection of various systems.");
 
-    /* should be found: */
+    // should be found:
     assert(alg.main(data, _T("new*pro?ection")) == true);              // __ * [pro]ject ... [pro]t[ection]
     assert(alg.main(data, _T("????")) == true);
     assert(alg.main(data, _T("project?12")) == true);
     assert(alg.main(_T("system-17 fee also offers protection"), _T("system?17")) == true);
 
-    /* should not be found: */
+    // should not be found:
     assert(alg.main(data, _T("?pro?12?|seems?7")) == false);
     assert(alg.main(_T("system, installments range from 2 to 17"), _T("system?17")) == false);
     assert(alg.main(_T("system17 fee also"), _T("system?17")) == false);
     assert(alg.main(_T("my system17 fee also"), _T("system?17")) == false);
     assert(alg.main(_T("system_-17 fee also"), _T("system?17")) == false);
-}
-
-void AlgorithmExtTestCase::assertsAnySP()
-{
-    /* should be found: */
-    assert(alg.main(_T("/new/user_myhid_test.bzip2"), _T("myhid>bzip")) == true);   // __...___
-    assert(alg.main(_T("/new/user_myhid_test.bzip2"), _T("myhid>")) == true);       // __...EOL
-    assert(alg.main(_T("/new/user_myhid"), _T("myhid>")) == true);                  // __EOL
-        
-    /* with other metasymbols: */
-    {
-        assert(alg.main(_T("/new/user_myhid"), _T("myhid>*")) == true);
-        assert(alg.main(_T("/new/user_myhid"), _T("myhid>***")) == true);
-        assert(alg.main(_T("/new/user_myhid"), _T("myhid>?")) == true);
-        assert(alg.main(_T("/new/user_myhid"), _T("myhid>?*")) == true);
-    }
-
-    /* should not be found: */
-    assert(alg.main(_T("/new/user_myhid_t/est.bzip2"), _T("myhid>bzip")) == false);     // __.../...__
-    assert(alg.main(_T("/new/user_myhid/_test.bzip2"), _T("myhid>bzip")) == false);     // __/...__
-    assert(alg.main(_T("/new/user_myhid_test./bzip2"), _T("myhid>bzip")) == false);     // __.../__
-    assert(alg.main(_T("/new/user_myhid_te/st.bzip2"), _T("myhid>")) == false);         // __.../...EOL
-    assert(alg.main(_T("/new/user_myhid_te/"), _T("myhid>")) == false);                 // __.../EOL
-    assert(alg.main(_T("/new/user_myhid_t\\est.bzip2"), _T("myhid>bzip")) == false);    //  "\" & "//"
-        
-    /* with other metasymbols: */
-    {
-        assert(alg.main(_T("/new/user_myhid_s/df.txt"), _T("myhid>*")) == false);
-        assert(alg.main(_T("/new/user_myhid_s/df.txt"), _T("myhid>***")) == false);
-        assert(alg.main(_T("/new/user_myhid_s/df.txt"), _T("myhid>?")) == false);
-        assert(alg.main(_T("/new/user_myhid_s/df.txt"), _T("myhid>?*")) == false);
-        //-
-        assert(alg.main(_T("/new/user_myhid_s/df.txt"), _T("myhid>*txt")) == false);
-        assert(alg.main(_T("/new/user_myhid_s/df.txt"), _T("myhid>***txt")) == false);
-        assert(alg.main(_T("/new/user_myhid_s/df.txt"), _T("myhid>?txt")) == false);
-        assert(alg.main(_T("/new/user_myhid_s/df.txt"), _T("myhid>?*??txt")) == false);
-        //-
-        assert(alg.main(_T("/new/user_myhid"), _T("myhid>*txt")) == false);
-        assert(alg.main(_T("/new/user_myhid"), _T("myhid>***txt")) == false);
-        assert(alg.main(_T("/new/user_myhid"), _T("myhid>?txt")) == false);
-        assert(alg.main(_T("/new/user_myhid"), _T("myhid>?*??txt")) == false);
-    }
-}
-
-void AlgorithmExtTestCase::asserts()
-{
-    assertsAny();
-    assertsSplit();
-    assertsOne();
-    assertsAnySP();
 }
 
 }}}

@@ -7,90 +7,78 @@
     </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\comparison">
-      <UniqueIdentifier>{fb84fe70-a336-4fcc-a656-dc7a784359c2}</UniqueIdentifier>
+    <Filter Include="Header Files\core">
+      <UniqueIdentifier>{482adaa7-cd8a-4b21-adb6-4639ef68aa6f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\comparison">
-      <UniqueIdentifier>{85549663-7078-4347-868f-4c57a2dcf16c}</UniqueIdentifier>
+    <Filter Include="Header Files\core\ESS">
+      <UniqueIdentifier>{886c2a10-d651-4497-af13-a6b0bdeeaa7f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\common">
-      <UniqueIdentifier>{e2573a4e-beee-40aa-9bd7-bed318bbd35a}</UniqueIdentifier>
+    <Filter Include="Header Files\core\EXT">
+      <UniqueIdentifier>{eebd350d-0765-4329-871e-e33453bebda0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\versions">
-      <UniqueIdentifier>{707ee201-875d-49d6-a29d-21c98c0716e6}</UniqueIdentifier>
+    <Filter Include="Source Files\core">
+      <UniqueIdentifier>{b886227e-83cf-47a6-a990-23691b36bbdb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\versions\simple">
-      <UniqueIdentifier>{3ff7aca5-6307-4746-85f6-9e0db8f87ad8}</UniqueIdentifier>
+    <Filter Include="Source Files\core\ESS">
+      <UniqueIdentifier>{b1c52020-66cd-413c-9f86-4e0dffe8f982}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\versions">
-      <UniqueIdentifier>{5a9a8ec2-bf09-413c-92e6-90f8465bb3d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\versions\simple">
-      <UniqueIdentifier>{2b5db05c-76ee-4075-9b21-c0ac3f3f98e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\comparison\methods">
-      <UniqueIdentifier>{39fd7fc3-a520-4c81-91a4-d62b7d46c14e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\comparison\methods">
-      <UniqueIdentifier>{7f3f7fe1-2737-45e4-bff5-68937c3068ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\versions\essential">
-      <UniqueIdentifier>{a862a019-d680-4dfd-93ab-54baa371dc45}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\versions\essential">
-      <UniqueIdentifier>{c911a432-e2e9-4e1d-b935-97edefad7ead}</UniqueIdentifier>
+    <Filter Include="Source Files\core\EXT">
+      <UniqueIdentifier>{da4fad56-4e17-4b9c-b598-379d25b8aaf3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="common\Meter.h">
-      <Filter>Header Files\common</Filter>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="common\typedefs.h">
-      <Filter>Header Files\common</Filter>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="common\Util.h">
-      <Filter>Header Files\common</Filter>
+    <ClInclude Include="regXwild.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="versions\simple\AlgorithmExt.h">
-      <Filter>Header Files\versions\simple</Filter>
+    <ClInclude Include="declspec.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="comparison\methods\Algorithms.h">
-      <Filter>Header Files\comparison\methods</Filter>
+    <ClInclude Include="regXwildConf.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="versions\essential\AlgorithmEss.h">
-      <Filter>Header Files\versions\essential</Filter>
+    <ClInclude Include="regXwildAPI.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="comparison\AlgorithmEssCmpExt.h">
-      <Filter>Header Files\comparison</Filter>
+    <ClInclude Include="typedefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\ESS\AlgorithmEss.h">
+      <Filter>Header Files\core\ESS</Filter>
+    </ClInclude>
+    <ClInclude Include="core\EXT\AlgorithmExt.h">
+      <Filter>Header Files\core\EXT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="versions\simple\AlgorithmExt.cpp">
-      <Filter>Source Files\versions\simple</Filter>
+    <ClCompile Include="regXwild.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="comparison\methods\Algorithms.cpp">
-      <Filter>Source Files\comparison\methods</Filter>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="comparison\methods\AlgorithmsTestCase.cpp">
-      <Filter>Source Files\comparison\methods</Filter>
+    <ClCompile Include="regXwildAPI.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="versions\simple\AlgorithmExtTestCase.cpp">
-      <Filter>Source Files\versions\simple</Filter>
+    <ClCompile Include="core\ESS\AlgorithmEss.cpp">
+      <Filter>Source Files\core\ESS</Filter>
     </ClCompile>
-    <ClCompile Include="versions\essential\AlgorithmEss.cpp">
-      <Filter>Source Files\versions\essential</Filter>
-    </ClCompile>
-    <ClCompile Include="versions\essential\AlgorithmEssTestCase.cpp">
-      <Filter>Source Files\versions\essential</Filter>
+    <ClCompile Include="core\EXT\AlgorithmExt.cpp">
+      <Filter>Source Files\core\EXT</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

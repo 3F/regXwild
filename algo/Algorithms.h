@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 * The MIT License (MIT)
 *
@@ -22,10 +24,7 @@
 * THE SOFTWARE.
 */
 
-#ifndef WILDCARDS_CMP_METHODS_ALGORITHMS__H
-#define WILDCARDS_CMP_METHODS_ALGORITHMS__H
-
-#include "../../common/typedefs.h"
+#include "typedefs.h"
 
 namespace net { namespace r_eg { namespace regXwild {
 
@@ -67,5 +66,3 @@ namespace net { namespace r_eg { namespace regXwild {
     };
 
 }}}
-
-#endif // WILDCARDS_CMP_METHODS_ALGORITHMS__H

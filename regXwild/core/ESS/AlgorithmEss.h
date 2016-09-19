@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 * The MIT License (MIT)
 *
@@ -22,12 +24,9 @@
 * THE SOFTWARE.
 */
 
-#ifndef WILDCARDS_VERSIONS_ESSENTIAL_ALGORITHM_ESS__H
-#define WILDCARDS_VERSIONS_ESSENTIAL_ALGORITHM_ESS__H
+#include "typedefs.h"
 
-#include "../../common/typedefs.h"
-
-namespace net { namespace r_eg { namespace regXwild {
+namespace net { namespace r_eg { namespace regXwild { namespace core { namespace ESS {
 
     class AlgorithmEss
     {
@@ -144,39 +143,4 @@ namespace net { namespace r_eg { namespace regXwild {
         };
     };
 
-    class AlgorithmEssTestCase
-    {
-    public:
-
-        /** verify MetaOperation::ANY */
-        void assertsAny();
-        /** verify MetaOperation::SPLIT */
-        void assertsSplit();
-        /** verify MetaOperation::ONE */
-        void assertsOne();
-        /** verify MetaOperation::ANYSP */
-        void assertsAnySP();
-        /** verify MetaOperation::BEGIN */
-        void assertsBegin();
-        /** verify MetaOperation::END */
-        void assertsEnd();
-        /** verify MetaOperation::MORE */
-        void assertsMore();
-        /** verify MetaOperation::SINGLE */
-        void assertsSingle();
-        /** wrapper */
-        void asserts();
-
-    protected:
-        AlgorithmEss alg;
-
-    private:
-        /** Stub with a MS combination for current version - END */
-        void _stubENDCombination();
-        /** Stub with a MS combination for current version - SINGLE */
-        void _stubSINGLECombination();
-    };
-
-}}}
-
-#endif // WILDCARDS_VERSIONS_ESSENTIAL_ALGORITHM_ESS__H
+}}}}}

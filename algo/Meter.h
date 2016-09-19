@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 * The MIT License (MIT)
 *
@@ -22,46 +24,28 @@
 * THE SOFTWARE.
 */
 
-#ifndef WILDCARDS_COMMON_TYPEDEFS__H
-#define WILDCARDS_COMMON_TYPEDEFS__H
+#include "typedefs.h"
 
-#include <tchar.h>
-#include <string>
-#include <vector>
-#include <regex>
-#include <sstream>
-#include <iostream>
-#include <assert.h>
+namespace net { namespace r_eg { namespace regXwild {
 
-using namespace std;
+    class Meter
+    {
+    public:
+        void start()
+        {
+            _started = clock();
+        }
 
-namespace net { namespace r_eg { namespace regXwild { 
+        clock_t delta()
+        {
+            return clock() - _started;
+        }
 
-    #ifdef UNICODE
-
-        typedef wstring tstring;
-        typedef wstringstream tstringStream;
-
-        //<tchar.h>
-        //typedef wchar_t TCHAR;
-        //#define _T(x)  L ## x
-
-    #else
-
-        typedef string tstring;
-        typedef stringstream tstringStream;
-
-        //<tchar.h>
-        //typedef char TCHAR;
-        //#define _T(x)  ## x
-
-    #endif
-
-    typedef vector<tstring> tstringList;
-    typedef basic_regex<TCHAR> tregex;
-
-#define TRACE(str){ std::cout << str; }
+        Meter(void){};
+        ~Meter(void){};
+    
+    private:
+        clock_t _started;
+    };
 
 }}}
-
-#endif // WILDCARDS_COMMON_TYPEDEFS__H

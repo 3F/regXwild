@@ -22,8 +22,9 @@
 * THE SOFTWARE.
 */
 
+#include "stdafx.h"
 #include "Algorithms.h"
-#include "../../common/Util.h"
+#include "Util.h"
 
 namespace net { namespace r_eg { namespace regXwild {
 
@@ -34,7 +35,7 @@ bool Algorithms::main(const tstring& text, const tstring& filter)
     }
 
     tstring _text   = Util::uppercase(text);
-    tstring _filter = Util::uppercase(filter); //if optimize(to outward): ~18ms
+    tstring _filter = Util::uppercase(filter); //if optimize(outward): ~18ms
 
     enum MetaOperation{
         FLUSH   = 0,
@@ -55,7 +56,7 @@ bool Algorithms::main(const tstring& text, const tstring& filter)
     };
 
     //split-mode: at least one "|"
-    bool split = _filter.find(MS_SPLIT) != tstring::npos; //if optimize(to outward): < 1ms
+    bool split = _filter.find(MS_SPLIT) != tstring::npos; //if optimize(outward): < 1ms
 
     // to wildcards
     tstring     item;

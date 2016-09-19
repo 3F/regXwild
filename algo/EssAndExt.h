@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 * The MIT License (MIT)
 *
@@ -22,13 +24,13 @@
 * THE SOFTWARE.
 */
 
-#ifndef WILDCARDS_VERSIONS_ESSENTIAL_ALGORITHM_ESS_COMPARE_EXT__H
-#define WILDCARDS_VERSIONS_ESSENTIAL_ALGORITHM_ESS_COMPARE_EXT__H
+#include "typedefs.h"
+#include "Meter.h"
 
-#include "../common/typedefs.h"
-#include "../common/Meter.h"
-#include "../versions/simple/AlgorithmExt.h"
-#include "../versions/essential/AlgorithmEss.h"
+#include "..\regXwild\regXwildAPI.h"
+
+//#include "AlgorithmExt.h"
+//#include "AlgorithmEss.h"
 
 namespace net { namespace r_eg { namespace regXwild {
 
@@ -44,11 +46,11 @@ namespace net { namespace r_eg { namespace regXwild {
 
         bool search(const tstring& text, const tstring& filter)
         {
-            return alg.search(text, filter, true);
+            return searchEss(text, filter, true);
         }
 
     protected:
-        AlgorithmEss alg;
+        //AlgorithmEss alg;
 
     };
 
@@ -58,11 +60,11 @@ namespace net { namespace r_eg { namespace regXwild {
 
         bool search(const tstring& text, const tstring& filter)
         {
-            return alg.main(text, filter);
+            return searchExt(text, filter);
         }
 
     protected:
-        AlgorithmExt alg;
+        //AlgorithmExt alg;
 
     };
 
@@ -109,23 +111,21 @@ namespace net { namespace r_eg { namespace regXwild {
             TRACE("[EXT::SPLIT] =~ " << analysis(&algExt, text, filter, iterations) << "ms\n");
             TRACE("[ESS::SPLIT] =~ " << analysis(&algEss, text, filter, iterations) << "ms\n");
 
-            // TODO:
+            /* BEGIN */
+            filter = _T("^JDK 6");
+            TRACE("[ESS::BEGIN] =~ " << analysis(&algEss, text, filter, iterations) << "ms\n");
 
-            ///* BEGIN */
-            //filter = _T("^JDK 6");
-            //TRACE("[ESS::BEGIN] =~ " << analysis(&algEss, text, filter, iterations) << "ms\n");
+            /* END */
+            filter = _T("or later.$");
+            TRACE("[ESS::END] =~ " << analysis(&algEss, text, filter, iterations) << "ms\n");
 
-            ///* END */
-            //filter = _T("or later.$");
-            //TRACE("[ESS::END] =~ " << analysis(&algEss, text, filter, iterations) << "ms\n");
+            /* MORE */
+            filter = _T("NetBeans+must be+1.5");
+            TRACE("[ESS::MORE] =~ " << analysis(&algEss, text, filter, iterations) << "ms\n");
 
-            ///* MORE */
-            //filter = _T("NetBeans+must be+1.5");
-            //TRACE("[ESS::MORE] =~ " << analysis(&algEss, text, filter, iterations) << "ms\n");
-
-            ///* SINGLE */
-            //filter = _T("JDK # for NetBeans #");
-            //TRACE("[ESS::SINGLE] =~ " << analysis(&algEss, text, filter, iterations) << "ms\n");
+            /* SINGLE */
+            filter = _T("JDK # for NetBeans #");
+            TRACE("[ESS::SINGLE] =~ " << analysis(&algEss, text, filter, iterations) << "ms\n");
 
         };
 
@@ -151,5 +151,3 @@ namespace net { namespace r_eg { namespace regXwild {
     };
 
 }}}
-
-#endif // WILDCARDS_VERSIONS_ESSENTIAL_ALGORITHM_ESS_COMPARE_EXT__H

@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 * The MIT License (MIT)
 *
@@ -22,33 +24,22 @@
 * THE SOFTWARE.
 */
 
-#ifndef WILDCARDS_COMMON_METER__H
-#define WILDCARDS_COMMON_METER__H
+#ifdef REGXWILD_AS_DLL
 
-#include <time.h>
+    #ifdef REGXWILD_EXPORTS
 
-namespace net { namespace r_eg { namespace regXwild {
+        // C linkage for comfortable work via Conari etc.
+        // https://github.com/3F/Conari/issues/3
+        #define REGXWILD_API extern "C" __declspec(dllexport)
 
-    class Meter
-    {
-    public:
-        void start()
-        {
-            _started = clock();
-        }
+    #else
 
-        clock_t delta()
-        {
-            return clock() - _started;
-        }
+        #define REGXWILD_API __declspec(dllimport)
 
-        Meter(void){};
-        ~Meter(void){};
-    
-    private:
-        clock_t _started;
-    };
+    #endif
 
-}}}
+#else
 
-#endif // WILDCARDS_COMMON_METER__H
+    #define REGXWILD_API  extern
+
+#endif

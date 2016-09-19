@@ -22,9 +22,10 @@
 * THE SOFTWARE.
 */
 
+#include "stdafx.h"
 #include "AlgorithmEss.h"
 
-namespace net { namespace r_eg { namespace regXwild {
+namespace net { namespace r_eg { namespace regXwild { namespace core { namespace ESS {
 
 /**
  * entry for match cases
@@ -305,4 +306,4 @@ inline bool AlgorithmEss::rewindToNextBlock(tstring::const_iterator& it, bool de
     return true;
 }
 
-}}}
+}}}}}

@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 * The MIT License (MIT)
 *
@@ -22,12 +24,9 @@
 * THE SOFTWARE.
 */
 
-#ifndef WILDCARDS_VERSIONS_SIMPLE_ALGORITHM_EXT__H
-#define WILDCARDS_VERSIONS_SIMPLE_ALGORITHM_EXT__H
+#include "typedefs.h"
 
-#include "../../common/typedefs.h"
-
-namespace net { namespace r_eg { namespace regXwild {
+namespace net { namespace r_eg { namespace regXwild { namespace core { namespace EXT {
 
     class AlgorithmExt
     {
@@ -101,25 +100,4 @@ namespace net { namespace r_eg { namespace regXwild {
         };
     };
 
-    class AlgorithmExtTestCase
-    {
-    public:
-
-        /** verify MetaOperation::ANY */
-        void assertsAny();
-        /** verify MetaOperation::SPLIT */
-        void assertsSplit();
-        /** verify MetaOperation::ONE */
-        void assertsOne();
-        /** verify MetaOperation::ANYSP */
-        void assertsAnySP();
-        /** wrapper */
-        void asserts();
-
-    protected:
-        AlgorithmExt alg;
-    };
-
-}}}
-
-#endif // WILDCARDS_VERSIONS_SIMPLE_ALGORITHM_EXT__H
+}}}}}

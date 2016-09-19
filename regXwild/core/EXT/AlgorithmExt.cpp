@@ -22,9 +22,10 @@
 * THE SOFTWARE.
 */
 
+#include "stdafx.h"
 #include "AlgorithmExt.h"
 
-namespace net { namespace r_eg { namespace regXwild {
+namespace net { namespace r_eg { namespace regXwild { namespace core { namespace EXT {
 
 #define WILDCARDS_SYMB_SLASHS _T("\\/") //both
 
@@ -173,4 +174,4 @@ size_t AlgorithmExt::_handlerInterval(Item& item, Words& words, const tstring& t
     return words.found;
 }
 
-}}}
+}}}}}
