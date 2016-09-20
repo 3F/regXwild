@@ -83,9 +83,9 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
         struct Item
         {
             tstring curr;
-            size_t pos;
-            size_t left;
-            size_t delta;
+            udiff_t pos;
+            udiff_t left;
+            udiff_t delta;
             Mask mask;
             unsigned short int overlay;
 
@@ -107,8 +107,8 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
          */
         struct Words
         {
-            size_t found;
-            size_t left;
+            udiff_t found;
+            udiff_t left;
 
             void reset()
             {
@@ -123,7 +123,7 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
          *      _______
          * {word} ... {word}
          */
-        size_t interval();
+        udiff_t interval();
 
         /** rewind to next SPLIT-block */
         bool rewindToNextBlock(tstring::const_iterator& it, bool delta = true);

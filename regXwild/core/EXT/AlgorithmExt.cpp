@@ -148,13 +148,15 @@ bool AlgorithmExt::main(const tstring& text, const tstring& filter)
     return true;
 }
 
-size_t AlgorithmExt::_handlerInterval(Item& item, Words& words, const tstring& text)
+udiff_t AlgorithmExt::_handlerInterval(Item& item, Words& words, const tstring& text)
 {
     // "?"
     // TODO: [optimize perfomance]: pre-combination - "item?item"
-    if(item.mask.prev & ONE && (words.found - words.left) != 1){ // :: delta -> w?ord
-        size_t len      = item.prev.length();
-        short int lPos  = words.found - len - 1;
+    if(item.mask.prev & ONE && (words.found - words.left) != 1) // :: delta -> w?ord
+    {
+        udiff_t len = item.prev.length();
+        diff_t lPos = words.found - len - 1;
+
         if(lPos < 0 || text.substr(lPos, len).compare(item.prev) != 0){
             return tstring::npos;
         }

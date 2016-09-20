@@ -25,32 +25,12 @@
 */
 
 #include "stdafx.h"
+#include "..\regXwild\typedefs.h"
 
-using namespace std;
+namespace net { namespace r_eg { namespace regXwild
+{
+    using namespace std;
 
-namespace net { namespace r_eg { namespace regXwild { 
-
-    #ifdef UNICODE
-
-        typedef wstring tstring;
-        typedef wstringstream tstringStream;
-
-        //<tchar.h>
-        //typedef wchar_t TCHAR;
-        //#define _T(x)  L ## x
-
-    #else
-
-        typedef string tstring;
-        typedef stringstream tstringStream;
-
-        //<tchar.h>
-        //typedef char TCHAR;
-        //#define _T(x)  ## x
-
-    #endif
-
-    typedef vector<tstring> tstringList;
     typedef basic_regex<TCHAR> tregex;
 
 #define TRACE(str){ std::cout << str; }

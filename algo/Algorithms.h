@@ -44,8 +44,11 @@ namespace net { namespace r_eg { namespace regXwild {
 
         bool main(const tstring& text, const tstring& filter);
 
+        bool finalEss(const tstring& data, const tstring& filter/*, bool ignoreCase*/);
+        bool finalExt(const tstring& data, const tstring& filter);
+
     protected:
-        void _assertsMain();
+        //void _assertsMain();
     };
 
     typedef bool(Algorithms::*talgorithm)(const tstring&, const tstring&);

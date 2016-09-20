@@ -107,6 +107,8 @@ Getline + Find                            | ~59ms
 Iterator + Substr                         | ~165ms      
 Iterator + Iterator                       | ~136ms      
 main :: based on Iterator + Find          | ~53ms       
+Final algorithm - EXT version:            | ~50ms       
+Final algorithm - ESS version:            | ~50ms       
 ------------------------------------------|-------------
 regexp-c++11(regex_search)                | ~64063ms    
 regexp-c++11(only as ^match$ like a '==') | ~34ms       

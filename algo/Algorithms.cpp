@@ -25,9 +25,28 @@
 #include "stdafx.h"
 #include "Algorithms.h"
 #include "Util.h"
+#include "..\regXwild\regXwildAPI.h"
 
 namespace net { namespace r_eg { namespace regXwild {
 
+
+bool Algorithms::finalEss(const tstring& data, const tstring& filter/*, bool ignoreCase*/)
+{
+    return searchEss(data, filter, true);
+}
+
+bool Algorithms::finalExt(const tstring& data, const tstring& filter)
+{
+    return searchExt(data, filter);
+}
+
+/*
+    Please note: all below, was before the main library as a draft of primary way.
+                 I already don't remember of all my ideas from 2013 thus I leave it 'as is'.
+                 Use the final implementation of regXwild from main library.
+*/
+
+// seems early EXT variant:
 bool Algorithms::main(const tstring& text, const tstring& filter)
 {
     if(filter.empty()){
@@ -59,15 +78,15 @@ bool Algorithms::main(const tstring& text, const tstring& filter)
     bool split = _filter.find(MS_SPLIT) != tstring::npos; //if optimize(outward): < 1ms
 
     // to wildcards
-    tstring     item;
-    tstring     itemPrev;
-    std::size_t itemPos     = 0;
-    std::size_t itemLeft    = 0;
-    std::size_t itemDelta   = 0;
+    tstring item;
+    tstring itemPrev;
+    udiff_t itemPos     = 0;
+    udiff_t itemLeft    = 0;
+    udiff_t itemDelta   = 0;
 
     // to words
-    std::size_t found;
-    std::size_t left        = 0;
+    udiff_t found;
+    udiff_t left = 0;
     for(tstring::const_iterator it = _filter.begin(); it != _filter.end(); ++it){
         ++itemLeft;
 
@@ -118,9 +137,11 @@ bool Algorithms::main(const tstring& text, const tstring& filter)
 
         //compare delta -> w?ord
         // TODO: [optimize perfomance]: pre-combination - "item?item"
-        if(prevMask & ONE && found != tstring::npos && (found - left) != 1){
-            std::size_t itemPrevLen = itemPrev.length();
-            short int lPos          = found - itemPrevLen - 1;
+        if(prevMask & ONE && found != tstring::npos && (found - left) != 1)
+        {
+            udiff_t itemPrevLen = itemPrev.length();
+            diff_t lPos         = found - itemPrevLen - 1;
+
             if(lPos < 0 || _text.substr(lPos, itemPrevLen).compare(itemPrev) != 0){
                 found = tstring::npos;
             }
@@ -179,11 +200,11 @@ bool Algorithms::findGetlineFind(const tstring& text, const tstring& filter)
 
     tstringStream ss(_filter);
     tstring item;
-    size_t found;
+    udiff_t found;
  
-    size_t prevFound   = 0;
-    size_t prevLen     = 0;
-    while(std::getline(ss, item, symbol)){        
+    udiff_t prevFound = 0;
+    udiff_t prevLen   = 0;
+    while(std::getline(ss, item, symbol)){
         found = _text.find(item, (prevFound + prevLen));
  
         if(found == std::string::npos){
@@ -202,13 +223,13 @@ bool Algorithms::findFindFind(const tstring& text, const tstring& filter)
     tstring _filter = Util::uppercase(filter);
     TCHAR symbol    = _T('*');
 
-    size_t nextDelim;
-    size_t pos = 0;
+    udiff_t nextDelim;
+    udiff_t pos = 0;
     tstring item;
  
-    size_t found;
-    size_t prevFound   = 0;
-    size_t prevLen     = 0;
+    udiff_t found;
+    udiff_t prevFound   = 0;
+    udiff_t prevLen     = 0;
     while((nextDelim = _filter.find(symbol, pos)) != std::string::npos){
         item = _filter.substr(pos, nextDelim - pos);
         if(!item.empty()){
@@ -233,41 +254,48 @@ bool Algorithms::findIteratorSubstr(const tstring& text, const tstring& filter)
     TCHAR symbol    = _T('*');
 
     tstring item;
-    size_t posFilter = 0;
-    size_t posFilter2 = 0;
+    udiff_t posFilter   = 0;
+    udiff_t posFilter2  = 0;
     //---
     tstring item2;
-    size_t itemLen;
-    size_t posPrev = 0;
+    udiff_t itemLen;
+    udiff_t posPrev = 0;
     //--- 
  
-    for(tstring::const_iterator it = _filter.begin(); it != _filter.end(); ++it){
+    for(tstring::const_iterator it = _filter.begin(); it != _filter.end(); ++it)
+    {
         item = *it;
         posFilter2++;
-        if(*it == symbol){
-            item = _filter.substr(posFilter, posFilter2 - 1 - posFilter);
- 
-            if(item.empty()){
-                posFilter = posFilter2;
-                continue;
-            }
- 
-            itemLen = item.length();
-            bool flag = false;
-            for(int idx = posPrev, n = text.length(); idx < n; ++idx){
-                item2 = _text.substr(idx, itemLen);
-                if(item.compare(item2) == 0){
-                    posPrev = idx + itemLen;
-                    flag = true;
-                    break;
-                }
-            }
-            if(!flag){
-                return false;
-            } 
-            posFilter = posFilter2;
+
+        if(*it != symbol) {
+            continue;
         }
-    } 
+        item = _filter.substr(posFilter, posFilter2 - 1 - posFilter);
+
+        if(item.empty()){
+            posFilter = posFilter2;
+            continue;
+        }
+
+        itemLen     = item.length();
+        bool flag   = false;
+
+        for(udiff_t idx = posPrev, n = text.length(); idx < n; ++idx)
+        {
+            item2 = _text.substr(idx, itemLen);
+            if(item.compare(item2) == 0) {
+                posPrev = idx + itemLen;
+                flag = true;
+                break;
+            }
+        }
+
+        if(!flag) {
+            return false;
+        } 
+        posFilter = posFilter2;
+    }
+
     return true;
 }
 
@@ -278,14 +306,14 @@ bool Algorithms::findIteratorFind(const tstring& text, const tstring& filter)
     tstring symbol  = _T("*");
 
     // to wildcards
-    tstring     item;
-    std::size_t itemPos     = 0;
-    std::size_t itemLeft    = 0;
-    std::size_t itemDelta   = 0;
+    tstring item;
+    udiff_t itemPos     = 0;
+    udiff_t itemLeft    = 0;
+    udiff_t itemDelta   = 0;
 
     // to words
-    std::size_t found;
-    std::size_t left        = 0;
+    udiff_t found;
+    udiff_t left = 0;
     for(tstring::const_iterator it = _filter.begin(); it != _filter.end(); ++it){
         item = *it;
         ++itemLeft;
@@ -316,13 +344,13 @@ bool Algorithms::findIteratorIterator(const tstring& text, const tstring& filter
     tstring symbol  = _T("*");
 
     tstring item;
-    std::size_t posFilter   = 0;
-    std::size_t posFilter2  = 0;
+    udiff_t posFilter   = 0;
+    udiff_t posFilter2  = 0;
     //---
     tstring item2;
-    std::size_t itemLen;
-    std::size_t posPrev = 0;
-    std::size_t idx;
+    udiff_t itemLen;
+    udiff_t posPrev = 0;
+    udiff_t idx;
     tstring::const_iterator iterLast = _text.begin();
     //---
 

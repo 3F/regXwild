@@ -67,9 +67,9 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
          */
         struct Item{
             tstring curr;
-            size_t pos;
-            size_t left;
-            size_t delta;
+            udiff_t pos;
+            udiff_t left;
+            udiff_t delta;
             Mask mask;
             tstring prev;
             Item(): pos(0), left(0), delta(0){};
@@ -79,8 +79,8 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
          * to words
          */
         struct Words{
-            size_t found;
-            size_t left;
+            udiff_t found;
+            udiff_t left;
             Words(): left(0){};
         };
 
@@ -89,7 +89,7 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
          *      _______
          * {word} ... {word}
          */
-        size_t _handlerInterval(Item& item, Words& words, const tstring& text);
+        udiff_t _handlerInterval(Item& item, Words& words, const tstring& text);
 
     private:
 

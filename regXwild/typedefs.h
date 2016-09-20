@@ -30,27 +30,29 @@ namespace net { namespace r_eg { namespace regXwild
 {
     using namespace std;
 
-    #ifdef UNICODE
+#ifdef UNICODE
 
-        typedef wstring tstring;
-        typedef wstringstream tstringStream;
+    typedef wstring tstring;
+    typedef wstringstream tstringStream;
 
-        //<tchar.h>
-        //typedef wchar_t TCHAR;
-        //#define _T(x)  L ## x
+    //<tchar.h>
+    //typedef wchar_t TCHAR;
+    //#define _T(x)  L ## x
 
-    #else
+#else
 
-        typedef string tstring;
-        typedef stringstream tstringStream;
+    typedef string tstring;
+    typedef stringstream tstringStream;
 
-        //<tchar.h>
-        //typedef char TCHAR;
-        //#define _T(x)  ## x
+    //<tchar.h>
+    //typedef char TCHAR;
+    //#define _T(x)  ## x
 
-    #endif
+#endif
+
+    typedef size_t udiff_t;
+    typedef ptrdiff_t diff_t;
 
     typedef vector<tstring> tstringList;
-    //typedef basic_regex<TCHAR> tregex;
 
 }}}

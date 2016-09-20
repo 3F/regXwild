@@ -48,8 +48,8 @@ namespace net { namespace r_eg { namespace regXwild {
 
         static tstring strReplace(const tstring& replace, const tstring& replacement, tstring str)
         {
-            size_t pos  = 0;
-            while((pos  = str.find(replace, pos)) != tstring::npos){
+            udiff_t pos = 0;
+            while((pos = str.find(replace, pos)) != tstring::npos){
                 str.replace(pos, replace.length(), replacement);
                 pos += replacement.length();
             }

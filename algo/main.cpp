@@ -22,10 +22,6 @@
 * THE SOFTWARE.
 */
 
-/*
-
-*/
-
 #include "stdafx.h"
 
 #include "Algorithms.h"

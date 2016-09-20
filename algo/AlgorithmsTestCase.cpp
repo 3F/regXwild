@@ -74,6 +74,12 @@ void AlgorithmsTestCase::analysis()
     //result: 10000: ~53ms
     analysis("main :: based on Iterator + Find: ", data, filter, lim, &Algorithms::main, alg);
 
+    //result: 10000: ~50ms
+    analysis("Final algorithm - EXT version: ", data, filter, lim, &Algorithms::finalExt, alg);
+
+    //result: 10000: ~50ms
+    analysis("Final algorithm - ESS version: ", data, filter, lim, &Algorithms::finalEss, alg);
+
     TRACE("\n-----------\n");
     
     //result: 10000: ~64063ms

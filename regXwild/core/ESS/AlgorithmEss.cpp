@@ -242,13 +242,13 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
     return true;
 }
 
-size_t AlgorithmEss::interval()
+udiff_t AlgorithmEss::interval()
 {
     // "#"
     if(item.mask.prev & SINGLE && (words.found - words.left) != 1)
     {
-        size_t len      = item.prev.length();
-        short int lPos  = words.found - len - item.overlay - 1;
+        udiff_t len = item.prev.length();
+        diff_t lPos = words.found - len - item.overlay - 1;
 
         // [pro]ject ... [pro]t[ection] -> [pro]<-#-ection
         if(lPos < 0 || _text.substr(lPos, len).compare(item.prev) != 0){
@@ -260,9 +260,9 @@ size_t AlgorithmEss::interval()
     // "?"
     if(item.mask.prev & ONE && (words.found - words.left) > 1)
     {
-        size_t len      = item.prev.length();
-        size_t lPosMax  = words.found - len;
-        size_t lPos     = lPosMax - item.overlay - 1;
+        udiff_t len     = item.prev.length();
+        udiff_t lPosMax = words.found - len;
+        udiff_t lPos    = lPosMax - item.overlay - 1;
 
         do{ // ????? - min<->max:
             if(_text.substr(lPos, len).compare(item.prev) == 0){
