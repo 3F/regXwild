@@ -60,7 +60,7 @@ namespace net { namespace r_eg { namespace regXwild {
 
         bool search(const tstring& text, const tstring& filter)
         {
-            return searchExt(text, filter);
+            return searchExt(text, filter, true);
         }
 
     protected:

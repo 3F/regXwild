@@ -29,14 +29,22 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
 
 #define WILDCARDS_SYMB_SLASHS _T("\\/") //both
 
-bool AlgorithmExt::main(const tstring& text, const tstring& filter)
+bool AlgorithmExt::main(const tstring& text, const tstring& filter, bool ignoreCase)
 {
     if(filter.empty()){
         return true;
     }
 
-    tstring _text   = _lowercase(text);
-    tstring _filter = _lowercase(filter); //if optimize(to outward): ~18ms
+    tstring _text, _filter;
+
+    if(ignoreCase) {
+        _text   = _lowercase(text);
+        _filter = _lowercase(filter); //if optimize(to outward): ~18ms
+    }
+    else {
+        _text   = text;
+        _filter = filter;
+    }
 
     //split-mode: at least one "|"
     bool split = _filter.find(MS_SPLIT) != tstring::npos; //if optimize(to outward): < 1ms

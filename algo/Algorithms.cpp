@@ -35,9 +35,9 @@ bool Algorithms::finalEss(const tstring& data, const tstring& filter/*, bool ign
     return searchEss(data, filter, true);
 }
 
-bool Algorithms::finalExt(const tstring& data, const tstring& filter)
+bool Algorithms::finalExt(const tstring& data, const tstring& filter/*, bool ignoreCase*/)
 {
-    return searchExt(data, filter);
+    return searchExt(data, filter, true);
 }
 
 /*

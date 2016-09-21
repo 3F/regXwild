@@ -23,9 +23,10 @@ The regXwild library exports the following functions (C-linkage):
     * To search substring in data with filter by the rules of EXT algorithm.
     * @param data Where to search.
     * @param filter The filter of comparison string.
+    * @param ignoreCase To check data with no case sensitive rules if true.
     * @return Returns true value if the data satisfies the condition of the filter.
     */
-    REGXWILD_API bool searchExt(const tstring& data, const tstring& filter);
+    REGXWILD_API bool searchExt(const tstring& data, const tstring& filter, bool ignoreCase);
 ```
 
 
@@ -88,6 +89,26 @@ searchEss(data, _T("new+7+system"));
 searchEss(data, _T("some project|open*and*star|system"));
 ...
 ```
+
+## License
+
+The [MIT License (MIT)](https://github.com/3F/regXwild/blob/master/LICENSE)
+
+```
+Copyright (c) 2013, 2014, 2016  Denis Kuzmin <entry.reg@gmail.com>
+```
+
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=entry%2ereg%40gmail%2ecom&lc=US&item_name=3F%2dOpenSource%20%5b%20github%2ecom%2f3F&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted)
+
+##
+
+### How to Get
+
+Available variants:
+
+* [/releases](https://github.com/3F/regXwild/releases) ( [latest](https://github.com/3F/regXwild/releases/latest) )
+* [Nightly builds](https://ci.appveyor.com/project/3Fs/regxwild/history) (`/artifacts` page). But remember: It can be unstable or not work at all. Use this for tests of latest changes.
+
 
 ## Speed comparison
 
@@ -181,63 +202,6 @@ MORE                  | ---        | ~44ms      | ---        | ~23ms
 SINGLE                | ---        | ~43ms      | ---        | ~22ms
 
 
-### sandbox
-
-*initially from my [sandbox](https://github.com/3F/sandbox)*
-
-```
-[Intel Core2 Duo P8400 @ 2.26GHz]:
+/[archive](https://github.com/3F/regXwild/wiki/archive-speedtest-sandbox)
 
 
-                                        |c icase          | без icase
-----------------------------------------|-----------------|-----------------------
-Iterator + Find                         | ~240ms (~222ms) | ~7ms
-Getline + Find                          | ~296ms (~278ms) | ~63ms
-Find + Find                             | ~250ms (~232ms) | ~17ms
-Iterator + Substr                       | ~370ms (~352ms) | ~137ms
-Iterator + Iterator                     | ~320ms (~302ms) | ~87ms
-----------------------------------------|-----------------|-----------------------
-regexp-c++11(regex_match! только ^str$) | ~970ms          | ~1163ms - среднее действ. выросло
-regexp-c++11(regex_search)              | ~85279ms        | ~16426ms
-regexp-c++11(regex_match c конечными .*)| ~91715ms        | ~19413ms - ограничение жадности для квантификатора
-                                        |                 |            дает сравнимые результаты
-----------------------------------------------------------------------------------
-
-Data:
-300 символов юникода, 10000 строк, Фильтр L"nime**haru*02*mkv"
-
-
-[Intel Core i7-3630QM @ 2.40GHz] - EXT vs ESS:
-
-Operation (+icase)                   | EXT             | ESS
--------------------------------------|-----------------|--------------------
-ANY                                  | ~119ms          | ~118ms
-ANYSP                                | ~124ms          | ~121ms
-ONE                                  | ~121ms          | ~120ms
-SPLIT                                | ~188ms          | ~188ms
-BEGIN                                |      ---        |  TODO
-END                                  |      ---        |  TODO
-MORE                                 |      ---        |  TODO
-SINGLE                               |      ---        |  TODO
-----------------------------------------------------------------------------
-```
-
-
-## License
-
-The [MIT License (MIT)](https://github.com/3F/regXwild/blob/master/LICENSE)
-
-```
-Copyright (c) 2013, 2014, 2016  Denis Kuzmin <entry.reg@gmail.com>
-```
-
-##
-
-### How to Get
-
-Available variants:
-
-TODO:
-
-
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=entry%2ereg%40gmail%2ecom&lc=US&item_name=3F%2dOpenSource%20%5b%20github%2ecom%2f3F&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted)

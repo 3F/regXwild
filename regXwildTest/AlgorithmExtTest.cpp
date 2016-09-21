@@ -8,6 +8,8 @@ using namespace net::r_eg::regXwild;
 
 namespace regXwildTest
 {
+    namespace regXwild = net::r_eg::regXwild;
+
     TEST_CLASS(AlgorithmExtTest)
     {
     public:
@@ -151,6 +153,26 @@ namespace regXwildTest
                 Assert::AreEqual(false, searchExt(_T("/new/user_myhid"), _T("myhid>?*??txt")));
             }
         }
+
+        TEST_METHOD(caseSensitiveTest1)
+        {
+            Assert::AreEqual(false, regXwild::searchExt(_T("system"), _T("syStem"), false));
+            Assert::AreEqual(true, regXwild::searchExt(_T("system"), _T("system"), false));
+            Assert::AreEqual(false, regXwild::searchExt(_T("syStem"), _T("system"), false));
+            Assert::AreEqual(true, regXwild::searchExt(_T("SYSTEM"), _T("SYSTEM"), false));
+
+            Assert::AreEqual(false, regXwild::searchExt(_T("system"), _T("sy*Stem"), false));
+            Assert::AreEqual(false, regXwild::searchExt(_T("system"), _T("syS*tem"), false));
+            Assert::AreEqual(true, regXwild::searchExt(_T("system"), _T("sy*stem"), false));
+        }
+
+    private:
+
+        bool searchExt(const tstring& data, const tstring& filter)
+        {
+            return regXwild::searchExt(data, filter, true);
+        }
+
     };
 
 }
