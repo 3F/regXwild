@@ -91,7 +91,7 @@
       "Mode": {
         "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
         "Type": "Script",
-        "Command": "$(odir  = \"bin/Releases/\")\r\n$(oraw  = \"bin\\raw\\$(Configuration)/\")\r\n\r\n#[$(pDir    = \"regXwild\")]\r\n#[var pVer  = #[File get(\".version\")]]\r\n\r\n#[IO replace.Regexp(\"$(pDir)/regXwildAPI.cpp\", \"(vsSBE.+?_T\\().+?;\", \"$1\\\"$(pVer)\\\");\")]\r\n",
+        "Command": "$(odir  = \"bin/Releases/\")\n$(oraw  = \"bin\\raw\\$(Configuration)/\")\n\n#[$(pDir    = \"regXwild\")]\n#[var pVer  = #[File get(\".version\")]]\n\n#[IO replace.Regexp(\"$(pDir)/regXwildAPI.cpp\", \"(vsSBE.+?_T\\().+?;\", \"$1\\\"$(pVer)\\\");\")]\n",
         "Command__": [
           "$(odir  = \"bin/Releases/\")",
           "$(oraw  = \"bin\\raw\\$(Configuration)/\")",
@@ -129,7 +129,7 @@
       "Mode": {
         "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
         "Type": "Script",
-        "Command": "#[try{ #[IO delete.directory(\"$(odir)\", true)] }catch{ }]\r\n\r\n#[IO copy.directory(\"\", \"$(odir)\", true)]\r\n\r\n#[7z pack.files(\r\n        { \r\n            \"$(oraw)algo.exe\", \r\n            \"$(oraw)regXwild.dll\",\r\n            \"$(oraw)regXwild.lib\",\r\n            \"$(oraw)regXwild.exp\",\r\n            \"$(oraw)regXwild.pdb\"\r\n        }, \r\n        \"$(odir)regXwild_[$(Configuration)][$(Platform)].zip\")]\r\n",
+        "Command": "#[try{ #[IO delete.directory(\"$(odir)\", true)] }catch{ }]\n\n#[IO copy.directory(\"\", \"$(odir)\", true)]\n\n#[7z pack.files(\n        { \n            \"$(oraw)algo.exe\", \n            \"$(oraw)regXwild.dll\",\n            \"$(oraw)regXwild.lib\",\n            \"$(oraw)regXwild.exp\",\n            \"$(oraw)regXwild.pdb\"\n        }, \n        \"$(odir)regXwild_v$(pVer)[$(Configuration)][$(Platform)].zip\")]\n",
         "Command__": [
           "#[try{ #[IO delete.directory(\"$(odir)\", true)] }catch{ }]",
           "",
@@ -143,7 +143,7 @@
           "            \"$(oraw)regXwild.exp\",",
           "            \"$(oraw)regXwild.pdb\"",
           "        }, ",
-          "        \"$(odir)regXwild_[$(Configuration)][$(Platform)].zip\")]",
+          "        \"$(odir)regXwild_v$(pVer)[$(Configuration)][$(Platform)].zip\")]",
           ""
         ]
       }

@@ -11,7 +11,20 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "algo", "algo\algo.vcxproj",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{571DA510-79F7-48C0-9024-9632E16353DF}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		.version = .version
+		build.bat = build.bat
+		gnt.core = gnt.core
+		LICENSE = LICENSE
+		packages.config = packages.config
+		Readme.md = Readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{9390762C-88DF-4FF5-BD50-CCF3694BDFD9}"
+	ProjectSection(SolutionItems) = preProject
+		tools\gnt.bat = tools\gnt.bat
+		tools\msbuild.bat = tools\msbuild.bat
+		tools\powershell.bat = tools\powershell.bat
 	EndProjectSection
 EndProject
 Global
