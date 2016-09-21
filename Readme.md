@@ -1,7 +1,5 @@
 
-*from my [sandbox](https://github.com/3F/sandbox)*
-
-Fast and powerful wildcards ! `*,|,?,^,$,+,#,>` to replace slow regexp engine and more...
+Fast and powerful wildcards ! `*,|,?,^,$,+,#,>` in addition to slow regexp engine and more...
 
 [![Build status](https://ci.appveyor.com/api/projects/status/92y03ofto5fbb60a/branch/master?svg=true)](https://ci.appveyor.com/project/3Fs/regxwild/branch/master)
 [![release-src](https://img.shields.io/github/release/3F/regXwild.svg)](https://github.com/3F/regXwild/releases/latest)
@@ -93,50 +91,99 @@ searchEss(data, _T("some project|open*and*star|system"));
 
 ## Speed comparison
 
-*Release/Win32* - *(`algo` subproject as tester of main algorithms)*
+**Please note:** 
 
-**Please note:** **+icase** means that a search engine should ignore case sensitivity when matching the filter(pattern) within the searched string, i.e. `ignoreCase = true`. Without this, all below would be much more faster, and final algorithms EXT & ESS should be **< 1ms** !
+* **+icase** means that a search engine should ignore case sensitivity when matching the filter(pattern) within the searched string, i.e. `ignoreCase = true`. Without this, all below would be much more faster, and final algorithms EXT & ESS should be **< 1ms** (see table below)
+* All results below can be different for other machines and you should look only difference (in milliseconds) between algorithms for specific target.
+    * To calculate data as in table below you should run - `algo.exe`
+    
+### Procedure of testing
+
+* Used the `algo` subproject as tester of main algorithms (*Release cfg - x32 & x64*)
+* Mainly, calculation is simple and also uses average as `i = (t2 - t1); (sum(i) / n)` where:
+    * **i** - one iteration for searching by filter. Represents a delta of time `t2 - t1`
+    * **n** - the number of repeats of searching to get average.
+
+e.g.:
+
+```cpp
+{
+    Meter meter;
+    int results = 0;
+
+    for(int total = 0; total < average; ++total)
+    {
+        meter.start();
+        for(int i = 0; i < iterations; ++i)
+        {
+            if((alg.*method)(data, filter)) {
+                //...
+            }
+        }
+        results += meter.delta();
+    }
+
+    TRACE((results / average) << "ms");
+}
+```
+
+for regex it also prepares additional `basic_regex` from filter - one for all iterations:
+
+```cpp
+meter.start();
+
+auto rfilter = tregex(
+    filter,
+    regex_constants::icase | regex_constants::optimize
+);
+
+results += meter.delta();
+...
+```
+
+### Example
 
 Test Data:
 
-* 340 Symbols of Unicode, 10000 iterations ( 340 x 10000 ), Filter: `L"nime**haru*02*Magica"`
+* 340 Symbols of Unicode, 10000 iterations, Filter: `L"nime**haru*02*Magica"`
 
 
-                                          | +icase      
-------------------------------------------|-------------
-Find + Find                               | ~58ms       
-Iterator + Find                           | ~57ms       
-Getline + Find                            | ~59ms       
-Iterator + Substr                         | ~165ms      
-Iterator + Iterator                       | ~136ms      
-main :: based on Iterator + Find          | ~53ms       
-------------------------------------------|-------------
-Final algorithm - EXT version:            | ~50ms       
-Final algorithm - ESS version:            | ~50ms       
-------------------------------------------|-------------
-regexp-c++11(regex_search)                | ~64063ms    
-regexp-c++11(only as ^match$ like a '==') | ~34ms       
-regexp-c++11(regex_match with endings .*) | ~64329ms    
+                                          | +icase [x32]| +icase [x64]
+------------------------------------------|-------------|-------------
+Find + Find                               | ~58ms       | ~44ms       
+Iterator + Find                           | ~57ms       | ~46ms       
+Getline + Find                            | ~59ms       | ~54ms       
+Iterator + Substr                         | ~165ms      | ~132ms      
+Iterator + Iterator                       | ~136ms      | ~118ms      
+main :: based on Iterator + Find          | ~53ms       | ~45ms       
+                                          |             |             
+**Final algorithm - EXT version:**        | **~50ms**   | **~26ms**   
+**Final algorithm - ESS version:**        | **~50ms**   | **~27ms**   
+                                          |             |             
+regexp-c++11(regex_search)                | ~59309ms    | ~53334ms    
+regexp-c++11(only as ^match$ like a '==') | ~12ms       | ~5ms        
+regexp-c++11(regex_match with endings .*) | ~59503ms    | ~53817ms    
 
 
 **ESS vs EXT**
 
-Test Data: ( 350 x 10000 )
+* 350 Symbols of Unicode, 10000 iterations
 
-Operation (+icase)                   | EXT         | ESS
--------------------------------------|-------------|----------
-ANY                                  | ~54ms       | ~55ms
-ANYSP                                | ~60ms       | ~59ms
-ONE                                  | ~56ms       | ~56ms
-SPLIT                                | ~92ms       | ~94ms
-BEGIN                                | ---         | ~38ms
-END                                  | ---         | ~39ms
-MORE                                 | ---         | ~44ms
-SINGLE                               | ---         | ~43ms
+Operation (+icase)    | EXT  [x32] | ESS  [x32] | EXT  [x64] | ESS  [x64] 
+----------------------|------------|------------|------------|------------
+ANY                   | ~54ms      | ~55ms      | ~32ms      | ~34ms
+ANYSP                 | ~60ms      | ~59ms      | ~37ms      | ~38ms
+ONE                   | ~56ms      | ~56ms      | ~33ms      | ~35ms
+SPLIT                 | ~92ms      | ~94ms      | ~58ms      | ~63ms
+BEGIN                 | ---        | ~38ms      | ---        | ~19ms
+END                   | ---        | ~39ms      | ---        | ~21ms
+MORE                  | ---        | ~44ms      | ---        | ~23ms
+SINGLE                | ---        | ~43ms      | ---        | ~22ms
 
 
 ### sandbox
 
+*initially from my [sandbox](https://github.com/3F/sandbox)*
 
 ```
 [Intel Core2 Duo P8400 @ 2.26GHz]:
@@ -152,7 +199,8 @@ Iterator + Iterator                     | ~320ms (~302ms) | ~87ms
 ----------------------------------------|-----------------|-----------------------
 regexp-c++11(regex_match! только ^str$) | ~970ms          | ~1163ms - среднее действ. выросло
 regexp-c++11(regex_search)              | ~85279ms        | ~16426ms
-regexp-c++11(regex_match c конечными .*)| ~91715ms        | ~19413ms - ограничение жадности для квантификатора дает сравнимые результаты
+regexp-c++11(regex_match c конечными .*)| ~91715ms        | ~19413ms - ограничение жадности для квантификатора
+                                        |                 |            дает сравнимые результаты
 ----------------------------------------------------------------------------------
 
 Data:
@@ -172,7 +220,6 @@ END                                  |      ---        |  TODO
 MORE                                 |      ---        |  TODO
 SINGLE                               |      ---        |  TODO
 ----------------------------------------------------------------------------
-( 350 x 10000 )
 ```
 
 

@@ -68,13 +68,12 @@ namespace net { namespace r_eg { namespace regXwild {
 
     };
 
-    class AlgorithmEssCmpExt
+    class EssAndExt
     {
     public:
 
         /**
          * ESS vs EXT
-         * simple speed comparison
          */
         void compare()
         {

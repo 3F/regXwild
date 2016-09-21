@@ -43,7 +43,7 @@ bool Algorithms::finalExt(const tstring& data, const tstring& filter)
 /*
     Please note: all below, was before the main library as a draft of primary way.
                  I already don't remember of all my ideas from 2013 thus I leave it 'as is'.
-                 Use the final implementation of regXwild from main library.
+                 Look the final implementations of regXwild from main library.
 */
 
 // seems early EXT variant:
@@ -182,14 +182,14 @@ bool Algorithms::main(const tstring& text, const tstring& filter)
     return true;
 }
 
-bool Algorithms::findRegexpCpp11m(const tstring& text, const tstring& filter)
+bool Algorithms::findRegexpCpp11m(const tstring& text, const tregex& filter)
 {
-    return std::regex_match(text, tregex(filter, std::tr1::regex_constants::icase));
+    return regex_match(text, filter);
 }
 
-bool Algorithms::findRegexpCpp11s(const tstring& text, const tstring& filter)
+bool Algorithms::findRegexpCpp11s(const tstring& text, const tregex& filter)
 {
-    return std::regex_search(text, tregex(filter, std::tr1::regex_constants::icase));
+    return regex_search(text, filter);
 }
 
 bool Algorithms::findGetlineFind(const tstring& text, const tstring& filter)
@@ -389,6 +389,102 @@ bool Algorithms::findIteratorIterator(const tstring& text, const tstring& filter
         }
     } 
     return true;
+}
+
+
+/* TODO: All tests below was before main library to support main logic from errors and typos, 
+        i.e. it used only for current algo !  
+
+        All Unit-tests see in regXwildTest.
+*/
+
+void Algorithms::mainTest()
+{
+    assertMainAny();
+    assertMainSplit();
+    assertMainOne();
+}
+
+void Algorithms::assertMainAny()
+{
+    tstring data = _T("new tes;ted project-12, and 75_protection of various systems.");
+
+    // should be found:
+    assert(main(data, _T("protection of various")) == true);      // __ __ __
+    assert(main(data, _T("pro*system")) == true);                 // __ * __
+    assert(main(data, _T("*pro*system*")) == true);               // * __ * __ *
+    assert(main(data, _T("project**various")) == true);           // __ ** __
+    assert(main(data, _T("new*7*systems")) == true);              // __ * __ * __
+    assert(main(data, _T("")) == true);                           // empty
+
+    // should not be found:
+    assert(main(data, _T("project 12 and")) == false);            // __ _x_ __
+    assert(main(data, _T("new*express")) == false);               // __ * _x_
+    assert(main(data, _T("tes*ting*project")) == false);          // __ * _x_ * __
+    assert(main(data, _T("testing*project*and")) == false);       // _x_ * __ * __
+    assert(main(data, _T("now*is*completely")) == false);         // _x_ * _x_ * _x_
+    assert(main(data, _T("protection*project*new")) == false);    // backwards __ * __ * __
+    assert(main(data, _T("**open**close")) == false);             // ** _x_ ** _x_
+}
+
+void Algorithms::assertMainSplit()
+{
+    tstring data = _T("new tes;ted project-12, and 75_protection of various systems.");
+
+    // should be found:
+    assert(main(data, _T("protection of|new tes")) == true);       // __ __ | __ __
+    assert(main(data, _T("some project|of various")) == true);     // _x_ __ | __ __
+    assert(main(data, _T("various systems|new 237")) == true);     // __ __ | __ _x_
+    assert(main(data, _T("pro*12|new*system")) == true);           // __ * __ | __ *__
+    assert(main(data, _T("ject*new|pro*tems")) == true);           // __ * _x_ | __ * __
+    assert(main(data, _T("pro*tems|seems*and")) == true);          // __ * __ | _x_ * __
+    assert(main(data, _T("project*|new")) == true);                // __ *| __
+    assert(main(data, _T("various*|zeep")) == true);               // __ * | _x_
+    assert(main(data, _T("goo*|systems")) == true);                // _x_ * | __
+    assert(main(data, _T("project||protect")) == true);            // __ || __
+    assert(main(data, _T("|new||and|")) == true);                  // | __ || __ |
+    assert(main(data, _T("|fail|system")) == true);                // | _x_ | __
+    assert(main(data, _T("|12||true||")) == true);                 // | __ || _x_ ||
+    assert(main(data, _T("above|new|with")) == true);              // _x_ | __ | _x_
+    assert(main(data, _T("project**|new")) == true);               // __ **| __
+    assert(main(data, _T("zoom|*pro")) == true);                   // _x_ | * __
+    assert(main(data, _T("zoom|*pro**")) == true);                 // _x_ | *__ **
+    assert(main(data, _T("||")) == true);                          //empty
+    assert(main(data, _T("")) == true);                            //empty
+    assert(main(data, _T("||zoom||out||")) == true);               // ||_x_ || _x_ ||
+    assert(main(data, _T("|*|")) == true);                         // |*|
+    assert(main(data, _T("|long-term")) == true);                  // | _x_
+    assert(main(data, _T("long-term|")) == true);                  // _x_ |
+    assert(main(data, _T("*|*")) == true);                         // *|*
+    assert(main(data, _T("*|")) == true);                          // *|
+    assert(main(data, _T("|*")) == true);                          // |*
+    assert(main(data, _T("seems|open*and*star|*system")) == true); // _x_ | _x_ * __ * _x_ | * __
+
+    // should not be found:        
+    assert(main(data, _T("above|fails|with")) == false);           // _x_ | _x_ | _x_
+    assert(main(data, _T("let*proj|project*deep")) == false);      // _x_ * __ | __ * _x_
+    assert(main(data, _T("operator*|*zeep")) == false);            // _x_ *|* _x_
+    assert(main(data, _T("some project|let*various")) == false);   // _x_ __ | _x_* __
+    assert(main(data, _T("some project|various*zoom")) == false);  // _x_ __ | __ * _x_
+    assert(main(data, _T("be|pen*and*star|*my*system")) == false); // _x_ | _x_ * __ * _x_ | * _x_ * __
+}
+
+void Algorithms::assertMainOne()
+{
+    tstring data = _T("new tes;ted project-12, and 75_protection of various systems.");
+
+    // should be found:
+    assert(main(data, _T("new*pro?ection")) == true);              // __ * [pro]ject ... [pro]t[ection]
+    assert(main(data, _T("????")) == true);
+    assert(main(data, _T("project?12")) == true);
+    assert(main(_T("system-17 fee also offers protection"), _T("system?17")) == true);
+
+    // should not be found:
+    assert(main(data, _T("?pro?12?|seems?7")) == false);
+    assert(main(_T("system, installments range from 2 to 17"), _T("system?17")) == false);
+    assert(main(_T("system17 fee also"), _T("system?17")) == false);
+    assert(main(_T("my system17 fee also"), _T("system?17")) == false);
+    assert(main(_T("system_-17 fee also"), _T("system?17")) == false);
 }
 
 }}}

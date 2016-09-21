@@ -31,8 +31,11 @@ namespace net { namespace r_eg { namespace regXwild
 {
     using namespace std;
 
+    typedef const tstring& refstr_t;
+
     typedef basic_regex<TCHAR> tregex;
 
-#define TRACE(str){ std::cout << str; }
+#define TRACE(str){ cout << str; }
+#define DELTAINFO(str, num){ cout << str; (num < 1)? cout << "< 1" : cout << "~" << num; cout << "ms\n"; }
 
 }}}

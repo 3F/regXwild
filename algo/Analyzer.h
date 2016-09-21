@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 * The MIT License (MIT)
 *
@@ -22,70 +24,27 @@
 * THE SOFTWARE.
 */
 
-#include "stdafx.h"
-
+#include "typedefs.h"
 #include "Algorithms.h"
-#include "Analyzer.h"
-#include "EssAndExt.h"
 
-using namespace net::r_eg::regXwild;
-
-
-int _tmain(int argc, _TCHAR* argv[])
+namespace net { namespace r_eg { namespace regXwild
 {
+    typedef bool(Algorithms::*talgo)(refstr_t, refstr_t);
+    typedef bool(Algorithms::*tralgo)(refstr_t, const tregex&);
 
-    TRACE("https://github.com/3F/regXwild \n\n");
+    class Analyzer
+    {
+    public:
 
-#if _DEBUG
+        void calc();
+        void calc(const string& label, refstr_t data, refstr_t filter, int iterations, talgo method, Algorithms& alg, int average);
+        void calc(const string& label, refstr_t data, refstr_t filter, int iterations, tralgo method, Algorithms& alg, int average);
 
-    Algorithms alg;
-    alg.mainTest();
+    protected:
 
-    TRACE("\nUse Release cfg. and try to execute outside VS IDE algo.exe for comparison speed.\n\n");
+        void tryAlgo(refstr_t data, refstr_t filter, int iterations, int average);
+        void tryRegex(refstr_t data, refstr_t filter, int iterations, int average);
 
-#else
+    };
 
-    /*
-
-    Find + Find: ~58ms
-    Iterator + Find: ~57ms
-    Getline + Find: ~59ms
-    Iterator + Substr: ~165ms
-    Iterator + Iterator: ~136ms
-    main :: based on Iterator + Find: ~53ms
-
-    -----------
-    regexp-c++11(search): ~64063ms
-    regexp-c++11(only as ^match$ like a '=='): ~34ms
-    regexp-c++11(match*): ~64329ms
-    [EXT::ANY] =~ 54ms
-    [ESS::ANY] =~ 55ms
-    [EXT::ANYSP] =~ 60ms
-    [ESS::ANYSP] =~ 59ms
-    [EXT::ONE] =~ 56ms
-    [ESS::ONE] =~ 56ms
-    [EXT::SPLIT] =~ 92ms
-    [ESS::SPLIT] =~ 94ms
-    [ESS::BEGIN] =~ 38ms
-    [ESS::END] =~ 39ms
-    [ESS::MORE] =~ 44ms
-    [ESS::SINGLE] =~ 43ms
-
-    */
-
-    Analyzer anl;
-    anl.calc();
-
-    TRACE("\n------\nESS vs EXT:\n\n");
-
-    EssAndExt eve;
-    eve.compare();
-
-    TRACE("\ndone.\n\n");
-
-#endif
-
-    system("pause");
-    return 0;
-}
-
+}}}
