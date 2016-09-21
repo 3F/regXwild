@@ -34,4 +34,14 @@ namespace net { namespace r_eg { namespace regXwild
         return alg.main(data, filter);
     }
 
+    /**
+    * To get current version of regXwild library as a string.
+    * @return Returns version as Major.Minor [.Revision] etc.
+    */
+    REGXWILD_API const TCHAR* versionString()
+    {
+        // Please use '.version' file. It will be automatically updated by vssbe script.
+        return /*vsSBE*/_T("0.0.1"); //TODO: additional structure etc. of version data.
+    }
+
 }}}

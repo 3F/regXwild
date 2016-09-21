@@ -45,4 +45,10 @@ namespace net { namespace r_eg { namespace regXwild
     */
     REGXWILD_API bool searchExt(const tstring& data, const tstring& filter);
 
+    /**
+    * To get current version of regXwild library as a string.
+    * @return Returns version as Major.Minor [.Revision] etc.
+    */
+    REGXWILD_API const TCHAR* versionString();
+
 }}}

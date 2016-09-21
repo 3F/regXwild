@@ -3,7 +3,8 @@
 
 Fast and powerful wildcards ! `*,|,?,^,$,+,#,>` to replace slow regexp engine and more...
 
-[![Build status](https://ci.appveyor.com/api/projects/status/qc1d3ofsso8fd67t/branch/master?svg=true)](https://ci.appveyor.com/project/3Fs/regxwild/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/92y03ofto5fbb60a/branch/master?svg=true)](https://ci.appveyor.com/project/3Fs/regxwild/branch/master)
+[![release-src](https://img.shields.io/github/release/3F/regXwild.svg)](https://github.com/3F/regXwild/releases/latest)
 [![License](https://img.shields.io/badge/License-MIT-74A5C2.svg)](https://github.com/3F/regXwild/blob/master/LICENSE)
 
 ## C/C++ API
@@ -94,9 +95,11 @@ searchEss(data, _T("some project|open*and*star|system"));
 
 *Release/Win32* - *(`algo` subproject as tester of main algorithms)*
 
+**Please note:** **+icase** means that a search engine should ignore case sensitivity when matching the filter(pattern) within the searched string, i.e. `ignoreCase = true`. Without this, all below would be much more faster, and final algorithms EXT & ESS should be **< 1ms** !
+
 Test Data:
 
-* 340 Symbols of Unicode, 10000 iterations ( 340 x 10000 ), Filter: L"nime**haru*02*Magica"
+* 340 Symbols of Unicode, 10000 iterations ( 340 x 10000 ), Filter: `L"nime**haru*02*Magica"`
 
 
                                           | +icase      
@@ -107,6 +110,7 @@ Getline + Find                            | ~59ms
 Iterator + Substr                         | ~165ms      
 Iterator + Iterator                       | ~136ms      
 main :: based on Iterator + Find          | ~53ms       
+------------------------------------------|-------------
 Final algorithm - EXT version:            | ~50ms       
 Final algorithm - ESS version:            | ~50ms       
 ------------------------------------------|-------------

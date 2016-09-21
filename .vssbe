@@ -1,0 +1,161 @@
+﻿{
+  "Header": {
+    "_": [
+      " Current file requires a vsSolutionBuildEvent engine.",
+      " Free plugin for Visual Studio or MSBuild Tools:",
+      "  * http://visualstudiogallery.msdn.microsoft.com/0d1dbfd7-ed8a-40af-ae39-281bfeca2334/",
+      "  * http://vssbe.r-eg.net",
+      " Feedback: entry.reg@gmail.com"
+    ],
+    "Compatibility": "0.9"
+  },
+  "Components": [
+    {
+      "ClassName": "InternalComponent",
+      "Enabled": true
+    },
+    {
+      "ClassName": "UserVariableComponent",
+      "Enabled": true
+    },
+    {
+      "ClassName": "TryComponent",
+      "Enabled": true
+    },
+    {
+      "ClassName": "OWPComponent",
+      "Enabled": true
+    },
+    {
+      "ClassName": "NuGetComponent",
+      "Enabled": true
+    },
+    {
+      "ClassName": "FunctionComponent",
+      "Enabled": true
+    },
+    {
+      "ClassName": "FileComponent",
+      "Enabled": true
+    },
+    {
+      "ClassName": "DTEComponent",
+      "Enabled": true
+    },
+    {
+      "ClassName": "BuildComponent",
+      "Enabled": true
+    },
+    {
+      "ClassName": "BoxComponent",
+      "Enabled": true
+    },
+    {
+      "ClassName": "SevenZipComponent",
+      "Enabled": true
+    },
+    {
+      "ClassName": "ConditionComponent",
+      "Enabled": true
+    },
+    {
+      "ClassName": "MSBuildComponent",
+      "Enabled": true
+    },
+    {
+      "ClassName": "CommentComponent",
+      "Enabled": true
+    }
+  ],
+  "PreBuild": [
+    {
+      "Enabled": true,
+      "Name": "Act",
+      "Caption": "Update version of regXwild",
+      "SupportMSBuild": true,
+      "SupportSBEScripts": true,
+      "IgnoreIfBuildFailed": false,
+      "BuildType": "Common",
+      "Confirmation": false,
+      "ToConfiguration": [],
+      "ExecutionOrder": {
+        "$type": "net.r_eg.vsSBE.Events.ExecutionOrder[], vsSolutionBuildEvent",
+        "$values": []
+      },
+      "Process": {
+        "$type": "net.r_eg.vsSBE.Events.EventProcess, vsSolutionBuildEvent",
+        "Waiting": true,
+        "Hidden": true,
+        "TimeLimit": 30
+      },
+      "Mode": {
+        "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
+        "Type": "Script",
+        "Command": "$(odir  = \"bin/Releases/\")\r\n$(oraw  = \"bin\\raw\\$(Configuration)/\")\r\n\r\n#[$(pDir    = \"regXwild\")]\r\n#[var pVer  = #[File get(\".version\")]]\r\n\r\n#[IO replace.Regexp(\"$(pDir)/regXwildAPI.cpp\", \"(vsSBE.+?_T\\().+?;\", \"$1\\\"$(pVer)\\\");\")]\r\n",
+        "Command__": [
+          "$(odir  = \"bin/Releases/\")",
+          "$(oraw  = \"bin\\raw\\$(Configuration)/\")",
+          "",
+          "#[$(pDir    = \"regXwild\")]",
+          "#[var pVer  = #[File get(\".version\")]]",
+          "",
+          "#[IO replace.Regexp(\"$(pDir)/regXwildAPI.cpp\", \"(vsSBE.+?_T\\().+?;\", \"$1\\\"$(pVer)\\\");\")]",
+          ""
+        ]
+      }
+    }
+  ],
+  "PostBuild": [
+    {
+      "Enabled": true,
+      "Name": "ActPack",
+      "Caption": "create zip of regXwild",
+      "SupportMSBuild": true,
+      "SupportSBEScripts": true,
+      "IgnoreIfBuildFailed": true,
+      "BuildType": "Common",
+      "Confirmation": false,
+      "ToConfiguration": [],
+      "ExecutionOrder": {
+        "$type": "net.r_eg.vsSBE.Events.ExecutionOrder[], vsSolutionBuildEvent",
+        "$values": []
+      },
+      "Process": {
+        "$type": "net.r_eg.vsSBE.Events.EventProcess, vsSolutionBuildEvent",
+        "Waiting": true,
+        "Hidden": true,
+        "TimeLimit": 30
+      },
+      "Mode": {
+        "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
+        "Type": "Script",
+        "Command": "#[try{ #[IO delete.directory(\"$(odir)\", true)] }catch{ }]\r\n\r\n#[IO copy.directory(\"\", \"$(odir)\", true)]\r\n\r\n#[7z pack.files(\r\n        { \r\n            \"$(oraw)algo.exe\", \r\n            \"$(oraw)regXwild.dll\",\r\n            \"$(oraw)regXwild.lib\",\r\n            \"$(oraw)regXwild.exp\",\r\n            \"$(oraw)regXwild.pdb\"\r\n        }, \r\n        \"$(odir)regXwild_[$(Configuration)][$(Platform)].zip\")]\r\n",
+        "Command__": [
+          "#[try{ #[IO delete.directory(\"$(odir)\", true)] }catch{ }]",
+          "",
+          "#[IO copy.directory(\"\", \"$(odir)\", true)]",
+          "",
+          "#[7z pack.files(",
+          "        { ",
+          "            \"$(oraw)algo.exe\", ",
+          "            \"$(oraw)regXwild.dll\",",
+          "            \"$(oraw)regXwild.lib\",",
+          "            \"$(oraw)regXwild.exp\",",
+          "            \"$(oraw)regXwild.pdb\"",
+          "        }, ",
+          "        \"$(odir)regXwild_[$(Configuration)][$(Platform)].zip\")]",
+          ""
+        ]
+      }
+    }
+  ],
+  "CancelBuild": [],
+  "WarningsBuild": [],
+  "ErrorsBuild": [],
+  "OWPBuild": [],
+  "Transmitter": [],
+  "CommandEvent": [],
+  "Logging": [],
+  "SlnOpened": [],
+  "SlnClosed": []
+}
