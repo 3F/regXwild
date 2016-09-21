@@ -35,14 +35,18 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
  */
 bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignoreCase)
 {
-    if(filter.empty()){
+    if(filter.empty()) {
         return true;
     }
 
-    if(ignoreCase){
+    if(ignoreCase) {
         //TODO: [perfomance] by single char for iterator
         _text   = _lowercase(text);
         _filter = _lowercase(filter); //: ~18ms
+    }
+    else {
+        _text   = text;
+        _filter = filter;
     }
 
     item.reset();

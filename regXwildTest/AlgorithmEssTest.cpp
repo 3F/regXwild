@@ -9,6 +9,8 @@ using namespace net::r_eg::regXwild;
 
 namespace regXwildTest
 {
+    namespace regXwild = net::r_eg::regXwild;
+
     TEST_CLASS(AlgorithmEssTest)
     {
     public:
@@ -974,6 +976,25 @@ namespace regXwildTest
                     }
                 }
             }
+        }
+
+        TEST_METHOD(caseSensitiveTest1)
+        {
+            Assert::AreEqual(false, regXwild::searchEss(_T("system"), _T("syStem"), false));
+            Assert::AreEqual(true, regXwild::searchEss(_T("system"), _T("system"), false));
+            Assert::AreEqual(false, regXwild::searchEss(_T("syStem"), _T("system"), false));
+            Assert::AreEqual(true, regXwild::searchEss(_T("SYSTEM"), _T("SYSTEM"), false));
+
+            Assert::AreEqual(false, regXwild::searchEss(_T("system"), _T("sy*Stem"), false));
+            Assert::AreEqual(false, regXwild::searchEss(_T("system"), _T("syS*tem"), false));
+            Assert::AreEqual(true, regXwild::searchEss(_T("system"), _T("sy*stem"), false));
+        }
+
+    private:
+
+        bool searchEss(const tstring& data, const tstring& filter)
+        {
+            return regXwild::searchEss(data, filter, true);
         }
 
     };
