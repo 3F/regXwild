@@ -1,0 +1,10 @@
+- - - - -
+regXwild
+_ _ _ _ _
+
+
+[v1.0]
+
+    * First public release.
+      regXwild - Fast and powerful wildcards ! in addition to slow regex engine and more...
+      The initial non-public versions from 2013-2014 you can find in sandbox.

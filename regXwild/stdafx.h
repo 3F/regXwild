@@ -9,8 +9,4 @@
 #include <tchar.h>
 #include <string>
 #include <vector>
-//#include <regex>
-//#include <sstream>
-//#include <iostream>
-//#include <assert.h>
 #include <algorithm>

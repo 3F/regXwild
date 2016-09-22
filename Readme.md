@@ -1,5 +1,5 @@
 
-Fast and powerful wildcards ! `*,|,?,^,$,+,#,>` in addition to slow regexp engine and more...
+[regXwild](https://github.com/3F/regXwild) - Fast and powerful wildcards ! `*,|,?,^,$,+,#,>` in addition to slow regex engine and more...
 
 [![Build status](https://ci.appveyor.com/api/projects/status/92y03ofto5fbb60a/branch/master?svg=true)](https://ci.appveyor.com/project/3Fs/regxwild/branch/master)
 [![release-src](https://img.shields.io/github/release/3F/regXwild.svg)](https://github.com/3F/regXwild/releases/latest)
@@ -29,16 +29,14 @@ The regXwild library exports the following functions (C-linkage):
     REGXWILD_API bool searchExt(const tstring& data, const tstring& filter, bool ignoreCase);
 ```
 
+Calling Convention: **__cdecl**
+
 
 ## C# & .NET
 
 For .NET users: use [Conari](https://github.com/3F/Conari) engine for work as you like:
 
-
-TODO:
-
 ```csharp
-
 using(var l = new ConariL("regXwild.dll")) {
     // ...    
 }
@@ -66,7 +64,7 @@ enum MetaSymbols
 EXT algorithm:
 
 ```cpp
-enum MetaSymbols{
+enum MetaSymbols {
     MS_ANY      = _T('*'),
     MS_ANYSP    = _T('>'), //as [^/\\]+
     MS_SPLIT    = _T('|'),
@@ -81,7 +79,7 @@ enum MetaSymbols{
 All features of regXwild you can see with Unit-Tests - regXwildTest subproject.
 
 ```cpp
-searchEss(datam, _T("^main*is ok$"));
+searchEss(data, _T("^main*is ok$"));
 searchEss(data, _T("^new*pro?ection"));
 searchEss(data, _T("pro*system"));
 searchEss(data, _T("sys###s"));
@@ -169,7 +167,7 @@ Test Data:
 * 340 Symbols of Unicode, 10000 iterations, Filter: `L"nime**haru*02*Magica"`
 
 
-                                          | +icase [x32]| +icase [x64]
+ algorithms (see impl. from `algo`)       | +icase [x32]| +icase [x64]
 ------------------------------------------|-------------|-------------
 Find + Find                               | ~58ms       | ~44ms       
 Iterator + Find                           | ~57ms       | ~46ms       
@@ -203,5 +201,3 @@ SINGLE                | ---        | ~43ms      | ---        | ~22ms
 
 
 /[archive](https://github.com/3F/regXwild/wiki/archive-speedtest-sandbox)
-
-

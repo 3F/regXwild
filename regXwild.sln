@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{571DA510-7
 		.gitignore = .gitignore
 		.version = .version
 		build.bat = build.bat
+		changelog.txt = changelog.txt
 		gnt.core = gnt.core
 		LICENSE = LICENSE
 		packages.config = packages.config
