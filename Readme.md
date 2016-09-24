@@ -11,14 +11,16 @@ The regXwild library exports the following functions (C-linkage):
 
 ```cpp
     /**
-    * To search substring in data with filter by the rules of ESS algorithm. 
+    * To search substring in data with filter by the rules of ESS algorithm.
     * @param data Where to search.
     * @param filter The filter of comparison string.
     * @param ignoreCase To check data with no case sensitive rules if true.
     * @return Returns true value if the data satisfies the condition of the filter.
     */
-    REGXWILD_API bool searchEss(const tstring& data, const tstring& filter, bool ignoreCase);
+    REGXWILD_API bool searchEssC(const TCHAR* data, const TCHAR* filter, bool ignoreCase);
     
+    REGXWILD_API bool searchEss(const tstring& data, const tstring& filter, bool ignoreCase);
+
     /**
     * To search substring in data with filter by the rules of EXT algorithm.
     * @param data Where to search.
@@ -26,6 +28,8 @@ The regXwild library exports the following functions (C-linkage):
     * @param ignoreCase To check data with no case sensitive rules if true.
     * @return Returns true value if the data satisfies the condition of the filter.
     */
+    REGXWILD_API bool searchExtC(const TCHAR* data, const TCHAR* filter, bool ignoreCase);
+    
     REGXWILD_API bool searchExt(const tstring& data, const tstring& filter, bool ignoreCase);
 ```
 
@@ -38,7 +42,10 @@ For .NET users: use [Conari](https://github.com/3F/Conari) engine for work as yo
 
 ```csharp
 using(var l = new ConariL("regXwild.dll")) {
-    // ...    
+...
+    if(l.DLR.searchEssC<bool>((WCharPtr)data, (WCharPtr)filter, false)) {
+        // ...
+    }
 }
 ```
 
