@@ -28,18 +28,16 @@
 
     #ifdef REGXWILD_EXPORTS
 
-        // C linkage for comfortable work via Conari etc.
-        // https://github.com/3F/Conari/issues/3
-        #define REGXWILD_API extern "C" __declspec(dllexport)
+        #define REGXWILD_API TLINKAGE __declspec(dllexport)
 
     #else
 
-        #define REGXWILD_API __declspec(dllimport)
+        #define REGXWILD_API TLINKAGE __declspec(dllimport)
 
     #endif
 
 #else
 
-    #define REGXWILD_API  extern
+    #define REGXWILD_API TLINKAGE 
 
 #endif

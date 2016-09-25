@@ -26,7 +26,8 @@
 
 #include "stdafx.h"
 
-#define REGXWILD_AS_DLL
-#define REGXWILD_EXPORTS
+// C linkage for comfortable work via Conari etc.
+// https://github.com/3F/Conari/issues/3
+#define TLINKAGE extern "C"
 
 #include "declspec.h"
