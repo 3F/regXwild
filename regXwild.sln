@@ -19,6 +19,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{571DA510-7
 		LICENSE = LICENSE
 		packages.config = packages.config
 		Readme.md = Readme.md
+		regXwild.nuspec = regXwild.nuspec
+		regXwild_native.targets = regXwild_native.targets
+		regXwild_net.targets = regXwild_net.targets
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{9390762C-88DF-4FF5-BD50-CCF3694BDFD9}"

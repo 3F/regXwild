@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>regXwild</id>
+    <version>1.0.0</version>
+    <title>[ regXwild ] Fast and powerful wildcards ! Native C/C++ and .NET</title>
+    <authors>github.com/3F/regXwild</authors>
+    <owners>reg</owners>
+    <licenseUrl>https://github.com/3F/regXwild/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/3F/regXwild</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+    
+        regXwild - Fast and powerful wildcards ! 
+        [ Native C/C++ and .NET ]
+        
+        `*,|,?,^,$,+,#,&gt;` in addition to slow regex engine and more...
+        
+        This package contains both support of unmanaged and managed code for your projects.
+        
+        * native_$(Platform): regXwild.dll, regXwild.lib, regXwild.exp, include\*.h
+        * net40: Conari.dll
+        ~
+        _ _ _ _ _ _
+        Source code and all details here: https://github.com/3F/regXwild
+        
+        ~~~~~~~~
+        Alternative to get it:
+        ==========================================
+        msbuild gnt.core /p:ngpackages="regXwild/1.0.0"
+        ==========================================
+        * https://github.com/3F/GetNuTool         
+        
+    </description>
+    <summary>Fast and powerful wildcards ! Native C/C++ and .NET :: `*,|,?,^,$,+,#,&gt;` in addition to slow regex engine and more... https://github.com/3F/regXwild</summary>
+    <tags>wildcards extended-wildcards strings text filter search match search-in-text regex fast-regex powerful-wildcards regexp native cpp c .net net40 c# csharp Conari regXwild</tags>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright (c) 2013, 2014, 2016  Denis Kuzmin [entry.reg@gmail.com] </copyright>
+    <references>
+      <reference file="Conari.dll" /> <!-- binder for work with regXwild in .NET -->
+    </references>
+  </metadata>
+</package>

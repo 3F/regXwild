@@ -36,9 +36,11 @@ The regXwild library exports the following functions (C-linkage):
 Calling Convention: **__cdecl**
 
 
-## C# & .NET
+## How to for C# & .NET
 
-For .NET users: use [Conari](https://github.com/3F/Conari) engine for work as you like:
+The regXwild library was written on **native C++**, but you can also flexible use it in .NET world via [Conari](https://github.com/3F/Conari) engine !
+
+For .NET users, use [this](https://github.com/3F/Conari) for work as you like:
 
 ```csharp
 using(var l = new ConariL("regXwild.dll")) {

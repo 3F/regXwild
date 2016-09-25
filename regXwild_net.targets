@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- For .NET projects -->
+  
+  <PropertyGroup>
+    <regXwildRootPkg>$(MSBuildThisFileDirectory)..\..\</regXwildRootPkg> <!-- [root]\build\net\regXwild.targets -->
+    <ConariLibNetV>net40</ConariLibNetV>
+    <PathToBin_regXwild>$(regXwildRootPkg)lib\$(ConariLibNetV)\</PathToBin_regXwild>
+  </PropertyGroup>
+  
+  <ItemGroup Condition="Exists('$(PathToBin_regXwild)\native_Win32')">
+      <regXwildLib Include="$(PathToBin_regXwild)\native_Win32\*.dll" />
+      <regXwildLib Include="$(PathToBin_regXwild)\native_Win32\*.pdb" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="Exists('$(PathToBin_regXwild)\native_x64')">
+      <regXwildLib Include="$(PathToBin_regXwild)\native_x64\*.dll" />
+      <regXwildLib Include="$(PathToBin_regXwild)\native_x64\*.pdb" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="Exists('$(PathToBin_regXwild)\native_x86')">
+      <regXwildLib Include="$(PathToBin_regXwild)\native_x86\*.dll" />
+      <regXwildLib Include="$(PathToBin_regXwild)\native_x86\*.pdb" />
+  </ItemGroup>
+  
+  <Target Name="regXwildk_AfterBuild" AfterTargets="AfterBuild">
+    <Copy SourceFiles="@(regXwildLib)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+  </Target>
+
+</Project>

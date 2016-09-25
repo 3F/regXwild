@@ -70,7 +70,7 @@
   "PreBuild": [
     {
       "Enabled": true,
-      "Name": "Act",
+      "Name": "ActVersion",
       "Caption": "Update version of regXwild",
       "SupportMSBuild": true,
       "SupportSBEScripts": true,
@@ -91,16 +91,20 @@
       "Mode": {
         "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
         "Type": "Script",
-        "Command": "$(odir  = \"bin/Releases/\")\n$(oraw  = \"bin\\raw\\$(Configuration)/\")\n\n#[$(pDir    = \"regXwild\")]\n#[var pVer  = #[File get(\".version\")]]\n\n#[IO replace.Regexp(\"$(pDir)/regXwildAPI.cpp\", \"(vsSBE.+?_T\\().+?;\", \"$1\\\"$(pVer)\\\");\")]\n",
+        "Command": "$(oraw      = \"bin\\raw\")\n$(orawApp   = \"$(oraw)\\$(Configuration)\\$(Platform)/\")\n$(odir      = \"bin/Releases/\")\n$(onupkg    = \"bin/nupkg/\")\n\n#[$(pDir    = \"regXwild\")]\n#[var pVer  = #[File get(\".version\")]]\n\n#[IO replace.Regexp(\"$(pDir)/regXwildAPI.cpp\", \"(vsSBE.+?_T\\().+?;\", \"$1\\\"$(pVer)\\\");\")]\n\n#[IO replace.Regexp(\"regXwild.nuspec\", \"<version>.+?</version>\", \"<version>$(pVer)</version>\")]\n#[IO replace.Regexp(\"regXwild.nuspec\", \"\\\"regXwild/[0-9.]+\\\"\", \"\\\"regXwild/$(pVer)\\\"\")]",
         "Command__": [
-          "$(odir  = \"bin/Releases/\")",
-          "$(oraw  = \"bin\\raw\\$(Configuration)/\")",
+          "$(oraw      = \"bin\\raw\")",
+          "$(orawApp   = \"$(oraw)\\$(Configuration)\\$(Platform)/\")",
+          "$(odir      = \"bin/Releases/\")",
+          "$(onupkg    = \"bin/nupkg/\")",
           "",
           "#[$(pDir    = \"regXwild\")]",
           "#[var pVer  = #[File get(\".version\")]]",
           "",
           "#[IO replace.Regexp(\"$(pDir)/regXwildAPI.cpp\", \"(vsSBE.+?_T\\().+?;\", \"$1\\\"$(pVer)\\\");\")]",
-          ""
+          "",
+          "#[IO replace.Regexp(\"regXwild.nuspec\", \"<version>.+?</version>\", \"<version>$(pVer)</version>\")]",
+          "#[IO replace.Regexp(\"regXwild.nuspec\", \"\\\"regXwild/[0-9.]+\\\"\", \"\\\"regXwild/$(pVer)\\\"\")]"
         ]
       }
     }
@@ -109,7 +113,7 @@
     {
       "Enabled": true,
       "Name": "ActPack",
-      "Caption": "create zip of regXwild",
+      "Caption": "Create zip archive of regXwild",
       "SupportMSBuild": true,
       "SupportSBEScripts": true,
       "IgnoreIfBuildFailed": true,
@@ -129,7 +133,7 @@
       "Mode": {
         "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
         "Type": "Script",
-        "Command": "#[try{ #[IO delete.directory(\"$(odir)\", true)] }catch{ }]\n\n#[IO copy.directory(\"\", \"$(odir)\", true)]\n#[IO copy.file(\n        {\n            \"$(pDir)\\declspec.h\",\n            \"$(pDir)\\regXwild.h\",\n            \"$(pDir)\\regXwildAPI.h\",\n            \"$(pDir)\\regXwildConf.h\",\n            \"$(pDir)\\typedefs.h\"\n        }, \n        \"$(oraw)\\headers\",\n        true)]\n        \n#[IO copy.file({ \"Readme.md\", \"LICENSE\", \"changelog.txt\" }, \"$(oraw)\", true)]\n\n#[7z pack.files(\n        {\n            \"$(oraw)\\headers\\*.h\",\n            \"$(oraw)algo.exe\", \n            \"$(oraw)regXwild.dll\",\n            \"$(oraw)regXwild.lib\",\n            \"$(oraw)regXwild.exp\",\n            \"$(oraw)regXwild.pdb\",\n            \"$(oraw)Readme.md\", \n            \"$(oraw)LICENSE\",\n            \"$(oraw)changelog.txt\"\n        }, \n        \"$(odir)regXwild_v$(pVer)[$(Configuration)-$(Platform)][$(CharacterSet:regXwild)].zip\")]\n",
+        "Command": "#[try{ #[IO delete.directory(\"$(odir)\", true)] }catch{ }]\n\n#[IO copy.directory(\"\", \"$(odir)\", true)]\n#[IO copy.file(\n        {\n            \"$(pDir)\\declspec.h\",\n            \"$(pDir)\\regXwild.h\",\n            \"$(pDir)\\regXwildAPI.h\",\n            \"$(pDir)\\regXwildConf.h\",\n            \"$(pDir)\\typedefs.h\"\n        }, \n        \"$(orawApp)\\include\",\n        true)]\n        \n#[IO copy.file({ \"Readme.md\", \"LICENSE\", \"changelog.txt\" }, \"$(oraw)\", true)]\n\n#[7z pack.files(\n        {\n            \"$(oraw)\\Readme.md\", \n            \"$(oraw)\\LICENSE\",\n            \"$(oraw)\\changelog.txt\",\n            \"$(orawApp)\\include\\*.h\",\n            \"$(orawApp)algo.exe\", \n            \"$(orawApp)regXwild.dll\",\n            \"$(orawApp)regXwild.lib\",\n            \"$(orawApp)regXwild.exp\",\n            \"$(orawApp)regXwild.pdb\"\n        }, \n        \"$(odir)regXwild_v$(pVer)[$(Configuration)-$(Platform)][$(CharacterSet:regXwild)].zip\")]\n",
         "Command__": [
           "#[try{ #[IO delete.directory(\"$(odir)\", true)] }catch{ }]",
           "",
@@ -142,25 +146,147 @@
           "            \"$(pDir)\\regXwildConf.h\",",
           "            \"$(pDir)\\typedefs.h\"",
           "        }, ",
-          "        \"$(oraw)\\headers\",",
+          "        \"$(orawApp)\\include\",",
           "        true)]",
           "        ",
           "#[IO copy.file({ \"Readme.md\", \"LICENSE\", \"changelog.txt\" }, \"$(oraw)\", true)]",
           "",
           "#[7z pack.files(",
           "        {",
-          "            \"$(oraw)\\headers\\*.h\",",
-          "            \"$(oraw)algo.exe\", ",
-          "            \"$(oraw)regXwild.dll\",",
-          "            \"$(oraw)regXwild.lib\",",
-          "            \"$(oraw)regXwild.exp\",",
-          "            \"$(oraw)regXwild.pdb\",",
-          "            \"$(oraw)Readme.md\", ",
-          "            \"$(oraw)LICENSE\",",
-          "            \"$(oraw)changelog.txt\"",
+          "            \"$(oraw)\\Readme.md\", ",
+          "            \"$(oraw)\\LICENSE\",",
+          "            \"$(oraw)\\changelog.txt\",",
+          "            \"$(orawApp)\\include\\*.h\",",
+          "            \"$(orawApp)algo.exe\", ",
+          "            \"$(orawApp)regXwild.dll\",",
+          "            \"$(orawApp)regXwild.lib\",",
+          "            \"$(orawApp)regXwild.exp\",",
+          "            \"$(orawApp)regXwild.pdb\"",
           "        }, ",
           "        \"$(odir)regXwild_v$(pVer)[$(Configuration)-$(Platform)][$(CharacterSet:regXwild)].zip\")]",
           ""
+        ]
+      }
+    },
+    {
+      "Enabled": true,
+      "Name": "ActNupkg",
+      "Caption": "Prepare regXwild for NuGet",
+      "SupportMSBuild": true,
+      "SupportSBEScripts": true,
+      "IgnoreIfBuildFailed": true,
+      "BuildType": "Common",
+      "Confirmation": false,
+      "ToConfiguration": [],
+      "ExecutionOrder": {
+        "$type": "net.r_eg.vsSBE.Events.ExecutionOrder[], vsSolutionBuildEvent",
+        "$values": []
+      },
+      "Process": {
+        "$type": "net.r_eg.vsSBE.Events.EventProcess, vsSolutionBuildEvent",
+        "Waiting": true,
+        "Hidden": true,
+        "TimeLimit": 30
+      },
+      "Mode": {
+        "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
+        "Type": "Script",
+        "Command": "#[try{ #[IO delete.directory(\"$(onupkg)\", true)] }catch{ }]\n\n#[$(ConariNetV = \"net40\")]\n#[$(onupkgBin = \"$(onupkg)lib\\$(ConariNetV)\\native_$(Platform)\\\\\")]\n\n#[IO copy.directory(\"$(orawApp)\\include\", \"$(onupkgBin)include\", true)]\n#[IO copy.file({\n            \"$(orawApp)algo.exe\", \n            \"$(orawApp)regXwild.dll\",\n            \"$(orawApp)regXwild.lib\",\n            \"$(orawApp)regXwild.exp\",\n            \"$(orawApp)regXwild.pdb\"\n        }, \n        \"$(onupkgBin)\", true)]\n        \n#[IO copy.file({ \n            \"regXwild.nuspec\", \n            \"Readme.md\", \n            \"LICENSE\", \n            \"changelog.txt\" \n        }, \n        \"$(onupkg)\", true)]\n\n#[IO copy.directory(\"\", \"$(onupkg)build\\native\", true)]\n#[IO copy.file(\"regXwild_native.targets\", \"$(onupkg)build\\native/regXwild.targets\", true)]\n\n#[IO copy.directory(\"\", \"$(onupkg)build\\$(ConariNetV)\", true)]\n#[IO copy.file(\"regXwild_net.targets\", \"$(onupkg)build\\$(ConariNetV)/regXwild.targets\", true)]\n",
+        "Command__": [
+          "#[try{ #[IO delete.directory(\"$(onupkg)\", true)] }catch{ }]",
+          "",
+          "#[$(ConariNetV = \"net40\")]",
+          "#[$(onupkgBin = \"$(onupkg)lib\\$(ConariNetV)\\native_$(Platform)\\\\\")]",
+          "",
+          "#[IO copy.directory(\"$(orawApp)\\include\", \"$(onupkgBin)include\", true)]",
+          "#[IO copy.file({",
+          "            \"$(orawApp)algo.exe\", ",
+          "            \"$(orawApp)regXwild.dll\",",
+          "            \"$(orawApp)regXwild.lib\",",
+          "            \"$(orawApp)regXwild.exp\",",
+          "            \"$(orawApp)regXwild.pdb\"",
+          "        }, ",
+          "        \"$(onupkgBin)\", true)]",
+          "        ",
+          "#[IO copy.file({ ",
+          "            \"regXwild.nuspec\", ",
+          "            \"Readme.md\", ",
+          "            \"LICENSE\", ",
+          "            \"changelog.txt\" ",
+          "        }, ",
+          "        \"$(onupkg)\", true)]",
+          "",
+          "#[IO copy.directory(\"\", \"$(onupkg)build\\native\", true)]",
+          "#[IO copy.file(\"regXwild_native.targets\", \"$(onupkg)build\\native/regXwild.targets\", true)]",
+          "",
+          "#[IO copy.directory(\"\", \"$(onupkg)build\\$(ConariNetV)\", true)]",
+          "#[IO copy.file(\"regXwild_net.targets\", \"$(onupkg)build\\$(ConariNetV)/regXwild.targets\", true)]",
+          ""
+        ]
+      }
+    },
+    {
+      "Enabled": true,
+      "Name": "ActConari",
+      "Caption": "Packing with GetNuTool ...",
+      "SupportMSBuild": true,
+      "SupportSBEScripts": true,
+      "IgnoreIfBuildFailed": true,
+      "BuildType": "Common",
+      "Confirmation": false,
+      "ToConfiguration": [],
+      "ExecutionOrder": {
+        "$type": "net.r_eg.vsSBE.Events.ExecutionOrder[], vsSolutionBuildEvent",
+        "$values": []
+      },
+      "Process": {
+        "$type": "net.r_eg.vsSBE.Events.EventProcess, vsSolutionBuildEvent",
+        "Waiting": true,
+        "Hidden": true,
+        "TimeLimit": 30
+      },
+      "Mode": {
+        "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
+        "Type": "Script",
+        "Command": "#[IO scall(\"Conari.bat\", \"\", 500)]\n\n#[try { \n    #[IO copy.directory(\"Conari\\Conari\\bin\\Release\", \"$(onupkgBin)../\", true)]\n}\ncatch(err, msg){\n    #[IO writeLine(STDOUT): #[$(msg)] - #[$(err)]]\n}]",
+        "Command__": [
+          "#[IO scall(\"Conari.bat\", \"\", 500)]",
+          "",
+          "#[try { ",
+          "    #[IO copy.directory(\"Conari\\Conari\\bin\\Release\", \"$(onupkgBin)../\", true)]",
+          "}",
+          "catch(err, msg){",
+          "    #[IO writeLine(STDOUT): #[$(msg)] - #[$(err)]]",
+          "}]"
+        ]
+      }
+    },
+    {
+      "Enabled": true,
+      "Name": "ActNuGet",
+      "Caption": "Final packing - regXwild + Conari",
+      "SupportMSBuild": true,
+      "SupportSBEScripts": true,
+      "IgnoreIfBuildFailed": true,
+      "BuildType": "Common",
+      "Confirmation": false,
+      "ToConfiguration": [],
+      "ExecutionOrder": {
+        "$type": "net.r_eg.vsSBE.Events.ExecutionOrder[], vsSolutionBuildEvent",
+        "$values": []
+      },
+      "Process": {
+        "$type": "net.r_eg.vsSBE.Events.EventProcess, vsSolutionBuildEvent",
+        "Waiting": true,
+        "Hidden": true,
+        "TimeLimit": 30
+      },
+      "Mode": {
+        "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
+        "Type": "Script",
+        "Command": "#[NuGet gnt.raw(\"/t:pack /p:ngin=\\\"$(onupkg)\\\" /p:ngout=\\\"$(odir)\\\"\")]",
+        "Command__": [
+          "#[NuGet gnt.raw(\"/t:pack /p:ngin=\\\"$(onupkg)\\\" /p:ngout=\\\"$(odir)\\\"\")]"
         ]
       }
     }
