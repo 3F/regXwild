@@ -4,8 +4,9 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/92y03ofto5fbb60a/branch/master?svg=true)](https://ci.appveyor.com/project/3Fs/regxwild/branch/master)
 [![release-src](https://img.shields.io/github/release/3F/regXwild.svg)](https://github.com/3F/regXwild/releases/latest)
 [![License](https://img.shields.io/badge/License-MIT-74A5C2.svg)](https://github.com/3F/regXwild/blob/master/LICENSE)
+[![NuGet package](https://img.shields.io/nuget/v/regXwild.svg)](https://www.nuget.org/packages/regXwild/) 
 
-## C/C++ API
+## Native C/C++ API
 
 The regXwild library exports the following functions (C-linkage):
 
@@ -36,9 +37,9 @@ The regXwild library exports the following functions (C-linkage):
 Calling Convention: **__cdecl**
 
 
-## How to for C# & .NET
+## .NET Platform & C#
 
-The regXwild library was written on **native C++**, but you can also flexible use it in .NET world via [Conari](https://github.com/3F/Conari) engine !
+The regXwild library was written on **native C++**, but you can also use it flexibly in .NET world via [Conari](https://github.com/3F/Conari) engine !
 
 For .NET users, use [this](https://github.com/3F/Conari) for work as you like:
 
@@ -48,6 +49,23 @@ using(var l = new ConariL("regXwild.dll")) {
     if(l.DLR.searchEssC<bool>((WCharPtr)data, (WCharPtr)filter, false)) {
         // ...
     }
+}
+```
+
+## Easy to start even for C++
+
+v1.1+ also distributed via NuGet package (*How to Get* - below).
+
+For this method you can add this library **for both type** of your projects (Native projects ~ C/C++ and for .NET projects like C# etc.) in one click.
+
+```cpp
+#include "regXwildAPI.h"
+
+using namespace net::r_eg::regXwild;
+
+...
+if(searchEssC(_T("regXwild"), _T("reg?wild"), true)) {
+    // ...
 }
 ```
 
@@ -113,6 +131,9 @@ Copyright (c) 2013, 2014, 2016  Denis Kuzmin <entry.reg@gmail.com>
 
 Available variants:
 
+* NuGet PM: `Install-Package regXwild`
+* [GetNuTool](https://github.com/3F/GetNuTool): `msbuild gnt.core /p:ngpackages="regXwild"` or [gnt](https://github.com/3F/GetNuTool/releases/download/v1.5/gnt.bat) /p:ngpackages="regXwild"
+* NuGet Commandline: `nuget install regXwild`
 * [/releases](https://github.com/3F/regXwild/releases) ( [latest](https://github.com/3F/regXwild/releases/latest) )
 * [Nightly builds](https://ci.appveyor.com/project/3Fs/regxwild/history) (`/artifacts` page). But remember: It can be unstable or not work at all. Use this for tests of latest changes.
 

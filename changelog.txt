@@ -2,6 +2,16 @@
 regXwild
 _ _ _ _ _
 
+[v1.1]
+
+    CHANGED: Updated API:
+            +REGXWILD_API bool searchEssC(const TCHAR* data, const TCHAR* filter, bool ignoreCase);
+            +REGXWILD_API bool searchExtC(const TCHAR* data, const TCHAR* filter, bool ignoreCase);
+    
+    FIXED: Headers for C linkage and removed REGXWILD_EXPORTS from conf.
+    NEW: Added Conari engine for work in .NET
+         https://github.com/3F/Conari
+         Use our NuGet package for Native C/C++ & .NET projects.
 
 [v1.0]
 
