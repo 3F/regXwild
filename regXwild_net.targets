@@ -10,22 +10,18 @@
   </PropertyGroup>
   
   <ItemGroup Condition="Exists('$(PathToBin_regXwild)\native_Win32')">
-      <regXwildLib Include="$(PathToBin_regXwild)\native_Win32\*.dll" />
-      <regXwildLib Include="$(PathToBin_regXwild)\native_Win32\*.pdb" />
+      <regXwildLib32 Include="$(PathToBin_regXwild)\native_Win32\*.dll" />
+      <regXwildLib32 Include="$(PathToBin_regXwild)\native_Win32\*.pdb" />
   </ItemGroup>
   
   <ItemGroup Condition="Exists('$(PathToBin_regXwild)\native_x64')">
-      <regXwildLib Include="$(PathToBin_regXwild)\native_x64\*.dll" />
-      <regXwildLib Include="$(PathToBin_regXwild)\native_x64\*.pdb" />
-  </ItemGroup>
-  
-  <ItemGroup Condition="Exists('$(PathToBin_regXwild)\native_x86')">
-      <regXwildLib Include="$(PathToBin_regXwild)\native_x86\*.dll" />
-      <regXwildLib Include="$(PathToBin_regXwild)\native_x86\*.pdb" />
+      <regXwildLib64 Include="$(PathToBin_regXwild)\native_x64\*.dll" />
+      <regXwildLib64 Include="$(PathToBin_regXwild)\native_x64\*.pdb" />
   </ItemGroup>
   
   <Target Name="regXwildk_AfterBuild" AfterTargets="AfterBuild">
-    <Copy SourceFiles="@(regXwildLib)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+    <Copy SourceFiles="@(regXwildLib32)" DestinationFolder="$(TargetDir)\x32" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+    <Copy SourceFiles="@(regXwildLib64)" DestinationFolder="$(TargetDir)\x64" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
   </Target>
 
 </Project>

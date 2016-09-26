@@ -31,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{9390762C
 		tools\powershell.bat = tools\powershell.bat
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "snet", "snet\snet.csproj", "{12B25935-229F-4128-B66B-7561A77ABC54}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -63,6 +65,14 @@ Global
 		{7571CD36-4A3C-446F-96B1-951261274B78}.Release|Win32.Build.0 = Release|Win32
 		{7571CD36-4A3C-446F-96B1-951261274B78}.Release|x64.ActiveCfg = Release|x64
 		{7571CD36-4A3C-446F-96B1-951261274B78}.Release|x64.Build.0 = Release|x64
+		{12B25935-229F-4128-B66B-7561A77ABC54}.Debug|Win32.ActiveCfg = Debug|x86
+		{12B25935-229F-4128-B66B-7561A77ABC54}.Debug|Win32.Build.0 = Debug|x86
+		{12B25935-229F-4128-B66B-7561A77ABC54}.Debug|x64.ActiveCfg = Debug|x64
+		{12B25935-229F-4128-B66B-7561A77ABC54}.Debug|x64.Build.0 = Debug|x64
+		{12B25935-229F-4128-B66B-7561A77ABC54}.Release|Win32.ActiveCfg = Release|x86
+		{12B25935-229F-4128-B66B-7561A77ABC54}.Release|Win32.Build.0 = Release|x86
+		{12B25935-229F-4128-B66B-7561A77ABC54}.Release|x64.ActiveCfg = Release|x64
+		{12B25935-229F-4128-B66B-7561A77ABC54}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

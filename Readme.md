@@ -37,7 +37,7 @@ The regXwild library exports the following functions (C-linkage):
 Calling Convention: **__cdecl**
 
 
-## .NET Platform & C#
+## .NET Platform & C# ##
 
 The regXwild library was written on **native C++**, but you can also use it flexibly in .NET world via [Conari](https://github.com/3F/Conari) engine !
 
@@ -228,6 +228,26 @@ BEGIN                 | ---        | ~38ms      | ---        | ~19ms
 END                   | ---        | ~39ms      | ---        | ~21ms
 MORE                  | ---        | ~44ms      | ---        | ~23ms
 SINGLE                | ---        | ~43ms      | ---        | ~22ms
+
+
+**For .NET users via [Conari](https://github.com/3F/Conari) engine:**
+
+*Same test Data & Filter: 10000 iterations* 
+
+*x32 or x64 regXwild (Unicode)*
+
+
+ algorithms  (see impl. from `snet`)       | +icase [x32]*| +icase [x64]*
+-------------------------------------------|--------------|-------------        
+regXwild via Conari (Lambda) - ESS         | **~1032ms**  | **~1418ms**
+regXwild via Conari (DLR) - ESS            | ~1238ms      | ~1609ms
+regXwild via Conari (Lambda) - EXT         | **~1117ms**  | **~1457ms**
+regXwild via Conari (DLR) - EXT            | ~1246ms      | ~1601ms
+                                           |              | 
+.NET Regex engine [Compiled]               | ~38310ms     | ~37242ms
+.NET Regex engine [Compiled]{only ^match$} | < 1ms        | ~3ms
+.NET Regex engine                          | ~31565ms     | ~30975ms
+.NET Regex engine {only ^match$}           | < 1ms        | ~1ms
 
 
 /[archive](https://github.com/3F/regXwild/wiki/archive-speedtest-sandbox)
