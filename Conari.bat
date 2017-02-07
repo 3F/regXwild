@@ -22,14 +22,20 @@ goto exit
 
 :build
 
+setlocal
+
 cd Conari
 echo.  
 
-if exist "bin\\" goto exit
+set _cfgConari=Release
 
-set msbuild=tools/msbuild
+if exist "bin\\%_cfgConari%\\raw" goto exit
 
-call %msbuild% gnt.core /p:ngconfig="packages.config" /nologo /v:m /m:4
-call %msbuild% "Conari.sln" /verbosity:minimal /l:"packages\vsSBE.CI.MSBuild\bin\CI.MSBuild.dll" /m:4 /t:Build /p:Configuration=Release
+call build.bat %_cfgConari% >nul
+
+endlocal
+goto exit
+
 
 :exit
+exit /B 0

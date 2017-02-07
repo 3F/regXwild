@@ -3,7 +3,7 @@
   <metadata>
     <id>regXwild</id>
     <version>1.1.0</version>
-    <title>[ regXwild ] wildcards C/C++ &amp; .NET - Fast &amp; powerful !</title>
+    <title>[ regXwild ] wildcards Native C/C++ &amp; .NET</title>
     <authors>github.com/3F/regXwild</authors>
     <owners>reg</owners>
     <licenseUrl>https://github.com/3F/regXwild/blob/master/LICENSE</licenseUrl>
@@ -25,7 +25,7 @@
         Source code and all details here: https://github.com/3F/regXwild
         
         ~~~~~~~~
-        Alternative to get it:
+        Get it via GetNuTool:
         ==========================================
         msbuild gnt.core /p:ngpackages="regXwild/1.1.0"
         ==========================================

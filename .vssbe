@@ -1,11 +1,11 @@
 ﻿{
   "Header": {
     "_": [
-      " Current file requires a vsSolutionBuildEvent engine.",
+      " This requires vsSolutionBuildEvent engine.",
       " Free plugin for Visual Studio or MSBuild Tools:",
-      "  * http://visualstudiogallery.msdn.microsoft.com/0d1dbfd7-ed8a-40af-ae39-281bfeca2334/",
-      "  * http://vssbe.r-eg.net",
-      " Feedback: entry.reg@gmail.com"
+      "  * https://github.com/3F/vsSolutionBuildEvent",
+      "  * https://visualstudiogallery.msdn.microsoft.com/0d1dbfd7-ed8a-40af-ae39-281bfeca2334/",
+      " Feedback: github.com/3F  or entry.reg@gmail.com"
     ],
     "Compatibility": "0.9"
   },
@@ -248,9 +248,10 @@
       "Mode": {
         "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
         "Type": "Script",
-        "Command": "#[IO scall(\"Conari.bat\", \"\", 500)]\n\n#[try { \n    #[IO copy.directory(\"Conari\\Conari\\bin\\Release\", \"$(onupkgBin)../\", true)]\n}\ncatch(err, msg){\n    #[IO writeLine(STDOUT): #[$(msg)] - #[$(err)]]\n}]",
+        "Command": "#[IO writeLine(STDOUT):Preparing of Conari engine...]\n#[IO sout(\"Conari.bat\", \"\", 400)]\n\n#[try { \n    #[IO copy.directory(\"Conari\\Conari\\bin\\Release\", \"$(onupkgBin)../\", true)]\n}\ncatch(err, msg){\n    #[IO writeLine(STDOUT): #[$(msg)] - #[$(err)]]\n}]",
         "Command__": [
-          "#[IO scall(\"Conari.bat\", \"\", 500)]",
+          "#[IO writeLine(STDOUT):Preparing of Conari engine...]",
+          "#[IO sout(\"Conari.bat\", \"\", 400)]",
           "",
           "#[try { ",
           "    #[IO copy.directory(\"Conari\\Conari\\bin\\Release\", \"$(onupkgBin)../\", true)]",

@@ -1,5 +1,7 @@
 
-[regXwild](https://github.com/3F/regXwild) - Fast and powerful wildcards ! `*,|,?,^,$,+,#,>` in addition to slow regex engine and more...
+**[regXwild](https://github.com/3F/regXwild)** - Fast and powerful wildcards ! `*,|,?,^,$,+,#,>` in addition to slow regex engine and more...
+
+Unique algorithms that implemented in native C++ & optional .NET support (via [Conari engine](https://github.com/3F/Conari)).
 
 [![Build status](https://ci.appveyor.com/api/projects/status/92y03ofto5fbb60a/branch/master?svg=true)](https://ci.appveyor.com/project/3Fs/regxwild/branch/master)
 [![release-src](https://img.shields.io/github/release/3F/regXwild.svg)](https://github.com/3F/regXwild/releases/latest)
@@ -71,7 +73,7 @@ if(searchEssC(_T("regXwild"), _T("reg?wild"), true)) {
 
 ## Meta symbols
 
-ESS algorithm:
+ESS version (improvement of EXT version):
 
 ```cpp
 enum MetaSymbols
@@ -88,7 +90,7 @@ enum MetaSymbols
 ```
 
 
-EXT algorithm:
+EXT version (initial, more simplified):
 
 ```cpp
 enum MetaSymbols {
@@ -96,8 +98,6 @@ enum MetaSymbols {
     MS_ANYSP    = _T('>'), //as [^/\\]+
     MS_SPLIT    = _T('|'),
     MS_ONE      = _T('?'),
-    MS_START    = _T('^'),
-    MS_END      = _T('$'),
 };
 ```
 
@@ -132,7 +132,7 @@ Copyright (c) 2013, 2014, 2016, 2017  Denis Kuzmin <entry.reg@gmail.com>
 Available variants:
 
 * NuGet PM: `Install-Package regXwild`
-* [GetNuTool](https://github.com/3F/GetNuTool): `msbuild gnt.core /p:ngpackages="regXwild"` or [gnt](https://github.com/3F/GetNuTool/releases/download/v1.5/gnt.bat) /p:ngpackages="regXwild"
+* [GetNuTool](https://github.com/3F/GetNuTool): `msbuild gnt.core /p:ngpackages="regXwild"` or [gnt](https://github.com/3F/GetNuTool/releases/download/v1.6/gnt.bat) /p:ngpackages="regXwild"
 * NuGet Commandline: `nuget install regXwild`
 * [/releases](https://github.com/3F/regXwild/releases) ( [latest](https://github.com/3F/regXwild/releases/latest) )
 * [Nightly builds](https://ci.appveyor.com/project/3Fs/regxwild/history) (`/artifacts` page). But remember: It can be unstable or not work at all. Use this for tests of latest changes.
@@ -190,7 +190,7 @@ results += meter.delta();
 ...
 ```
 
-### Example
+### Sample of speed
 
 Test Data:
 
@@ -230,24 +230,27 @@ MORE                  | ---        | ~44ms      | ---        | ~23ms
 SINGLE                | ---        | ~43ms      | ---        | ~22ms
 
 
-**For .NET users via [Conari](https://github.com/3F/Conari) engine:**
+**For .NET users via [Conari](https://github.com/3F/Conari) engine:** 
 
 *Same test Data & Filter: 10000 iterations* 
 
 *x32 or x64 regXwild (Unicode)*
 
+* Updated with new improved speed via [Conari engine - v1.3](https://github.com/3F/Conari/commit/4f14cecbcea75895a510954c2cd402ee0e9e3521)
 
- algorithms  (see impl. from `snet`)       | +icase [x32]*| +icase [x64]*
--------------------------------------------|--------------|-------------        
-regXwild via Conari (Lambda) - ESS         | **~1032ms**  | **~1418ms**
-regXwild via Conari (DLR) - ESS            | ~1238ms      | ~1609ms
-regXwild via Conari (Lambda) - EXT         | **~1117ms**  | **~1457ms**
-regXwild via Conari (DLR) - EXT            | ~1246ms      | ~1601ms
-                                           |              | 
-.NET Regex engine [Compiled]               | ~38310ms     | ~37242ms
-.NET Regex engine [Compiled]{only ^match$} | < 1ms        | ~3ms
-.NET Regex engine                          | ~31565ms     | ~30975ms
-.NET Regex engine {only ^match$}           | < 1ms        | ~1ms
-
-
-/[archive](https://github.com/3F/regXwild/wiki/archive-speedtest-sandbox)
+ algorithms  (see impl. from `snet`)        | +icase [x32]*| +icase [x64]*| .
+--------------------------------------------|--------------|--------------|---
+regXwild via Conari v1.2 (Lambda) - ESS     | **~1032ms**  | **~1418ms**  |
+regXwild via Conari v1.2 (DLR) - ESS        | ~1238ms      | ~1609ms      |
+regXwild via Conari v1.2 (Lambda) - EXT     | **~1117ms**  | **~1457ms**  |
+regXwild via Conari v1.2 (DLR) - EXT        | ~1246ms      | ~1601ms      |
+                                            |              |              |
+regXwild via Conari **v1.3** (Lambda) - ESS | **~58ms**    | **~42ms**    | `<<`
+regXwild via Conari **v1.3** (DLR) - ESS    | ~218ms       | ~234ms       |
+regXwild via Conari **v1.3** (Lambda) - EXT | **~54ms**    | **~35ms**    | `<<`
+regXwild via Conari **v1.3** (DLR) - EXT    | ~214ms       | ~226ms       |
+                                            |              |              |
+.NET Regex engine [Compiled]                | ~38310ms     | ~37242ms     |
+.NET Regex engine [Compiled]{only ^match$}  | < 1ms        | ~3ms         |
+.NET Regex engine                           | ~31565ms     | ~30975ms     |
+.NET Regex engine {only ^match$}            | < 1ms        | ~1ms         |
