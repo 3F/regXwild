@@ -9,16 +9,15 @@ goto build
 
 echo. Getting of Conari engine ...
 
-git submodule update --init --recursive 2>nul || goto err_gitNotFound
+git submodule update --init --recursive || goto gitNotFound
 
 goto build
 
-:err_gitNotFound
+:gitNotFound
 
 echo.  
-echo. `git` was not found or something went wrong. Check your connection and env. variable `PATH`.
-
-goto exit
+echo. `git` was not found or something went wrong. Check your connection and env. variable `PATH`. 1>&2
+exit /B 2
 
 :build
 
@@ -34,7 +33,6 @@ if exist "bin\\%_cfgConari%\\raw" goto exit
 call build.bat %_cfgConari% >nul
 
 endlocal
-goto exit
 
 
 :exit

@@ -1,7 +1,7 @@
 
-**[regXwild](https://github.com/3F/regXwild)** - Fast and powerful wildcards ! `*,|,?,^,$,+,#,>` in addition to slow regex engine and more...
+**[regXwild](https://github.com/3F/regXwild)** - Fast and powerful wildcards ! in addition to slow regex engine and more...
 
-Unique algorithms that implemented in native C++ & optional .NET support (via [Conari engine](https://github.com/3F/Conari)).
+Unique algorithms that implemented in native unmanaged C++ & optional .NET support (via [Conari engine](https://github.com/3F/Conari)).
 
 [![Build status](https://ci.appveyor.com/api/projects/status/92y03ofto5fbb60a/branch/master?svg=true)](https://ci.appveyor.com/project/3Fs/regxwild/branch/master)
 [![release-src](https://img.shields.io/github/release/3F/regXwild.svg)](https://github.com/3F/regXwild/releases/latest)
@@ -36,10 +36,8 @@ The regXwild library exports the following functions (C-linkage):
     REGXWILD_API bool searchExt(const tstring& data, const tstring& filter, bool ignoreCase);
 ```
 
-Calling Convention: **__cdecl**
 
-
-## .NET Platform & C# ##
+## .NET Platform & C# via Conari engine
 
 The regXwild library was written on **native C++**, but you can also use it flexibly in .NET world via [Conari](https://github.com/3F/Conari) engine !
 
@@ -101,9 +99,9 @@ enum MetaSymbols {
 };
 ```
 
-## Features & Unit-Tests
+## Samples & Features
 
-All features of regXwild you can see with Unit-Tests - regXwildTest subproject.
+All features of regXwild you can see with **Unit-Tests** - regXwildTest subproject.
 
 ```cpp
 searchEss(data, _T("^main*is ok$"));
@@ -205,10 +203,10 @@ Getline + Find                            | ~59ms       | ~54ms
 Iterator + Substr                         | ~165ms      | ~132ms      
 Iterator + Iterator                       | ~136ms      | ~118ms      
 main :: based on Iterator + Find          | ~53ms       | ~45ms       
-                                          |             |             
+​ ​                                         | ​            | 
 **Final algorithm - EXT version:**        | **~50ms**   | **~26ms**   
 **Final algorithm - ESS version:**        | **~50ms**   | **~27ms**   
-                                          |             |             
+​ ​                                         | ​            | 
 regexp-c++11(regex_search)                | ~59309ms    | ~53334ms    
 regexp-c++11(only as ^match$ like a '==') | ~12ms       | ~5ms        
 regexp-c++11(regex_match with endings .*) | ~59503ms    | ~53817ms    
@@ -238,18 +236,18 @@ SINGLE                | ---        | ~43ms      | ---        | ~22ms
 
 * Updated with new improved speed via [Conari engine - v1.3](https://github.com/3F/Conari/commit/4f14cecbcea75895a510954c2cd402ee0e9e3521)
 
- algorithms  (see impl. from `snet`)        | +icase [x32]*| +icase [x64]*| .
+ algorithms  (see impl. from `snet`)        | +icase [x32]*| +icase [x64]*| ​  
 --------------------------------------------|--------------|--------------|---
 regXwild via Conari v1.2 (Lambda) - ESS     | **~1032ms**  | **~1418ms**  |
 regXwild via Conari v1.2 (DLR) - ESS        | ~1238ms      | ~1609ms      |
 regXwild via Conari v1.2 (Lambda) - EXT     | **~1117ms**  | **~1457ms**  |
 regXwild via Conari v1.2 (DLR) - EXT        | ~1246ms      | ~1601ms      |
-                                            |              |              |
+​ ​                                           | ​             |  ​            |
 regXwild via Conari **v1.3** (Lambda) - ESS | **~58ms**    | **~42ms**    | `<<`
 regXwild via Conari **v1.3** (DLR) - ESS    | ~218ms       | ~234ms       |
 regXwild via Conari **v1.3** (Lambda) - EXT | **~54ms**    | **~35ms**    | `<<`
 regXwild via Conari **v1.3** (DLR) - EXT    | ~214ms       | ~226ms       |
-                                            |              |              |
+​ ​                                           | ​             |  ​            |
 .NET Regex engine [Compiled]                | ~38310ms     | ~37242ms     |
 .NET Regex engine [Compiled]{only ^match$}  | < 1ms        | ~3ms         |
 .NET Regex engine                           | ~31565ms     | ~30975ms     |

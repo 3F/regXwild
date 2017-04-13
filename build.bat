@@ -1,7 +1,7 @@
 @echo off
 
 set _gnt=tools/gnt
-set _msbuild=tools/msbuild
+set _msbuild=tools/hMSBuild
 
 
 call %_gnt% /p:wpath="%cd%" /p:ngconfig="packages.config;snet\\packages.config" /nologo /v:m /m:4 || goto err
@@ -14,5 +14,7 @@ goto exit
 :err
 
 echo. Build failed. 1>&2
+exit /B 1
 
 :exit
+exit /B 0
