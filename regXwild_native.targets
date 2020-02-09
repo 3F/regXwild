@@ -5,7 +5,7 @@
   
   <PropertyGroup>
     <regXwildRootPkg>$(MSBuildThisFileDirectory)..\..\</regXwildRootPkg> <!-- [root]\build\native\regXwild.targets -->
-    <PathToBin_regXwild>$(regXwildRootPkg)lib\$(Platform)\</PathToBin_regXwild>
+    <PathToBin_regXwild>$(regXwildRootPkg)lib\native\$(Platform)-$(CharacterSet)\</PathToBin_regXwild>
     <IncludePath>$(PathToBin_regXwild)include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(PathToBin_regXwild);$(LibraryPath)</LibraryPath>
   </PropertyGroup>

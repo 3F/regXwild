@@ -35,6 +35,18 @@ namespace net { namespace r_eg { namespace regXwild
 
     typedef basic_regex<TCHAR> tregex;
 
+#ifdef UNICODE
+
+    typedef wstringstream tstringStream;
+    #define __toxupper towupper
+
+#else
+
+    typedef stringstream tstringStream;
+    #define __toxupper toupper
+
+#endif
+
 #define TRACE(str){ cout << str; }
 #define DELTAINFO(str, num){ cout << str; (num < 1)? cout << "< 1" : cout << "~" << num; cout << "ms\n"; }
 

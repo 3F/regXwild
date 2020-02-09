@@ -32,7 +32,9 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
     {
     public:
 
-        enum MetaOperation{
+        // TODO: consider upgrading to modern enum class or enum struct
+        enum MetaOperation
+        {
             FLUSH   = 0,
             ANY     = 1,
             ANYSP   = 2,
@@ -43,7 +45,9 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
             EOL     = 64,
         };
 
-        enum MetaSymbols{
+        // TODO: consider upgrading to modern enum class or enum struct
+        enum MetaSymbols
+        {
             MS_ANY      = _T('*'),
             MS_ANYSP    = _T('>'), //as [^/\\]+
             MS_SPLIT    = _T('|'),
@@ -56,32 +60,39 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
 
     protected:
 
-        struct Mask{
+        struct Mask
+        {
             MetaOperation curr;
             MetaOperation prev;
-            Mask(): curr(FLUSH), prev(FLUSH){};
+            Mask(): curr(FLUSH), prev(FLUSH) { };
         };
 
         /**
          * to wildcards
          */
-        struct Item{
+        struct Item
+        {
             tstring curr;
             udiff_t pos;
             udiff_t left;
             udiff_t delta;
             Mask mask;
             tstring prev;
-            Item(): pos(0), left(0), delta(0){};
+            Item(): pos(0), left(0), delta(0) { };
         };
 
         /**
          * to words
          */
-        struct Words{
+        struct Words 
+        {
             udiff_t found;
             udiff_t left;
-            Words(): left(0){};
+
+#pragma warning(push)
+#pragma warning(disable: 26495)
+            Words(): left(0) { };
+#pragma warning(pop)
         };
 
         /**
@@ -95,7 +106,7 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
 
         inline tstring _lowercase(tstring str) throw()
         {
-            transform(str.begin(), str.end(), str.begin(), towlower);
+            transform(str.begin(), str.end(), str.begin(), __toxlower);
             return str;
         };
     };

@@ -5,17 +5,18 @@
   
   <PropertyGroup>
     <regXwildRootPkg>$(MSBuildThisFileDirectory)..\..\</regXwildRootPkg> <!-- [root]\build\net\regXwild.targets -->
-    <PathToBin_regXwild>$(regXwildRootPkg)lib\</PathToBin_regXwild>
+    <PathToBin_regXwild>$(regXwildRootPkg)lib\native\</PathToBin_regXwild>
+    <CharacterSet Condition="'$(CharacterSet)'==''">MultiByte</CharacterSet>
   </PropertyGroup>
   
-  <ItemGroup Condition="Exists('$(PathToBin_regXwild)\Win32')">
-      <regXwildLib32 Include="$(PathToBin_regXwild)\Win32\*.dll" />
-      <regXwildLib32 Include="$(PathToBin_regXwild)\Win32\*.pdb" />
+  <ItemGroup Condition="Exists('$(PathToBin_regXwild)\Win32-$(CharacterSet)')">
+      <regXwildLib32 Include="$(PathToBin_regXwild)\Win32-$(CharacterSet)\*.dll" />
+      <regXwildLib32 Include="$(PathToBin_regXwild)\Win32-$(CharacterSet)\*.pdb" />
   </ItemGroup>
   
-  <ItemGroup Condition="Exists('$(PathToBin_regXwild)\x64')">
-      <regXwildLib64 Include="$(PathToBin_regXwild)\x64\*.dll" />
-      <regXwildLib64 Include="$(PathToBin_regXwild)\x64\*.pdb" />
+  <ItemGroup Condition="Exists('$(PathToBin_regXwild)\x64-$(CharacterSet)')">
+      <regXwildLib64 Include="$(PathToBin_regXwild)\x64-$(CharacterSet)\*.dll" />
+      <regXwildLib64 Include="$(PathToBin_regXwild)\x64-$(CharacterSet)\*.pdb" />
   </ItemGroup>
   
   <Target Name="regXwildk_AfterBuild" AfterTargets="AfterBuild">

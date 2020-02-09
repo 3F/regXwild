@@ -114,6 +114,7 @@ We're waiting for your awesome contributions!
 Please note:
 
 * **+icase** means ignore case sensitivity when matching the filter(pattern) within the searched string, i.e. `ignoreCase = true`. **Without** this, everything **will be much faster** of course. *That is, icase always adds complexity.*
+* Commonly **MultiByte** will be faster than **Unicode** (for the same platform and the same way of module use) but it depends on specific architecture and can be about ~2 times faster when native C++, and about ~4 times faster when .NET + Conari and related.
 * The results below can be different on different machines. You need only look at the difference (in milliseconds) between algorithms for a specific target.
 * To calculate the data, as in the table below, you need execute `algo.exe`
 
@@ -161,7 +162,7 @@ results += meter.delta();
 ...
 ```
 
-### Sample of speed
+### Sample of speed for Unicode
 
 340 Unicode Symbols and 10^4 iterations (340 x 10000); Filter: `L"nime**haru*02*Magica"`
 
@@ -230,6 +231,8 @@ regXwild via Conari **v1.3** (DLR) - EXT    | ~214ms       | ~226ms       |
 regXwild v1.1+ can also be installed through **NuGet** same for both unmanaged and managed projects.
 
 For .NET it will put x32 & x64 regXwild into $(TargetDir). Use it with your .net modules through [Conari](https://github.com/3F/Conari) and so on.
+
+x64 + x32 Unicode + MultiByte modules;
 
 Please note: Modern regXwild packages will no longer be distributed together with [Conari](https://github.com/3F/Conari). Please consider to use it separately, [Conari nuget packages](https://www.nuget.org/packages/Conari/).
 

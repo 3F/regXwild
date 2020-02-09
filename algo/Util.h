@@ -36,13 +36,13 @@ namespace net { namespace r_eg { namespace regXwild {
 
         inline static tstring uppercase(tstring str) throw()
         {
-            transform(str.begin(), str.end(), str.begin(), towupper);
+            transform(str.begin(), str.end(), str.begin(), __toxupper);
             return str;
         };
 
         inline static tstring lowercase(tstring str) throw()
         {
-            transform(str.begin(), str.end(), str.begin(), towlower);
+            transform(str.begin(), str.end(), str.begin(), __toxlower);
             return str;
         };
 

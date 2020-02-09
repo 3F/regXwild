@@ -133,7 +133,7 @@
       "Mode": {
         "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
         "Type": "Script",
-        "Command": "##[( !(#[IO exists.file(\"$(pConari)/Conari.sln\")]) )\r\n{\r\n    #[File call(\"git\", \"submodule update --init --recursive Conari\", 1000)]\r\n}]",
+        "Command": "##[( !(#[IO exists.file(\"$(pConari)/Conari.sln\")]) )\n{\n    #[File call(\"git\", \"submodule update --init --recursive Conari\", 1000)]\n}]",
         "Command__": [
           "##[( !(#[IO exists.file(\"$(pConari)/Conari.sln\")]) )",
           "{",
@@ -167,19 +167,27 @@
       "Mode": {
         "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
         "Type": "Script",
-        "Command": "#[IO write(\"$(orawApp)\\snet-run.bat\"):@echo off\r\n\r\nset ConariVersion=1.4.0\r\nset gnt=..\\..\\tools\\gnt.bat\r\nset platform=net40\r\n\r\ncall %gnt% /p:ngpackages=\"Conari/%ConariVersion%\"\r\n\r\ncopy /B/Y packages\\Conari.%ConariVersion%\\lib\\%platform%\\Conari.dll \"%cd%\"\r\n\r\nsnet.exe\r\n]",
+        "Command": "#[IO write(\"$(orawApp)snet-run.bat\"):@echo off\n\nset ConariVersion=1.4.0\nset gnt=..\\..\\tools\\gnt.bat\nset platform=net40\nset Conari=Conari.dll\n\nif not exist %Conari% if not exist %gnt% goto notfound\n\ncall %gnt% /p:ngpackages=\"Conari/%ConariVersion%\" || goto notfound\n\ncopy /B/Y packages\\Conari.%ConariVersion%\\lib\\%platform%\\%Conari% \"%cd%\"\nsnet.exe\n\n:notfound\necho You need %Conari% v%ConariVersion% to continue. But even GetNuTool was not found to get it automatically. 1>&2\necho Something went wrong, please get it manually: https://www.nuget.org/packages/Conari/%ConariVersion% 1>&2\npause\nexit /B 2\n]",
         "Command__": [
-          "#[IO write(\"$(orawApp)\\snet-run.bat\"):@echo off",
+          "#[IO write(\"$(orawApp)snet-run.bat\"):@echo off",
           "",
           "set ConariVersion=1.4.0",
           "set gnt=..\\..\\tools\\gnt.bat",
           "set platform=net40",
+          "set Conari=Conari.dll",
           "",
-          "call %gnt% /p:ngpackages=\"Conari/%ConariVersion%\"",
+          "if not exist %Conari% if not exist %gnt% goto notfound",
           "",
-          "copy /B/Y packages\\Conari.%ConariVersion%\\lib\\%platform%\\Conari.dll \"%cd%\"",
+          "call %gnt% /p:ngpackages=\"Conari/%ConariVersion%\" || goto notfound",
           "",
+          "copy /B/Y packages\\Conari.%ConariVersion%\\lib\\%platform%\\%Conari% \"%cd%\"",
           "snet.exe",
+          "",
+          ":notfound",
+          "echo You need %Conari% v%ConariVersion% to continue. But even GetNuTool was not found to get it automatically. 1>&2",
+          "echo Something went wrong, please get it manually: https://www.nuget.org/packages/Conari/%ConariVersion% 1>&2",
+          "pause",
+          "exit /B 2",
           "]"
         ]
       }
@@ -207,9 +215,9 @@
       "Mode": {
         "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
         "Type": "Script",
-        "Command": "#[($(regXwildx32x64) != 1) {\n    #[try{ #[IO delete.directory(\"$(odir)\", true)] }catch{ }]\n}]\n\n#[IO copy.directory(\"\", \"$(odir)\", true)]\n#[IO copy.file(\n        {\n            \"$(pDir)\\declspec.h\",\n            \"$(pDir)\\regXwild.h\",\n            \"$(pDir)\\regXwildAPI.h\",\n            \"$(pDir)\\regXwildConf.h\",\n            \"$(pDir)\\typedefs.h\"\n        }, \n        \"$(orawApp)\\include\",\n        true)]\n        \n#[IO copy.file({ \"Readme.md\", \"LICENSE\", \"changelog.txt\", \".version\" }, \"$(oraw)\", true)]\n#[IO copy.file({ \"tools\\*.bat\" }, \"$(oraw)\\tools\\\\\", true)]\n#[7z pack.files(\n        {\n            \"$(oraw)\\Readme.md\", \n            \"$(oraw)\\LICENSE\",\n            \"$(oraw)\\changelog.txt\",\n            \"$(oraw)\\.version\",\n            \"$(oraw)\\tools\\*.bat\",\n            \"$(orawApp)\\include\\*.h\",\n            \"$(orawApp)algo.exe\", \n            \"$(orawApp)snet.exe\", \n            \"$(orawApp)snet-run.bat\",\n            \"$(orawApp)regXwild.dll\",\n            \"$(orawApp)regXwild.lib\",\n            \"$(orawApp)regXwild.exp\",\n            \"$(orawApp)regXwild.pdb\"\n        }, \n        \"$(odir)regXwild.$(pVer).$(Platform).$(CharacterSet:regXwild).zip\")]\n",
+        "Command": "#[($(__InitBuild) == 1) {\n    #[try{ #[IO delete.directory(\"$(odir)\", true)] }catch{ }]\n}]\n\n#[IO copy.directory(\"\", \"$(odir)\", true)]\n#[IO copy.file(\n        {\n            \"$(pDir)\\declspec.h\",\n            \"$(pDir)\\regXwild.h\",\n            \"$(pDir)\\regXwildAPI.h\",\n            \"$(pDir)\\regXwildConf.h\",\n            \"$(pDir)\\stdafx.h\",\n            \"$(pDir)\\typedefs.h\"\n        }, \n        \"$(orawApp)\\include\",\n        true)]\n        \n#[IO copy.file({ \"Readme.md\", \"LICENSE\", \"changelog.txt\", \".version\" }, \"$(oraw)\", true)]\n#[IO copy.file({ \"tools\\*.bat\" }, \"$(oraw)\\tools\\\\\", true)]\n#[7z pack.files(\n        {\n            \"$(oraw)\\Readme.md\", \n            \"$(oraw)\\LICENSE\",\n            \"$(oraw)\\changelog.txt\",\n            \"$(oraw)\\.version\",\n            \"$(oraw)\\tools\\*.bat\",\n            \"$(orawApp)\\include\\*.h\",\n            \"$(orawApp)algo.exe\", \n            \"$(orawApp)snet.exe\", \n            \"$(orawApp)snet-run.bat\",\n            \"$(orawApp)regXwild.dll\",\n            \"$(orawApp)regXwild.lib\",\n            \"$(orawApp)regXwild.exp\",\n            \"$(orawApp)regXwild.pdb\"\n        }, \n        \"$(odir)regXwild.$(pVer).$(Platform).$(CharacterSet:regXwild).zip\")]\n",
         "Command__": [
-          "#[($(regXwildx32x64) != 1) {",
+          "#[($(__InitBuild) == 1) {",
           "    #[try{ #[IO delete.directory(\"$(odir)\", true)] }catch{ }]",
           "}]",
           "",
@@ -220,6 +228,7 @@
           "            \"$(pDir)\\regXwild.h\",",
           "            \"$(pDir)\\regXwildAPI.h\",",
           "            \"$(pDir)\\regXwildConf.h\",",
+          "            \"$(pDir)\\stdafx.h\",",
           "            \"$(pDir)\\typedefs.h\"",
           "        }, ",
           "        \"$(orawApp)\\include\",",
@@ -271,16 +280,28 @@
       "Mode": {
         "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
         "Type": "Script",
-        "Command": "#[($(regXwildx32x64) != 1) {\n    #[try{ #[IO delete.directory(\"$(onupkg)\", true)] }catch{ }]\n}]\n\n#[$(onupkgBin = \"$(onupkg)lib\\$(Platform)\\\\\")]\n\n#[IO copy.directory(\"$(orawApp)\\include\", \"$(onupkgBin)include\", true)]\n#[IO copy.directory(\"tools\", \"$(onupkg)tools\", true, true)]\n#[IO copy.file({\n            \"$(orawApp)algo.exe\", \n            \"$(orawApp)snet.exe\", \n            \"$(orawApp)snet-run.bat\",\n            \"$(orawApp)regXwild.dll\",\n            \"$(orawApp)regXwild.lib\",\n            \"$(orawApp)regXwild.exp\",\n            \"$(orawApp)regXwild.pdb\"\n        }, \n        \"$(onupkgBin)\", true)]\n        \n#[IO copy.file({ \n            \"regXwild.nuspec\", \n            \"Readme.md\", \n            \"LICENSE\", \n            \"changelog.txt\" \n        }, \n        \"$(onupkg)\", true)]\n\n#[IO copy.directory(\"\", \"$(onupkg)build\\native\", true)]\n#[IO copy.file(\"regXwild_native.targets\", \"$(onupkg)build\\native/regXwild.targets\", true)]\n\n#[IO copy.directory(\"\", \"$(onupkg)build\\net\", true)]\n#[IO copy.file(\"regXwild_net.targets\", \"$(onupkg)build\\net/regXwild.targets\", true)]\n",
+        "Command": "#[($(__InitBuild) == 1) {\n    #[try{ #[IO delete.directory(\"$(onupkg)\", true)] }catch{ }]\n}]\n\n#[$(onupkgBin = \"$(onupkg)lib\\\\native\\\\$(Platform)-$(CharacterSet:regXwild)\\\\\")]\n\n#[\" https://github.com/3F/DllExport/issues/36 \"]\n#[IO copy.directory(\"\", \"$(onupkg)/lib/net/\", true)]\n#[IO write(\"$(onupkg)/lib/net/_._\"):]\n\n#[IO copy.directory(\"\", \"$(onupkg)/lib/netcoreapp/\", true)]\n#[IO write(\"$(onupkg)/lib/netcoreapp/_._\"):]\n\n#[IO copy.directory(\"\", \"$(onupkg)/lib/netstandard/\", true)]\n#[IO write(\"$(onupkg)/lib/netstandard/_._\"):]\n\n#[IO copy.directory(\"$(orawApp)\\include\", \"$(onupkgBin)include\", true, true)]\n#[IO copy.directory(\"tools\", \"$(onupkg)tools\", true, true)]\n\n#[IO replace(\"$(orawApp)snet-run.bat\", \"..\\..\\tools\\gnt.bat\", \"..\\..\\..\\tools\\gnt.bat\")]\n#[IO copy.file({\n            \"$(orawApp)algo.exe\", \n            \"$(orawApp)snet.exe\", \n            \"$(orawApp)snet-run.bat\",\n            \"$(orawApp)regXwild.dll\",\n            \"$(orawApp)regXwild.lib\",\n            \"$(orawApp)regXwild.exp\",\n            \"$(orawApp)regXwild.pdb\"\n        }, \n        \"$(onupkgBin)\", true)]\n        \n#[IO copy.file({ \n            \"regXwild.nuspec\", \n            \"Readme.md\", \n            \"LICENSE\", \n            \"changelog.txt\" \n        }, \n        \"$(onupkg)\", true)]\n\n#[IO copy.directory(\"\", \"$(onupkg)build\\native\", true)]\n#[IO copy.file(\"regXwild_native.targets\", \"$(onupkg)build\\native/regXwild.targets\", true)]\n\n#[IO copy.directory(\"\", \"$(onupkg)build\\net\", true)]\n#[IO copy.file(\"regXwild_net.targets\", \"$(onupkg)build\\net/regXwild.targets\", true)]\n",
         "Command__": [
-          "#[($(regXwildx32x64) != 1) {",
+          "#[($(__InitBuild) == 1) {",
           "    #[try{ #[IO delete.directory(\"$(onupkg)\", true)] }catch{ }]",
           "}]",
           "",
-          "#[$(onupkgBin = \"$(onupkg)lib\\$(Platform)\\\\\")]",
+          "#[$(onupkgBin = \"$(onupkg)lib\\\\native\\\\$(Platform)-$(CharacterSet:regXwild)\\\\\")]",
           "",
-          "#[IO copy.directory(\"$(orawApp)\\include\", \"$(onupkgBin)include\", true)]",
+          "#[\" https://github.com/3F/DllExport/issues/36 \"]",
+          "#[IO copy.directory(\"\", \"$(onupkg)/lib/net/\", true)]",
+          "#[IO write(\"$(onupkg)/lib/net/_._\"):]",
+          "",
+          "#[IO copy.directory(\"\", \"$(onupkg)/lib/netcoreapp/\", true)]",
+          "#[IO write(\"$(onupkg)/lib/netcoreapp/_._\"):]",
+          "",
+          "#[IO copy.directory(\"\", \"$(onupkg)/lib/netstandard/\", true)]",
+          "#[IO write(\"$(onupkg)/lib/netstandard/_._\"):]",
+          "",
+          "#[IO copy.directory(\"$(orawApp)\\include\", \"$(onupkgBin)include\", true, true)]",
           "#[IO copy.directory(\"tools\", \"$(onupkg)tools\", true, true)]",
+          "",
+          "#[IO replace(\"$(orawApp)snet-run.bat\", \"..\\..\\tools\\gnt.bat\", \"..\\..\\..\\tools\\gnt.bat\")]",
           "#[IO copy.file({",
           "            \"$(orawApp)algo.exe\", ",
           "            \"$(orawApp)snet.exe\", ",
@@ -373,9 +394,11 @@
       "Mode": {
         "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
         "Type": "Script",
-        "Command": "#[NuGet gnt.raw(\"/t:pack /p:ngin=\\\"$(onupkg)\\\" /p:ngout=\\\"$(odir)\\\"\")]",
+        "Command": "#[($(__FinalBuild) == 1) {\n    #[NuGet gnt.raw(\"/t:pack /p:ngin=\\\"$(onupkg)\\\" /p:ngout=\\\"$(odir)\\\"\")]\n}]",
         "Command__": [
-          "#[NuGet gnt.raw(\"/t:pack /p:ngin=\\\"$(onupkg)\\\" /p:ngout=\\\"$(odir)\\\"\")]"
+          "#[($(__FinalBuild) == 1) {",
+          "    #[NuGet gnt.raw(\"/t:pack /p:ngin=\\\"$(onupkg)\\\" /p:ngout=\\\"$(odir)\\\"\")]",
+          "}]"
         ]
       }
     }

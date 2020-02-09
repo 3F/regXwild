@@ -17,9 +17,10 @@
         Unique algorithms that was implemented on native unmanaged C++ but easily accessible also in .NET
         through Conari (recommended due to caching of 0x29 opcodes and other related optimization).
 
-        This package provides both support of the unmanaged and managed projects:
+        This package contains x64 + x32 Unicode + MultiByte modules
+        and provides both support of the unmanaged and managed projects:
         
-        * For native: .\lib\{Platform}\ ~ regXwild.dll, regXwild.lib, regXwild.exp, include\*.h
+        * For native: .\lib\native\{Platform}-(Unicode or MultiByte)\ ~ regXwild.dll, regXwild.lib, regXwild.exp, include\*.h
         * For .NET it will put x32 &amp; x64 regXwild into (TargetDir). Use it with your .net modules through Conari ( https://github.com/3F/Conari ) and so on.
 
         ```

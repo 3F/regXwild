@@ -32,6 +32,7 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
     {
     public:
 
+        // TODO: consider upgrading to modern enum class or enum struct
         enum MetaOperation
         {
             NONE    = 0x000,
@@ -47,6 +48,7 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
             EOL     = 0x200,
         };
 
+        // TODO: consider upgrading to modern enum class or enum struct
         enum MetaSymbols
         {
             MS_ANY      = _T('*'), // {0, ~}
@@ -99,7 +101,7 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
                 curr.clear();
                 prev.clear();
             };
-            Item(): pos(0), left(0), delta(0), overlay(0){};
+            Item(): pos(0), left(0), delta(0), overlay(0) { };
         } item;
 
         /**
@@ -115,7 +117,12 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
                 found   = tstring::npos;
                 left    = 0;
             };
-            Words(): left(0){};
+
+#pragma warning(push)
+#pragma warning(disable: 26495)
+            Words(): left(0) { };
+#pragma warning(pop)
+
         } words;
 
         /**
@@ -138,7 +145,7 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
 
         inline tstring _lowercase(tstring str) throw()
         {
-            transform(str.begin(), str.end(), str.begin(), towlower);
+            transform(str.begin(), str.end(), str.begin(), __toxlower);
             return str;
         };
     };

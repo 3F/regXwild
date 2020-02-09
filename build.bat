@@ -10,17 +10,27 @@ if not defined reltype (
 
 call %_gnt% /p:wpath="%cd%" /p:ngconfig="packages.config;snet\\packages.config" /nologo /v:m /m:4 || goto err
 
-setlocal
-    call %cim% "regXwild.sln" /v:m /m:4 /p:Configuration="%reltype%" /p:Platform=Win32 || goto err
-endlocal
+    setlocal
+        set "__InitBuild=1" & call :build Win32 Unicode
+    endlocal
 
-setlocal
-    set regXwildx32x64=1
-    call %cim% "regXwild.sln" /v:m /m:4 /p:Configuration="%reltype%" /p:Platform=x64 || goto err
-endlocal
+    call :build x64 Unicode
+    call :build Win32 MultiByte
+
+    setlocal
+        set "__FinalBuild=1" & call :build x64 MultiByte
+    endlocal
 
 
 goto exit
+
+
+:build
+setlocal
+    set "platform=%~1" & set "CharacterSet=%~2"
+    call %cim% "regXwild.sln" /v:m /m:4 /p:Configuration="%reltype%" /p:Platform=%platform% || goto err
+endlocal
+exit /B 0
 
 :err
 

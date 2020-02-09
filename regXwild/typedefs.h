@@ -33,26 +33,16 @@ namespace net { namespace r_eg { namespace regXwild
 #ifdef UNICODE
 
     typedef wstring tstring;
-    typedef wstringstream tstringStream;
-
-    //<tchar.h>
-    //typedef wchar_t TCHAR;
-    //#define _T(x)  L ## x
+    #define __toxlower towlower
 
 #else
 
     typedef string tstring;
-    typedef stringstream tstringStream;
-
-    //<tchar.h>
-    //typedef char TCHAR;
-    //#define _T(x)  ## x
+    #define __toxlower tolower
 
 #endif
 
     typedef size_t udiff_t;
     typedef ptrdiff_t diff_t;
-
-    typedef vector<tstring> tstringList;
 
 }}}
