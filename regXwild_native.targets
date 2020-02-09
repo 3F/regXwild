@@ -5,8 +5,7 @@
   
   <PropertyGroup>
     <regXwildRootPkg>$(MSBuildThisFileDirectory)..\..\</regXwildRootPkg> <!-- [root]\build\native\regXwild.targets -->
-    <ConariLibNetV>net40</ConariLibNetV>
-    <PathToBin_regXwild>$(regXwildRootPkg)lib\$(ConariLibNetV)\native_$(Platform)\</PathToBin_regXwild>
+    <PathToBin_regXwild>$(regXwildRootPkg)lib\$(Platform)\</PathToBin_regXwild>
     <IncludePath>$(PathToBin_regXwild)include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(PathToBin_regXwild);$(LibraryPath)</LibraryPath>
   </PropertyGroup>

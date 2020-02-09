@@ -1,8 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
-MinimumVisualStudioVersion = 10.0.30319.1
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "regXwild", "regXwild\regXwild.vcxproj", "{74660324-42AA-41B6-9FDB-E0ED0D0144CE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "regXwildTest", "regXwildTest\regXwildTest.vcxproj", "{B43C60C4-7B0D-466B-BE85-11298000062A}"
@@ -28,7 +28,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{9390762C
 	ProjectSection(SolutionItems) = preProject
 		tools\gnt.bat = tools\gnt.bat
 		tools\msbuild.bat = tools\msbuild.bat
-		tools\powershell.bat = tools\powershell.bat
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "snet", "snet\snet.csproj", "{12B25935-229F-4128-B66B-7561A77ABC54}"
@@ -76,5 +75,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CB983F64-D9EE-4ADF-AD69-1D78A6CE1976}
 	EndGlobalSection
 EndGlobal

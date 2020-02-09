@@ -229,6 +229,10 @@ regXwild via Conari **v1.3** (DLR) - EXT    | ~214ms       | ~226ms       |
 
 regXwild v1.1+ can also be installed through **NuGet** same for both unmanaged and managed projects.
 
+For .NET it will put x32 & x64 regXwild into $(TargetDir). Use it with your .net modules through [Conari](https://github.com/3F/Conari) and so on.
+
+Please note: Modern regXwild packages will no longer be distributed together with [Conari](https://github.com/3F/Conari). Please consider to use it separately, [Conari nuget packages](https://www.nuget.org/packages/Conari/).
+
 * regXwild NuGet: [![NuGet package](https://img.shields.io/nuget/v/regXwild.svg)](https://www.nuget.org/packages/regXwild/)
 * [GetNuTool](https://github.com/3F/GetNuTool): `msbuild gnt.core /p:ngpackages="regXwild"` or **[gnt](https://3f.github.io/GetNuTool/releases/latest/gnt/)** /p:ngpackages="regXwild"
 * [GitHub Releases](https://github.com/3F/regXwild/releases) [ [latest](https://github.com/3F/regXwild/releases/latest) ]

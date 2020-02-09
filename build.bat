@@ -1,12 +1,23 @@
 @echo off
 
+set cim=packages\vsSolutionBuildEvent\cim.cmd -vsw-priority "Microsoft.VisualStudio.Component.VC.Redist.14.Latest Microsoft.NetCore.Component.SDK"
 set _gnt=tools/gnt
-set _msbuild=tools/hMSBuild
 
+set reltype=%~1
+if not defined reltype (
+    set reltype=Release
+)
 
 call %_gnt% /p:wpath="%cd%" /p:ngconfig="packages.config;snet\\packages.config" /nologo /v:m /m:4 || goto err
 
-call %_msbuild% -notamd64 "regXwild.sln" /v:normal /l:"packages\vsSBE.CI.MSBuild\bin\CI.MSBuild.dll" /m:4 /t:Build /p:Configuration=Release /p:Platform=Win32 || goto err
+setlocal
+    call %cim% "regXwild.sln" /v:m /m:4 /p:Configuration="%reltype%" /p:Platform=Win32 || goto err
+endlocal
+
+setlocal
+    set regXwildx32x64=1
+    call %cim% "regXwild.sln" /v:m /m:4 /p:Configuration="%reltype%" /p:Platform=x64 || goto err
+endlocal
 
 
 goto exit
