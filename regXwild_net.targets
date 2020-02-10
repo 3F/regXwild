@@ -4,7 +4,7 @@
   <!-- For .NET projects -->
   
   <PropertyGroup>
-    <regXwildRootPkg>$(MSBuildThisFileDirectory)..\..\</regXwildRootPkg> <!-- [root]\build\net\regXwild.targets -->
+    <regXwildRootPkg>$(MSBuildThisFileDirectory)..\..\</regXwildRootPkg> <!-- [root]\build\[net-target]\regXwild.targets -->
     <PathToBin_regXwild>$(regXwildRootPkg)lib\native\</PathToBin_regXwild>
     <CharacterSet Condition="'$(CharacterSet)'==''">MultiByte</CharacterSet>
   </PropertyGroup>
