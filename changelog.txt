@@ -1,7 +1,49 @@
-- - - - -
-regXwild
-_ _ _ _ _
+- - - - - - - - - - - - - - - - - - - - - 
+regXwild - https://github.com/3F/regXwild
+- - - - - - - - - - - - - - - - - - - - - 
 
+[v1.2] 2020.02.10
+
+    * NEW: MultiByte support.
+           Now you can use modules with MultiByte characters.
+           
+           For C++ projects it will be automatically selected 
+           according to the actual project configuration.
+           
+           For .NET, you need to override related `CharacterSet` property.
+           
+    * NEW: .NET Core based projects support through Conari and related:
+           Including .NET Standard targeting;
+           
+           Just install our modern NuGet packages;
+           https://www.nuget.org/packages/regXwild
+    
+    * CHANGED: Modules with MultiByte characters for .NET projects by default.
+               You can replace this by the changing $(CharacterSet) msbuild property:
+               ```
+               <CharacterSet>Unicode</CharacterSet>
+               ```
+               
+    * CHANGED: Added the following tools to packages for related build processes.
+    
+               * tools\gnt.bat - https://github.com/3F/GetNuTool
+               * tools\hMSBuild.bat - https://github.com/3F/hMSBuild
+               
+    * CHANGED: `algo` and `snet` testers can be found inside packages 
+                for each $(Platform)-$(CharacterSet)
+               
+    * CHANGED: Conari will no longer be distributed together with regXwild.
+               https://github.com/3F/Conari
+               
+               Please consider to use it separately. Conari nuget packages:
+               https://www.nuget.org/packages/Conari/
+               
+               (recommended due to caching of 0x29 opcodes and other related optimization)
+               
+    * NOTE: Offcial releases can be also found through GitHub Releases:
+            https://github.com/3F/regXwild/releases
+            
+            
 [v1.1]
 
     CHANGED: Updated API:
