@@ -117,6 +117,11 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
                 if(rewindToNextBlock(it)){ continue; } return false;
             }
 
+            // ++??
+            if(item.mask.prev & MORE && item.mask.curr & ONE) {
+                item.gapms = item.overlay + 1;
+            }
+
             // Sequential combinations of #, ?, +
             if((item.mask.curr & SINGLE && item.mask.prev & SINGLE) 
                 || (item.mask.curr & ONE && item.mask.prev & ONE)
@@ -211,8 +216,10 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
             }
 
             item.pos = item.left;
-            if(item.mask.curr & SPLIT) {
+            if(item.mask.curr & SPLIT)
+            {
                 words.left = 0;
+                item.gapms = 0;
                 item.mask.prev = BOL;
                 continue; //to next block
             }
@@ -253,6 +260,27 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
 
 udiff_t AlgorithmEss::interval()
 {
+    // ++??
+    if(item.mask.prev & ONE && item.gapms > 0)
+    {
+        size_t len      = item.prev.length();
+        diff_t delta    = words.found - words.left;
+
+        diff_t min = item.gapms;
+        diff_t max = min + item.overlay + 1;
+
+        if(delta < min || delta > max) {
+            return tstring::npos;
+        }
+
+        if(_text.substr(words.found - len - delta, len).compare(item.prev) == 0) {
+            return words.found;
+        }
+
+        return tstring::npos;
+
+    }
+
     // "#"
     if(item.mask.prev & SINGLE)
     {
