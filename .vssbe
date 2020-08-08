@@ -1,93 +1,19 @@
 ﻿{
   "Header": {
     "_": [
-      "https://github.com/3F/vsSolutionBuildEvent"
+      " This file for vsSolutionBuildEvent ",
+      " https://github.com/3F/vsSolutionBuildEvent "
     ],
-    "Compatibility": "0.9"
+    "Compatibility": "0.12.4"
   },
-  "Components": [
-    {
-      "ClassName": "InternalComponent",
-      "Enabled": true
-    },
-    {
-      "ClassName": "UserVariableComponent",
-      "Enabled": true
-    },
-    {
-      "ClassName": "TryComponent",
-      "Enabled": true
-    },
-    {
-      "ClassName": "OwpComponent",
-      "Enabled": true
-    },
-    {
-      "ClassName": "NuGetComponent",
-      "Enabled": true
-    },
-    {
-      "ClassName": "FunctionComponent",
-      "Enabled": true
-    },
-    {
-      "ClassName": "FileComponent",
-      "Enabled": true
-    },
-    {
-      "ClassName": "DteComponent",
-      "Enabled": true
-    },
-    {
-      "ClassName": "BuildComponent",
-      "Enabled": true
-    },
-    {
-      "ClassName": "BoxComponent",
-      "Enabled": true
-    },
-    {
-      "ClassName": "SevenZipComponent",
-      "Enabled": true
-    },
-    {
-      "ClassName": "ConditionComponent",
-      "Enabled": true
-    },
-    {
-      "ClassName": "EvMSBuildComponent",
-      "Enabled": true
-    },
-    {
-      "ClassName": "CommentComponent",
-      "Enabled": true
-    }
-  ],
   "PreBuild": [
     {
       "Enabled": true,
       "Name": "ActVersion",
       "Caption": "Update version of regXwild",
-      "SupportMSBuild": true,
-      "SupportSBEScripts": true,
-      "IgnoreIfBuildFailed": false,
-      "BuildType": "Common",
-      "Confirmation": false,
-      "ToConfiguration": [],
-      "ExecutionOrder": {
-        "$type": "net.r_eg.vsSBE.Events.ExecutionOrder[], vsSolutionBuildEvent",
-        "$values": []
-      },
-      "Process": {
-        "$type": "net.r_eg.vsSBE.Events.EventProcess, vsSolutionBuildEvent",
-        "Waiting": true,
-        "Hidden": true,
-        "TimeLimit": 30
-      },
       "Mode": {
         "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
         "Type": "Script",
-        "Command": "$(oraw      = \"bin\\raw\")\n$(orawApp   = \"$(oraw)\\$(Configuration)\\$(Platform)/\")\n$(odir      = \"bin/Releases/\")\n$(onupkg    = \"bin/nupkg/\")\n\n#[$(pDir    = \"regXwild\")]\n#[$(pConari = \"Conari\")]\n\n\n#[var pVer  = #[File get(\".version\")]]\n\n#[IO replace.Regexp(\"$(pDir)/regXwildAPI.cpp\", \"(vsSBE.+?_T\\().+?;\", \"$1\\\"$(pVer)\\\");\")]\n\n#[IO replace.Regexp(\"regXwild.nuspec\", \"<version>.+?</version>\", \"<version>$(pVer)</version>\")]\n#[IO replace.Regexp(\"regXwild.nuspec\", \"\\\"regXwild/[0-9.]+\\\"\", \"\\\"regXwild/$(pVer)\\\"\")]\n\n\n",
         "Command__": [
           "$(oraw      = \"bin\\raw\")",
           "$(orawApp   = \"$(oraw)\\$(Configuration)\\$(Platform)/\")",
@@ -114,26 +40,9 @@
       "Enabled": false,
       "Name": "ActSubmodules",
       "Caption": "submodules and packages",
-      "SupportMSBuild": true,
-      "SupportSBEScripts": true,
-      "IgnoreIfBuildFailed": false,
-      "BuildType": "Common",
-      "Confirmation": false,
-      "ToConfiguration": [],
-      "ExecutionOrder": {
-        "$type": "net.r_eg.vsSBE.Events.ExecutionOrder[], vsSolutionBuildEvent",
-        "$values": []
-      },
-      "Process": {
-        "$type": "net.r_eg.vsSBE.Events.EventProcess, vsSolutionBuildEvent",
-        "Waiting": true,
-        "Hidden": true,
-        "TimeLimit": 30
-      },
       "Mode": {
         "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
         "Type": "Script",
-        "Command": "##[( !(#[IO exists.file(\"$(pConari)/Conari.sln\")]) )\n{\n    #[File call(\"git\", \"submodule update --init --recursive Conari\", 1000)]\n}]",
         "Command__": [
           "##[( !(#[IO exists.file(\"$(pConari)/Conari.sln\")]) )",
           "{",
@@ -148,26 +57,9 @@
       "Enabled": true,
       "Name": "ActSnetGnt",
       "Caption": "snet helper",
-      "SupportMSBuild": true,
-      "SupportSBEScripts": true,
-      "IgnoreIfBuildFailed": false,
-      "BuildType": "Common",
-      "Confirmation": false,
-      "ToConfiguration": [],
-      "ExecutionOrder": {
-        "$type": "net.r_eg.vsSBE.Events.ExecutionOrder[], vsSolutionBuildEvent",
-        "$values": []
-      },
-      "Process": {
-        "$type": "net.r_eg.vsSBE.Events.EventProcess, vsSolutionBuildEvent",
-        "Waiting": true,
-        "Hidden": true,
-        "TimeLimit": 30
-      },
       "Mode": {
         "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
         "Type": "Script",
-        "Command": "#[IO write(\"$(orawApp)snet-run.bat\"):@echo off\n\nset ConariVersion=1.4.0\nset gnt=..\\..\\tools\\gnt.bat\nset platform=net40\nset Conari=Conari.dll\n\nif not exist %Conari% if not exist %gnt% goto notfound\n\ncall %gnt% /p:ngpackages=\"Conari/%ConariVersion%\" || goto notfound\n\ncopy /B/Y packages\\Conari.%ConariVersion%\\lib\\%platform%\\%Conari% \"%cd%\"\nsnet.exe\n\n:notfound\necho You need %Conari% v%ConariVersion% to continue. But even GetNuTool was not found to get it automatically. 1>&2\necho Something went wrong, please get it manually: https://www.nuget.org/packages/Conari/%ConariVersion% 1>&2\npause\nexit /B 2\n]",
         "Command__": [
           "#[IO write(\"$(orawApp)snet-run.bat\"):@echo off",
           "",
@@ -196,26 +88,10 @@
       "Enabled": true,
       "Name": "ActPack",
       "Caption": "Create zip archive of regXwild",
-      "SupportMSBuild": true,
-      "SupportSBEScripts": true,
       "IgnoreIfBuildFailed": true,
-      "BuildType": "Common",
-      "Confirmation": false,
-      "ToConfiguration": [],
-      "ExecutionOrder": {
-        "$type": "net.r_eg.vsSBE.Events.ExecutionOrder[], vsSolutionBuildEvent",
-        "$values": []
-      },
-      "Process": {
-        "$type": "net.r_eg.vsSBE.Events.EventProcess, vsSolutionBuildEvent",
-        "Waiting": true,
-        "Hidden": true,
-        "TimeLimit": 30
-      },
       "Mode": {
         "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
         "Type": "Script",
-        "Command": "#[($(__InitBuild) == 1) {\n    #[try{ #[IO delete.directory(\"$(odir)\", true)] }catch{ }]\n}]\n\n#[IO copy.directory(\"\", \"$(odir)\", true)]\n#[IO copy.file(\n        {\n            \"$(pDir)\\declspec.h\",\n            \"$(pDir)\\regXwild.h\",\n            \"$(pDir)\\regXwildAPI.h\",\n            \"$(pDir)\\regXwildConf.h\",\n            \"$(pDir)\\stdafx.h\",\n            \"$(pDir)\\typedefs.h\"\n        }, \n        \"$(orawApp)\\include\",\n        true)]\n        \n#[IO copy.file({ \"Readme.md\", \"LICENSE\", \"changelog.txt\", \".version\" }, \"$(oraw)\", true)]\n#[IO copy.file({ \"tools\\*.bat\" }, \"$(oraw)\\tools\\\\\", true)]\n#[7z pack.files(\n        {\n            \"$(oraw)\\Readme.md\", \n            \"$(oraw)\\LICENSE\",\n            \"$(oraw)\\changelog.txt\",\n            \"$(oraw)\\.version\",\n            \"$(oraw)\\tools\\*.bat\",\n            \"$(orawApp)\\include\\*.h\",\n            \"$(orawApp)algo.exe\", \n            \"$(orawApp)snet.exe\", \n            \"$(orawApp)snet-run.bat\",\n            \"$(orawApp)regXwild.dll\",\n            \"$(orawApp)regXwild.lib\",\n            \"$(orawApp)regXwild.exp\",\n            \"$(orawApp)regXwild.pdb\"\n        }, \n        \"$(odir)regXwild.$(pVer).$(Platform).$(CharacterSet:regXwild).zip\")]\n",
         "Command__": [
           "#[($(__InitBuild) == 1) {",
           "    #[try{ #[IO delete.directory(\"$(odir)\", true)] }catch{ }]",
@@ -261,26 +137,10 @@
       "Enabled": true,
       "Name": "ActNupkg",
       "Caption": "Prepare regXwild for NuGet",
-      "SupportMSBuild": true,
-      "SupportSBEScripts": true,
       "IgnoreIfBuildFailed": true,
-      "BuildType": "Common",
-      "Confirmation": false,
-      "ToConfiguration": [],
-      "ExecutionOrder": {
-        "$type": "net.r_eg.vsSBE.Events.ExecutionOrder[], vsSolutionBuildEvent",
-        "$values": []
-      },
-      "Process": {
-        "$type": "net.r_eg.vsSBE.Events.EventProcess, vsSolutionBuildEvent",
-        "Waiting": true,
-        "Hidden": true,
-        "TimeLimit": 30
-      },
       "Mode": {
         "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
         "Type": "Script",
-        "Command": "#[($(__InitBuild) == 1) {\n    #[try{ #[IO delete.directory(\"$(onupkg)\", true)] }catch{ }]\n}]\n\n#[$(onupkgBin = \"$(onupkg)lib\\\\native\\\\$(Platform)-$(CharacterSet:regXwild)\\\\\")]\n\n#[\" https://github.com/3F/DllExport/issues/36 \"]\n#[IO copy.directory(\"\", \"$(onupkg)/lib/net/\", true)]\n#[IO write(\"$(onupkg)/lib/net/_._\"):]\n\n#[IO copy.directory(\"\", \"$(onupkg)/lib/netcoreapp/\", true)]\n#[IO write(\"$(onupkg)/lib/netcoreapp/_._\"):]\n\n#[IO copy.directory(\"\", \"$(onupkg)/lib/netstandard/\", true)]\n#[IO write(\"$(onupkg)/lib/netstandard/_._\"):]\n\n#[IO copy.directory(\"$(orawApp)\\include\", \"$(onupkgBin)include\", true, true)]\n#[IO copy.directory(\"tools\", \"$(onupkg)tools\", true, true)]\n\n#[IO replace(\"$(orawApp)snet-run.bat\", \"..\\..\\tools\\gnt.bat\", \"..\\..\\..\\tools\\gnt.bat\")]\n#[IO copy.file({\n            \"$(orawApp)algo.exe\", \n            \"$(orawApp)snet.exe\", \n            \"$(orawApp)snet-run.bat\",\n            \"$(orawApp)regXwild.dll\",\n            \"$(orawApp)regXwild.lib\",\n            \"$(orawApp)regXwild.exp\",\n            \"$(orawApp)regXwild.pdb\"\n        }, \n        \"$(onupkgBin)\", true)]\n        \n#[IO copy.file({ \n            \"regXwild.nuspec\", \n            \"Readme.md\", \n            \"LICENSE\", \n            \"changelog.txt\" \n        }, \n        \"$(onupkg)\", true)]\n\n#[IO copy.directory(\"\", \"$(onupkg)build\\native\", true)]\n#[IO copy.file(\"regXwild_native.targets\", \"$(onupkg)build\\native/regXwild.targets\", true)]\n\n#[IO copy.directory(\"\", \"$(onupkg)build\\net\", true)]\n#[IO copy.file(\"regXwild_net.targets\", \"$(onupkg)build\\net/regXwild.targets\", true)]\n\n#[IO copy.directory(\"\", \"$(onupkg)build\\netcoreapp\", true)]\n#[IO copy.file(\"regXwild_net.targets\", \"$(onupkg)build\\netcoreapp/regXwild.targets\", true)]\n\n#[IO copy.directory(\"\", \"$(onupkg)build\\netstandard\", true)]\n#[IO copy.file(\"regXwild_net.targets\", \"$(onupkg)build\\netstandard/regXwild.targets\", true)]\n",
         "Command__": [
           "#[($(__InitBuild) == 1) {",
           "    #[try{ #[IO delete.directory(\"$(onupkg)\", true)] }catch{ }]",
@@ -340,26 +200,10 @@
       "Enabled": false,
       "Name": "ActConari",
       "Caption": "Conari build ...",
-      "SupportMSBuild": true,
-      "SupportSBEScripts": true,
       "IgnoreIfBuildFailed": true,
-      "BuildType": "Common",
-      "Confirmation": false,
-      "ToConfiguration": [],
-      "ExecutionOrder": {
-        "$type": "net.r_eg.vsSBE.Events.ExecutionOrder[], vsSolutionBuildEvent",
-        "$values": []
-      },
-      "Process": {
-        "$type": "net.r_eg.vsSBE.Events.EventProcess, vsSolutionBuildEvent",
-        "Waiting": true,
-        "Hidden": true,
-        "TimeLimit": 30
-      },
       "Mode": {
         "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
         "Type": "Script",
-        "Command": "#[IO writeLine(STDOUT):Preparing of Conari engine...]\n\n#[(! #[IO exists.directory(\"$(pConari)\\bin\\Release\\raw\")] ) {\n    #[IO cmd(\"cd $(pConari) & build Release\", 400)]\n}]\n\n\n#[try { \n    #[IO copy.directory(\"Conari\\Conari\\bin\\Release\", \"$(onupkgBin)../Conari/\", true)]\n}\ncatch(err, msg){\n    #[IO writeLine(STDOUT): #[$(msg)] - #[$(err)]]\n}]",
         "Command__": [
           "#[IO writeLine(STDOUT):Preparing of Conari engine...]",
           "",
@@ -381,26 +225,10 @@
       "Enabled": true,
       "Name": "ActNuGet",
       "Caption": "Final packing - regXwild + Conari",
-      "SupportMSBuild": true,
-      "SupportSBEScripts": true,
       "IgnoreIfBuildFailed": true,
-      "BuildType": "Common",
-      "Confirmation": false,
-      "ToConfiguration": [],
-      "ExecutionOrder": {
-        "$type": "net.r_eg.vsSBE.Events.ExecutionOrder[], vsSolutionBuildEvent",
-        "$values": []
-      },
-      "Process": {
-        "$type": "net.r_eg.vsSBE.Events.EventProcess, vsSolutionBuildEvent",
-        "Waiting": true,
-        "Hidden": true,
-        "TimeLimit": 30
-      },
       "Mode": {
         "$type": "net.r_eg.vsSBE.Events.ModeScript, vsSolutionBuildEvent",
         "Type": "Script",
-        "Command": "#[($(__FinalBuild) == 1) {\n    #[NuGet gnt.raw(\"/t:pack /p:ngin=\\\"$(onupkg)\\\" /p:ngout=\\\"$(odir)\\\"\")]\n}]",
         "Command__": [
           "#[($(__FinalBuild) == 1) {",
           "    #[NuGet gnt.raw(\"/t:pack /p:ngin=\\\"$(onupkg)\\\" /p:ngout=\\\"$(odir)\\\"\")]",
@@ -408,14 +236,5 @@
         ]
       }
     }
-  ],
-  "CancelBuild": [],
-  "WarningsBuild": [],
-  "ErrorsBuild": [],
-  "OWPBuild": [],
-  "Transmitter": [],
-  "CommandEvent": [],
-  "Logging": [],
-  "SlnOpened": [],
-  "SlnClosed": []
+  ]
 }

@@ -1,6 +1,6 @@
 @echo off
 
-set cim=packages\vsSolutionBuildEvent\cim.cmd -vsw-priority "Microsoft.VisualStudio.Component.VC.Redist.14.Latest Microsoft.NetCore.Component.SDK"
+set cim=packages\vsSolutionBuildEvent\cim.cmd -vsw-priority "Microsoft.VisualStudio.Component.VC.Redist.14.Latest"
 set _gnt=tools/gnt
 
 set reltype=%~1
