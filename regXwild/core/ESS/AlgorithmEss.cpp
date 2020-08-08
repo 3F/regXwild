@@ -249,7 +249,7 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
 udiff_t AlgorithmEss::interval()
 {
     // "#"
-    if(item.mask.prev & SINGLE && (words.found - words.left) != 1)
+    if(item.mask.prev & SINGLE)
     {
         udiff_t len = item.prev.length();
         diff_t lPos = words.found - len - item.overlay - 1;
@@ -265,10 +265,15 @@ udiff_t AlgorithmEss::interval()
     if(item.mask.prev & ONE && (words.found - words.left) > 1)
     {
         udiff_t len     = item.prev.length();
-        udiff_t lPosMax = words.found - len;
-        udiff_t lPos    = lPosMax - item.overlay - 1;
+        diff_t lPosMax  = words.found - len;
+        diff_t lPos     = lPosMax - item.overlay - 1;
 
-        do{ // ????? - min<->max:
+        if(lPos < 0) { // When filter ???? (0-4) is more than origin data.
+            lPos = 0;  //TOOD: currently no info about mixed ms like ??#?
+        }
+
+        do // ????? - min<->max:
+        {
             if(_text.substr(lPos, len).compare(item.prev) == 0){
                 return words.found;
             }

@@ -990,6 +990,47 @@ namespace regXwildTest
             Assert::AreEqual(true, regXwild::searchEss(_T("system"), _T("sy*stem"), false));
         }
 
+        TEST_METHOD(underscoreTest1)
+        {
+            tstring data = _T("TV_[11_of_24]");
+
+            Assert::IsTrue(searchEss(data, _T("1#_of")));
+            Assert::IsTrue(searchEss(data, _T("#1_of")));
+            Assert::IsTrue(searchEss(data, _T("1_of")));
+            Assert::IsTrue(searchEss(data, _T("[1#_o*24")));
+            Assert::IsFalse(searchEss(data, _T("[1##_o*24")));
+            Assert::IsFalse(searchEss(data, _T("[1###_o*24")));
+            Assert::IsFalse(searchEss(data, _T("[1###_o")));
+            Assert::IsFalse(searchEss(data, _T("[1###_of")));
+            Assert::IsTrue(searchEss(data, _T("[1#_of")));
+            Assert::IsFalse(searchEss(data, _T("[1__of")));
+            Assert::IsTrue(searchEss(data, _T("1_of")));
+            Assert::IsTrue(searchEss(data, _T("[1??_of")));
+            Assert::IsTrue(searchEss(data, _T("[1???_of")));
+        }
+
+        TEST_METHOD(underscoreTest2)
+        {
+            tstring data = _T("TV_[11_of_24]");
+
+            Assert::IsFalse(searchEss(data, _T("1####4")));
+            Assert::IsTrue(searchEss(data, _T("1#####4")));
+            Assert::IsTrue(searchEss(data, _T("1######4")));
+            Assert::IsFalse(searchEss(data, _T("f####4")));
+            Assert::IsFalse(searchEss(data, _T("f###4")));
+            Assert::IsTrue(searchEss(data, _T("f##4")));
+            Assert::IsFalse(searchEss(data, _T("1#######_of")));
+            Assert::IsFalse(searchEss(data, _T("1###############_of")));
+            Assert::IsFalse(searchEss(data, _T("1###############f")));
+            Assert::IsFalse(searchEss(data, _T("1###############_f")));
+            Assert::IsFalse(searchEss(data, _T("1###############_o")));
+            Assert::IsFalse(searchEss(data, _T("[1####_of")));
+            Assert::IsFalse(searchEss(data, _T("[1####of")));
+            Assert::IsFalse(searchEss(data, _T("[1###of")));
+            Assert::IsTrue(searchEss(data, _T("[1##of")));
+        }
+
+
     private:
 
         bool searchEss(const tstring& data, const tstring& filter)
