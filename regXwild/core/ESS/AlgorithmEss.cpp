@@ -204,13 +204,16 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
 
         /* SPLIT control */
 
-        if(words.found == tstring::npos){
+        if(words.found == tstring::npos)
+        {
             if(item.mask.curr & EOL){ //TODO: [optimize]: ...or last split-block
                 return false;
             }
 
             item.pos = item.left;
-            if(item.mask.curr & SPLIT){
+            if(item.mask.curr & SPLIT) {
+                words.left = 0;
+                item.mask.prev = BOL;
                 continue; //to next block
             }
             if(rewindToNextBlock(it, false)){ continue; } return false;

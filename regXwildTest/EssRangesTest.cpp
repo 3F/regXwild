@@ -15,6 +15,16 @@ namespace regXwildTest
     {
     public:
 
+        TEST_METHOD(minmaxRangeTest5)
+        {
+            tstring filter = _T("year = '##'|year = '####'"); // 2 or 4
+
+            Assert::IsTrue(searchEss(_T("year = '2020';"), filter));
+            Assert::IsTrue(searchEss(_T("year = '20';"), filter));
+            Assert::IsFalse(searchEss(_T("year = '2020y';"), filter));
+            Assert::IsFalse(searchEss(_T("year = 2020;"), filter));
+        }
+
         TEST_METHOD(rangeAtOneTest1)
         {
             tstring data = _T("number = '123';");
