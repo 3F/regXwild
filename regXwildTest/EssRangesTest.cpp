@@ -113,6 +113,52 @@ namespace regXwildTest
             Assert::IsFalse(searchEss(_T("number = '12345';"), filter));
         }
 
+        TEST_METHOD(rangeAtMoreTest1)
+        {
+            tstring data = _T("number = '123';");
+
+            Assert::IsTrue(searchEss(data, _T("number = '+++';")));
+            Assert::IsTrue(searchEss(data, _T("number = '++';")));
+            Assert::IsTrue(searchEss(data, _T("number = '+';")));
+            Assert::IsFalse(searchEss(data, _T("number = '++++';")));
+            Assert::IsFalse(searchEss(data, _T("number = '+++++';")));
+        }
+
+        TEST_METHOD(rangeAtMoreTest2)
+        {
+            tstring filter = _T("number = '+++';");
+
+            // +++ means 3 or more
+            Assert::IsFalse(searchEss(_T("number = '';"), filter));
+            Assert::IsFalse(searchEss(_T("number = '1';"), filter));
+            Assert::IsFalse(searchEss(_T("number = '12';"), filter));
+            Assert::IsTrue(searchEss(_T("number = '123';"), filter));
+            Assert::IsTrue(searchEss(_T("number = '1234';"), filter));
+        }
+
+        TEST_METHOD(rangeAtMoreTest3)
+        {
+            tstring data = _T("number = '123';");
+
+            Assert::IsTrue(searchEss(data, _T("ber = '+++';")));
+            Assert::IsTrue(searchEss(data, _T("ber = '++';")));
+            Assert::IsTrue(searchEss(data, _T("ber = '+';")));
+            Assert::IsFalse(searchEss(data, _T("ber = '++++';")));
+            Assert::IsFalse(searchEss(data, _T("ber = '+++++';")));
+        }
+
+        TEST_METHOD(rangeAtMoreTest4)
+        {
+            tstring filter = _T("ber = '+++';");
+
+            // +++ means 3 or more
+            Assert::IsFalse(searchEss(_T("number = '';"), filter));
+            Assert::IsFalse(searchEss(_T("number = '1';"), filter));
+            Assert::IsFalse(searchEss(_T("number = '12';"), filter));
+            Assert::IsTrue(searchEss(_T("number = '123';"), filter));
+            Assert::IsTrue(searchEss(_T("number = '1234';"), filter));
+        }
+
         TEST_METHOD(rangeAtAnyTest1)
         {
             tstring data = _T("number = '123';");
@@ -449,6 +495,52 @@ namespace regXwildTest
             Assert::IsTrue(searchEss(_T("number = '123';"), filter));
             Assert::IsFalse(searchEss(_T("number = '1234';"), filter));
             Assert::IsFalse(searchEss(_T("number = '12345';"), filter));
+        }
+
+        TEST_METHOD(limRangeAtMoreTest1)
+        {
+            tstring data = _T("number = '123';");
+
+            Assert::IsTrue(searchEss(data, _T("number = '+++'")));
+            Assert::IsTrue(searchEss(data, _T("number = '++'")));
+            Assert::IsTrue(searchEss(data, _T("number = '+'")));
+            Assert::IsFalse(searchEss(data, _T("number = '++++'")));
+            Assert::IsFalse(searchEss(data, _T("number = '+++++'")));
+        }
+
+        TEST_METHOD(limRangeAtMoreTest2)
+        {
+            tstring filter = _T("number = '+++'");
+
+            // +++ means 3 or more
+            Assert::IsFalse(searchEss(_T("number = '';"), filter));
+            Assert::IsFalse(searchEss(_T("number = '1';"), filter));
+            Assert::IsFalse(searchEss(_T("number = '12';"), filter));
+            Assert::IsTrue(searchEss(_T("number = '123';"), filter));
+            Assert::IsTrue(searchEss(_T("number = '1234';"), filter));
+        }
+
+        TEST_METHOD(limRangeAtMoreTest3)
+        {
+            tstring data = _T("number = '123';");
+
+            Assert::IsTrue(searchEss(data, _T("ber = '+++'")));
+            Assert::IsTrue(searchEss(data, _T("ber = '++'")));
+            Assert::IsTrue(searchEss(data, _T("ber = '+'")));
+            Assert::IsFalse(searchEss(data, _T("ber = '++++'")));
+            Assert::IsFalse(searchEss(data, _T("ber = '+++++'")));
+        }
+
+        TEST_METHOD(limRangeAtMoreTest4)
+        {
+            tstring filter = _T("ber = '+++'");
+
+            // +++ means 3 or more
+            Assert::IsFalse(searchEss(_T("number = '';"), filter));
+            Assert::IsFalse(searchEss(_T("number = '1';"), filter));
+            Assert::IsFalse(searchEss(_T("number = '12';"), filter));
+            Assert::IsTrue(searchEss(_T("number = '123';"), filter));
+            Assert::IsTrue(searchEss(_T("number = '1234';"), filter));
         }
 
         TEST_METHOD(limRangeAtAnyTest1)

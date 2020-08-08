@@ -1,15 +1,15 @@
 
 # [regXwild](https://github.com/3F/regXwild) 
 
-Small and super Fast advanced wildcards! `*`,`|`,`?`,`^`,`$`,`+`,`#`,`>` in addition to slow regex engine and more.
+Small and super Fast Advanced wildcards! `*`,`|`,`?`,`^`,`$`,`+`,`#`,`>` in addition to slow regex engines and more.
 
 Unique algorithms that was implemented on native unmanaged C++ but easily accessible also in .NET through **[Conari](https://github.com/3F/Conari)** (recommended due to caching of 0x29 opcodes and other related optimization).
 
 [![Build status](https://ci.appveyor.com/api/projects/status/8knio1ggle0o8ugh/branch/master?svg=true)](https://ci.appveyor.com/project/3Fs/regxwild-github/branch/master)
-[![release](https://img.shields.io/github/release/3F/regXwild.svg)](https://github.com/3F/regXwild/releases/latest)
-[![License](https://img.shields.io/badge/License-MIT-74A5C2.svg)](https://github.com/3F/regXwild/blob/master/LICENSE)
-[![NuGet package](https://img.shields.io/nuget/v/regXwild.svg)](https://www.nuget.org/packages/regXwild/)
-[![Tests](https://img.shields.io/appveyor/tests/3Fs/regxwild-github/master.svg)](https://ci.appveyor.com/project/3Fs/regxwild-github/build/tests)
+[![release](https://img.shields.io/github/v/release/3F/regXwild)](https://github.com/3F/regXwild/releases/latest)
+[![License](https://img.shields.io/badge/License-MIT-74A5C2)](https://github.com/3F/regXwild/blob/master/LICENSE)
+[![NuGet package](https://img.shields.io/nuget/v/regXwild)](https://www.nuget.org/packages/regXwild/)
+[![Tests](https://img.shields.io/appveyor/tests/3Fs/regxwild-github/master)](https://ci.appveyor.com/project/3Fs/regxwild-github/build/tests)
 
 [![Build history](https://buildstats.info/appveyor/chart/3Fs/regxwild-github?buildCount=20&includeBuildsFromPullRequest=true&showStats=true)](https://ci.appveyor.com/project/3Fs/regxwild-github/history)
 
@@ -30,7 +30,7 @@ Unique algorithms that was implemented on native unmanaged C++ but easily access
 
 It was designed to be faster than just fast, when using more features that usually go beyond the typical wildcards.
 
-🔍 Easy to start:
+### 🔍 Easy to start
 
 Unmanaged native C++ or managed .NET project. It doesn't matter, just use it:
 
@@ -44,7 +44,7 @@ if(searchEssC(_T("regXwild"), _T("reg?wild"), true)) {
 }
 ```
 
-C# if you're using [ [Conari](https://github.com/3F/Conari) ]
+C# if [ [Conari](https://github.com/3F/Conari) ]
 ```csharp
 using(var l = new ConariL("regXwild.dll")) 
 {
@@ -54,7 +54,7 @@ using(var l = new ConariL("regXwild.dll"))
 }
 ```
 
-🏄 Amazing meta symbols:
+### 🏄 Amazing meta symbols
 
 ESS version (advanced EXT version)
 
@@ -63,11 +63,11 @@ enum MetaSymbols
 {
     MS_ANY      = _T('*'), // {0, ~}
     MS_SPLIT    = _T('|'), // str1 or str2 or ...
-    MS_ONE      = _T('?'), // {0, 1}, ??? - {0, 3}, ...
+    MS_ONE      = _T('?'), // {0, 1}, ??? {0, 3}, ...
     MS_BEGIN    = _T('^'), // [str... or [str1... |[str2...
     MS_END      = _T('$'), // ...str] or ...str1]| ...str2]
-    MS_MORE     = _T('+'), // {1, ~}
-    MS_SINGLE   = _T('#'), // {1}
+    MS_MORE     = _T('+'), // {1, ~}, +++ {3, ~}, ...
+    MS_SINGLE   = _T('#'), // {1}, ## {2}, ### {3}, ...
     MS_ANYSP    = _T('>'), // as [^/]*
 };
 ```
@@ -84,14 +84,28 @@ enum MetaSymbols
 };
 ```
 
-Check it with our actual **Unit-Tests**.
+🧮 Quantifiers
 
-🚀 Awesome speed: 
+regex    | regXwild
+---------|----------
+.*       | *
+.+       | +
+.?       | ?
+.{1}     | #
+.{2}     | ##
+.{2, }   | ++
+.{0, 2}  | ??
+
+and similar ...
+
+Play with our actual **Unit-Tests**.
+
+### 🚀 Awesome speed
 
 * [~2000 times faster when C++](#speed).
 * For .NET (including modern .NET Core), [Conari](https://github.com/3F/Conari) provides optional caching of 0x29 opcodes (Calli) and more to get a similar result as possible.
 
-🍰 Open and Free:
+### 🍰 Open and Free
 
 Open Source project; MIT License, Enjoy 🎉
 
@@ -114,7 +128,7 @@ We're waiting for your awesome contributions!
 Please note:
 
 * **+icase** means ignore case sensitivity when matching the filter(pattern) within the searched string, i.e. `ignoreCase = true`. **Without** this, everything **will be much faster** of course. *That is, icase always adds complexity.*
-* Commonly **MultiByte** will be faster than **Unicode** (for the same platform and the same way of module use) but it depends on specific architecture and can be about ~2 times faster when native C++, and about ~4 times faster when .NET + Conari and related.
+* Below, **MultiByte** can be faster than **Unicode** (for the same platform and the same way of module use) but it depends on specific architecture and can be about ~2 times faster when native C++, and about ~4 times faster when .NET + Conari and related.
 * The results below can be different on different machines. You need only look at the difference (in milliseconds) between algorithms for a specific target.
 * To calculate the data, as in the table below, you need execute `algo.exe`
 

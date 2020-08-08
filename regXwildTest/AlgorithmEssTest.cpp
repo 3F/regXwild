@@ -351,7 +351,7 @@ namespace regXwildTest
             Assert::AreEqual(true, searchEss(data, _T("new++systems")));
             Assert::AreEqual(true, searchEss(data, _T("+systems")));
             Assert::AreEqual(true, searchEss(data, _T("project+12")));
-            Assert::AreEqual(true, searchEss(data, _T("project++12")));
+            Assert::AreEqual(false, searchEss(data, _T("project++12")));
             Assert::AreEqual(true, searchEss(data, _T("75+*systems")));
             Assert::AreEqual(true, searchEss(data, _T("75*+*systems")));
             Assert::AreEqual(true, searchEss(data, _T("new+7+system")));
@@ -410,6 +410,26 @@ namespace regXwildTest
                 Assert::AreEqual(false, searchEss(data, _T("notfound|project+new")));
                 Assert::AreEqual(false, searchEss(data, _T("notfound|notfound2|project+new")));
             }
+        }
+
+        TEST_METHOD(filterMoreTest6)
+        {
+            tstring data = _T("new project20+ 10-pro data");
+
+            Assert::AreEqual(true, searchEss(data, _T("++")));
+            Assert::AreEqual(true, searchEss(data, _T("+++")));
+            Assert::AreEqual(true, searchEss(data, _T("++++")));
+            Assert::AreEqual(true, searchEss(data, _T("++++proj")));
+
+            Assert::AreEqual(false, searchEss(data, _T("+++++proj")));
+
+            Assert::AreEqual(false, searchEss(data, _T("project+20")));
+            Assert::AreEqual(true, searchEss(data, _T("project+10")));
+            Assert::AreEqual(true, searchEss(data, _T("project++10")));
+            Assert::AreEqual(true, searchEss(data, _T("project+++10")));
+            Assert::AreEqual(true, searchEss(data, _T("project++++10")));
+            Assert::AreEqual(false, searchEss(data, _T("project+++++10")));
+            Assert::AreEqual(false, searchEss(data, _T("project++++++10")));
         }
 
         TEST_METHOD(filterBeginTest1)
@@ -1007,6 +1027,9 @@ namespace regXwildTest
             Assert::IsTrue(searchEss(data, _T("1_of")));
             Assert::IsTrue(searchEss(data, _T("[1??_of")));
             Assert::IsTrue(searchEss(data, _T("[1???_of")));
+            Assert::IsTrue(searchEss(data, _T("[1+_of")));
+            Assert::IsFalse(searchEss(data, _T("[1++_of")));
+            Assert::IsFalse(searchEss(data, _T("[1+++_of")));
         }
 
         TEST_METHOD(underscoreTest2)

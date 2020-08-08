@@ -117,9 +117,11 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
                 if(rewindToNextBlock(it)){ continue; } return false;
             }
 
-            // Sequential combinations of characters SINGLE & ONE
-            if((item.mask.curr & SINGLE && item.mask.prev & SINGLE) || 
-                (item.mask.curr & ONE && item.mask.prev & ONE)){
+            // Sequential combinations of #, ?, +
+            if((item.mask.curr & SINGLE && item.mask.prev & SINGLE) 
+                || (item.mask.curr & ONE && item.mask.prev & ONE)
+                || (item.mask.curr & MORE && item.mask.prev & MORE))
+            {
                     ++item.overlay;
             }
             else{ item.overlay = 0; }
@@ -259,6 +261,25 @@ udiff_t AlgorithmEss::interval()
             return tstring::npos;
         }
         return words.found;
+    }
+
+    // "+"
+    if(item.mask.prev & MORE)
+    {
+        udiff_t len     = item.prev.length();
+        diff_t lPosMax  = words.found - len;
+        diff_t plim     = words.found - words.left;
+        diff_t lPos     = lPosMax - plim - 1;
+
+        if(item.overlay > plim) { // When filter ++++ (4 or more) is more than origin data.
+            return tstring::npos;
+        }
+
+        if(_text.substr(lPos, len).compare(item.prev) == 0) {
+            return words.found;
+        }
+
+        return tstring::npos;
     }
 
     // "?"
