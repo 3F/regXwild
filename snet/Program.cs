@@ -10,9 +10,9 @@ namespace snet
             Console.WriteLine("\n https://github.com/3F/regXwild \n");
 
             Console.WriteLine(".NET version via Conari engine - github.com/3F/Conari");
-            Console.WriteLine("[ v{0} - SHA-1 {1}] \n", ConariVersion.S_NUM_REV, ConariVersion.BRANCH_SHA1);
+            Console.WriteLine($"Used Conari version: {ConariVersion.S_NUM_REV}+{ConariVersion.BRANCH_SHA1}\n");
 #if DEBUG
-            Console.WriteLine("\nUse Release cfg.\n\n");
+            Console.WriteLine("\nPlease compile it first for the `Release` configuration.\n\n");
 
 #else
 

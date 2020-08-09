@@ -22,19 +22,29 @@ namespace snet
             
             tryAlgo(data, filter);
 
-            Console.WriteLine("\n#####\n");
+            Console.WriteLine(Environment.NewLine);
 
-            tryRegex(data, filter);
+            tryRegex(data, filter.Replace("*", ".*"));
         }
 
         public void tryAlgo(string data, string filter)
         {
             using(IConari l = new ConariL("regXwild.dll"))
             {
-                using(var uData = new UnmanagedString(data, UnmanagedString.SType.Unicode))
-                using(var uFilter = new UnmanagedString(filter, UnmanagedString.SType.Unicode))
+                Console.Write($"regXwild module: ");
+
+#if RXW_UNICODE
+                UnmanagedString.SType sType = UnmanagedString.SType.Unicode;
+                Console.WriteLine($"Unicode");
+#else
+                UnmanagedString.SType sType = UnmanagedString.SType.Ansi;
+                Console.WriteLine($"MultiByte");
+#endif
+
+                using(var uData = new UnmanagedString(data, sType))
+                using(var uFilter = new UnmanagedString(filter, sType))
                 {
-                    Console.WriteLine($"Unicode: true \niterations({iterations}) x average({average})\n");
+                    Console.WriteLine($"\niterations({iterations}) x average({average})\n");
 
                     var alg = new Algorithms();
 
@@ -71,26 +81,23 @@ namespace snet
             Console.WriteLine($"{label}{ms(results / average)}");
         }
 
-        public void tryRegex(string data, string filter)
+        protected void tryRegex(string data, string filter)
         {
-            Console.WriteLine("The regex engine is much more slower (~30-90sec for 10000 iterations), please wait... \n\n");
-
-            string rFilter = filter.Replace("*", ".*");
-
-            Console.WriteLine($"Compiled: true \niterations({iterations}) x average({average})\n");
-
-            calcRegex(true, " .NET Regex engine: ", data, rFilter);
-            calcRegex(true, " .NET Regex engine(only as ^match$ like a simple '=='): ", data, "^" + rFilter + "$");
-
+            tryRegex(true, data, filter);
             Console.WriteLine("\n-------\n");
-
-            Console.WriteLine($"Compiled: false \niterations({iterations}) x average({average})\n");
-
-            calcRegex(false, " .NET Regex engine: ", data, rFilter);
-            calcRegex(false, " .NET Regex engine(only as ^match$ like a simple '=='): ", data, "^" + rFilter + "$");
+            tryRegex(false, data, filter);
         }
 
-        public void calcRegex(bool compiled, string label, string data, string filter)
+        protected void tryRegex(bool compile, string data, string filter)
+        {
+            Console.WriteLine($".NET Regex. Compile: {compile} \niterations({iterations}) x average({average})\n");
+            Console.WriteLine("Please wait for the result ...\n\n");
+
+            calcRegex(compile, " .NET Regex engine: ", data, filter);
+            calcRegex(compile, " .NET Regex engine(only as ^match$ like a simple '=='): ", data, "^" + filter + "$");
+        }
+
+        protected void calcRegex(bool compiled, string label, string data, string filter)
         {
             var alg     = new Algorithms();
             var meter   = new Meter();
