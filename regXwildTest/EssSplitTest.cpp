@@ -21,6 +21,7 @@ namespace regXwildTest
 
             Assert::IsTrue(searchEss(_T("year = '2020';"), filter));
             Assert::IsTrue(searchEss(_T("year = '20';"), filter));
+            Assert::IsFalse(searchEss(_T("year = '20y';"), filter));
             Assert::IsFalse(searchEss(_T("year = '2020y';"), filter));
             Assert::IsFalse(searchEss(_T("year = 2020;"), filter));
         }

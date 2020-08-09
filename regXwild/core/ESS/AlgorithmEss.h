@@ -90,19 +90,21 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
             udiff_t delta;
             Mask mask;
             unsigned short int overlay;
-            unsigned short int gapms; // ++??
+
+            unsigned short int mixpos; // ++??
+            MetaOperation mixms;
 
             /** enough of this.. */
             tstring prev;
 
             void reset()
             {
-                pos = left = delta = overlay = gapms = 0;
+                pos = left = delta = overlay = mixpos = 0;
                 mask.curr = mask.prev = BOL;
                 curr.clear();
                 prev.clear();
             };
-            Item(): pos(0), left(0), delta(0), overlay(0), gapms(0) { };
+            Item(): pos(0), left(0), delta(0), overlay(0), mixpos(0) { };
         } item;
 
         /**

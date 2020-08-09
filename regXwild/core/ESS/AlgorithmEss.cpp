@@ -117,9 +117,11 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
                 if(rewindToNextBlock(it)){ continue; } return false;
             }
 
-            // ++??
-            if(item.mask.prev & MORE && item.mask.curr & ONE) {
-                item.gapms = item.overlay + 1;
+            // ++?? and ##??
+            if(item.mask.prev & (MORE | SINGLE) && item.mask.curr & ONE) 
+            {
+                item.mixpos = item.overlay + 1;
+                item.mixms  = item.mask.prev;
             }
 
             // Sequential combinations of #, ?, +
@@ -210,7 +212,7 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
             if(item.mask.curr & SPLIT)
             {
                 words.left = 0;
-                item.gapms = 0;
+                item.mixpos = 0;
                 item.mask.prev = BOL;
                 continue; //to next block
             }
@@ -251,14 +253,18 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
 
 udiff_t AlgorithmEss::interval()
 {
-    // ++??
-    if(item.mask.prev & ONE && item.gapms > 0)
+    // ++?? or ##??
+    if(item.mask.prev & ONE && item.mixpos > 0)
     {
         size_t len      = item.prev.length();
         diff_t delta    = words.found - words.left;
 
-        diff_t min = item.gapms;
+        diff_t min = item.mixpos;
         diff_t max = min + item.overlay + 1;
+
+        if(item.mixms & SINGLE && delta != min && delta != max) {
+            return tstring::npos;
+        }
 
         if(delta < min || delta > max) {
             return tstring::npos;
