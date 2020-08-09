@@ -64,13 +64,12 @@ namespace net { namespace r_eg { namespace regXwild
     }
 
     /**
-    * To get current version of regXwild library as a string.
-    * @return Returns version as Major.Minor [.Revision] etc.
+    * obsolete due to RXWVersion
+    * @return Returns current RXWVersion.product version of regXwild library.
     */
     REGXWILD_API const TCHAR* versionString()
     {
-        // Please use '.version' file. It will be automatically updated by vssbe script.
-        return /*vsSBE*/_T("1.2.0"); //TODO: additional structure etc. of version data.
+        return /*vsSBE*/_T("1.2.0");
     }
 
 }}}

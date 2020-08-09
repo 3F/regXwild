@@ -27,6 +27,7 @@
 #include "stdafx.h"
 #include "regXwildConf.h"
 #include "typedefs.h"
+#include "RXWVersion.h"
 
 namespace net { namespace r_eg { namespace regXwild
 {

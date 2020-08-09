@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>regXwild</id>
-    <version>1.2.0</version>
+    <version>$-version-$</version>
     <title>[ regXwild ] Fast Advanced wildcards</title>
     <authors>github.com/3F/regXwild</authors>
     <license type="file">LICENSE</license>
@@ -117,10 +117,10 @@
         - - - - - - - - - - - - - - - - 
         
         =======================================
-        gnt /p:ngpackages="regXwild/1.2.0"
+        gnt /p:ngpackages="regXwild/$-version-$"
         ================== https://github.com/3F/GetNuTool
 
-    </description>
+        {build-info}</description>
     <summary>Small and super Fast advanced wildcards! `*,|,?,^,$,+,#,&gt;` in addition to slow regex engines and more. https://github.com/3F/regXwild</summary>
     <tags>wildcards advanced-wildcards fast-wildcards fast-regex extended-wildcards strings text filter search matching search-in-text regex glob filters powerful-wildcards regexp cpp c dotnet dotnetcore csharp Conari regXwild native</tags>
     <releaseNotes> changelog: https://github.com/3F/regXwild/blob/master/changelog.txt </releaseNotes>
