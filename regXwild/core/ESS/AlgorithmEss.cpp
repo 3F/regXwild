@@ -127,18 +127,9 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
                 || (item.mask.curr & ONE && item.mask.prev & ONE)
                 || (item.mask.curr & MORE && item.mask.prev & MORE))
             {
-                    ++item.overlay;
+                ++item.overlay;
             }
             else{ item.overlay = 0; }
-
-            // disable all combinations for SINGLE. TODO: stub - _stubSINGLECombination()
-            if( (item.mask.prev & (BOL | EOL)) == 0 &&
-               ( 
-                (item.mask.curr & SINGLE && (item.mask.prev & SINGLE) == 0) ||
-                (item.mask.prev & SINGLE && (item.mask.curr & SINGLE) == 0) ))
-            {
-                if(rewindToNextBlock(it)){ continue; } return false;
-            }
 
             ++item.pos;
 
