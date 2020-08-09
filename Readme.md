@@ -13,22 +13,27 @@ Unique algorithms that was implemented on native unmanaged C++ but easily access
 
 [![Build history](https://buildstats.info/appveyor/chart/3Fs/regxwild-github?buildCount=20&includeBuildsFromPullRequest=true&showStats=true)](https://ci.appveyor.com/project/3Fs/regxwild-github/history)
 
+Samples [⏯](regXwildTest/EssSamplesTest.cpp) | regXwild filter | n
+----------------------|----------------------|---------
+number = '1271';      | number = '????';     |  0 - 4
+year = '2020';        | '##'\|'####'         |  2;  4
+year = '20';          | = '##??'             |  2;  4
+number = 888;         | number = +??;        |  1 - 3
 
-```cpp
-= searchEssC(L"number = '1271';", L"number = '????';", true);
-```
-```cpp
-= searchEss(data, _T("^main*is ok$"));
-= searchEss(data, _T("^new*pro?ection"));
-= searchEss(data, _T("pro*system"));
-= searchEss(data, _T("sys###s"));
-= searchEss(data, _T("new+7+system"));
-= searchEss(data, _T("some project$|open*and*star|^system"));
-```
+
+Samples [⏯](regXwildTest/EssSamplesTest.cpp) | regXwild filter
+----------------------|----------------------
+everything is ok      | ^everything\*ok$
+systems               | system?
+systems               | sys###s
+A new 'X1' project    | ^A\*'+' pro?ect
+professional system   | pro\*system
+regXwild in action    | pro?ect$\|open\*source+act\|^regXwild
+
 
 ## Why regXwild ?
 
-It was designed to be faster than just fast, when using more features that usually go beyond the typical wildcards.
+It was designed to be faster than just fast for features that usually go beyond the typical wildcards. Seriously, We love regex, I love, You love; 2013 far behind but regXwild still relevant for speed and powerful wildcards-like features, such as `##??` (which means 2 or 4) ...
 
 ### 🔍 Easy to start
 
@@ -58,43 +63,42 @@ using(var l = new ConariL("regXwild.dll"))
 
 ESS version (advanced EXT version)
 
-```cpp
-enum MetaSymbols
-{
-    MS_ANY      = _T('*'), // {0, ~}
-    MS_SPLIT    = _T('|'), // str1 or str2 or ...
-    MS_ONE      = _T('?'), // {0, 1}, ??? {0, 3}, ...
-    MS_BEGIN    = _T('^'), // [str... or [str1... |[str2...
-    MS_END      = _T('$'), // ...str] or ...str1]| ...str2]
-    MS_MORE     = _T('+'), // {1, ~}, +++ {3, ~}, ...
-    MS_SINGLE   = _T('#'), // {1}, ## {2}, ### {3}, ...
-    MS_ANYSP    = _T('>'), // as [^/]*
-};
-```
+metasymbol | meaning
+-----------|----------------
+\*         | {0, ~}
+\|         | str1 or str2 or ...
+?          | {0, 1}, ??? {0, 3}, ...
+^          | [str... or [str1... |[str2...
+$          | ...str] or ...str1]| ...str2]
+\+         | {1, ~}, +++ {3, ~}, ...
+\#         | {1}, ## {2}, ### {3}, ...
+\>         | as [^/]*
 
 EXT version (more simplified than ESS)
 
-```cpp
-enum MetaSymbols 
-{
-    MS_ANY      = _T('*'),
-    MS_ANYSP    = _T('>'), //as [^/\\]+
-    MS_SPLIT    = _T('|'),
-    MS_ONE      = _T('?'),
-};
-```
+metasymbol | meaning
+-----------|----------------
+\*         | {0, ~}
+\>         | as [^/\\]+
+\|         | str1 or str2 or ...
+?          | {0, 1}, ??? {0, 3}, ...
 
-🧮 Quantifiers
 
-regex    | regXwild
----------|----------
-.*       | *
-.+       | +
-.?       | ?
-.{1}     | #
-.{2}     | ##
-.{2, }   | ++
-.{0, 2}  | ??
+### 🧮 Quantifiers
+
+regex           | regXwild   | n
+----------------|------------|---------
+.\*             | \*         | 0+
+.+              | +          | 1+
+.?              | ?          | 0;  1
+.{1}            | #          | 1
+.{2}            | ##         | 2
+.{2, }          | ++         | 2+
+.{0, 2}         | ??         | 0 - 2
+.{2, 4}         | ++??       | 2 - 4
+(?:.{2}\|.{4})  | ##??       | 2;  4
+.{3, 4}         | +++?       | 3 - 4
+(?:.{1}\|.{3})  | #??        | 1;  3
 
 and similar ...
 

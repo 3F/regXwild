@@ -105,6 +105,19 @@ namespace regXwildTest
             Assert::AreEqual(false, searchExt(_T("system_-17 fee also"), _T("system?17")));
         }
 
+        TEST_METHOD(filterOneTest3)
+        {
+            tstring data = _T("number = '1234';");
+
+            Assert::IsTrue, searchExt(data, _T("'????'"));
+            Assert::IsTrue, searchExt(data, _T("'?????'"));
+            Assert::IsTrue, searchExt(data, _T("'??????'"));
+            Assert::IsFalse, searchExt(data, _T("'???'"));
+            Assert::IsFalse, searchExt(data, _T("'??'"));
+            Assert::IsFalse, searchExt(data, _T("'?'"));
+            Assert::IsFalse, searchExt(data, _T("''"));
+        }
+
         TEST_METHOD(filterAnySPTest1)
         {
             Assert::AreEqual(true, searchExt(_T("/new/user_myhid_test.bzip2"), _T("myhid>bzip")));   // __...___

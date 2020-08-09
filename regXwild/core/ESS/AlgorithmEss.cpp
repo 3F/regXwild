@@ -117,23 +117,21 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
                 if(rewindToNextBlock(it)){ continue; } return false;
             }
 
+            // ++?? and ##??
+            if(item.mask.prev & (MORE | SINGLE) && item.mask.curr & ONE) 
+            {
+                item.mixpos = item.overlay + 1;
+                item.mixms  = item.mask.prev;
+            }
+
             // Sequential combinations of #, ?, +
             if((item.mask.curr & SINGLE && item.mask.prev & SINGLE) 
                 || (item.mask.curr & ONE && item.mask.prev & ONE)
                 || (item.mask.curr & MORE && item.mask.prev & MORE))
             {
-                    ++item.overlay;
+                ++item.overlay;
             }
             else{ item.overlay = 0; }
-
-            // disable all combinations for SINGLE. TODO: stub - _stubSINGLECombination()
-            if( (item.mask.prev & (BOL | EOL)) == 0 &&
-               ( 
-                (item.mask.curr & SINGLE && (item.mask.prev & SINGLE) == 0) ||
-                (item.mask.prev & SINGLE && (item.mask.curr & SINGLE) == 0) ))
-            {
-                if(rewindToNextBlock(it)){ continue; } return false;
-            }
 
             ++item.pos;
 
@@ -211,8 +209,10 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
             }
 
             item.pos = item.left;
-            if(item.mask.curr & SPLIT) {
+            if(item.mask.curr & SPLIT)
+            {
                 words.left = 0;
+                item.mixpos = 0;
                 item.mask.prev = BOL;
                 continue; //to next block
             }
@@ -253,6 +253,31 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
 
 udiff_t AlgorithmEss::interval()
 {
+    // ++?? or ##??
+    if(item.mask.prev & ONE && item.mixpos > 0)
+    {
+        size_t len      = item.prev.length();
+        diff_t delta    = words.found - words.left;
+
+        diff_t min = item.mixpos;
+        diff_t max = min + item.overlay + 1;
+
+        if(item.mixms & SINGLE && delta != min && delta != max) {
+            return tstring::npos;
+        }
+
+        if(delta < min || delta > max) {
+            return tstring::npos;
+        }
+
+        if(_text.substr(words.found - len - delta, len).compare(item.prev) == 0) {
+            return words.found;
+        }
+
+        return tstring::npos;
+
+    }
+
     // "#"
     if(item.mask.prev & SINGLE)
     {

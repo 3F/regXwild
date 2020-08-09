@@ -882,44 +882,6 @@ namespace regXwildTest
             }
         }
 
-        /* behaviour by default for non implemented combinations - SINGLE */
-        TEST_METHOD(stubSINGLECombinationTest1)
-        {
-            tstring data = _T("new tes;ted project-12, and 75_protection of various systems");
-
-            // MS combination
-            {
-                //TODO: implement *,>,?,+,# and combination
-                {
-                    /* true: */
-
-                    // *
-                    {
-                        Assert::AreEqual(false, searchEss(data, _T("*#")));
-                        Assert::AreEqual(false, searchEss(data, _T("*#*")));
-                        Assert::AreEqual(false, searchEss(data, _T("#*")));
-                        Assert::AreEqual(false, searchEss(data, _T("*#systems")));
-                        Assert::AreEqual(false, searchEss(data, _T("new*#*systems")));
-                        Assert::AreEqual(false, searchEss(data, _T("*new#*systems*")));
-                        Assert::AreEqual(false, searchEss(data, _T("new#*systems")));
-                        Assert::AreEqual(false, searchEss(data, _T("75*#protection")));
-                        Assert::AreEqual(false, searchEss(data, _T("75*#*protection")));
-                        Assert::AreEqual(false, searchEss(data, _T("new*#systems")));
-                        Assert::AreEqual(false, searchEss(data, _T("*new#*#systems*")));
-                    }
-
-                    /* false */
-                    {
-                        Assert::AreEqual(false, searchEss(data, _T("*new#systems*")));
-                        Assert::AreEqual(false, searchEss(data, _T("*new##systems*")));
-                        Assert::AreEqual(false, searchEss(data, _T("systems*#")));
-                        Assert::AreEqual(false, searchEss(data, _T("pro#*ject")));
-                        Assert::AreEqual(false, searchEss(data, _T("systems#*")));
-                    }
-                }
-            }
-        }
-
         /* behaviour by default for non implemented combinations - END */
         TEST_METHOD(stubENDCombinationTest1)
         {
