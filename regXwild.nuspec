@@ -11,10 +11,10 @@
     <projectUrl>https://github.com/3F/regXwild</projectUrl>
     <repository type="git" url="https://github.com/3F/regXwild" />
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Small and super Fast Advanced wildcards! `*,|,?,^,$,+,#,&gt;` in addition to slow regex engines and more.
+    <description>Small and super Fast Advanced wildcards! `*,|,?,^,$,+,#,&gt;,++??,##??` in addition to slow regex engines and more.
 
-        Unique algorithms that was implemented on native unmanaged C++ but easily accessible also in .NET
-        through Conari (recommended due to caching of 0x29 opcodes and other related optimization).
+        Unique algorithms that was implemented on native unmanaged C++ but easily accessible in .NET
+        through Conari (recommended due to caching of 0x29 opcodes + related optimizations) etc.
 
         Samples [⏯](run)    | regXwild filter      | n
         ----------------------|----------------------|---------
@@ -121,7 +121,7 @@
         ================== https://github.com/3F/GetNuTool
 
         {build-info}</description>
-    <summary>Small and super Fast advanced wildcards! `*,|,?,^,$,+,#,&gt;` in addition to slow regex engines and more. https://github.com/3F/regXwild</summary>
+    <summary>Small and super Fast advanced wildcards! `*,|,?,^,$,+,#,&gt;,++??,##??` in addition to slow regex engines and... https://github.com/3F/regXwild</summary>
     <tags>wildcards advanced-wildcards fast-wildcards fast-regex extended-wildcards strings text filter search matching search-in-text regex glob filters powerful-wildcards regexp cpp c dotnet dotnetcore csharp Conari regXwild native</tags>
     <releaseNotes> changelog: https://github.com/3F/regXwild/blob/master/changelog.txt </releaseNotes>
     <copyright>Copyright (c) 2013-2014, 2016-2017, 2020  Denis Kuzmin &lt; x-3F@outlook.com &gt; GitHub/3F</copyright>

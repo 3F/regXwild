@@ -18,12 +18,12 @@ namespace net { namespace r_eg { namespace regXwild
             TNum(int major, int minor, int patch, int build = 0)
                 : major(major), minor(minor), patch(patch), build(build) { }
 
-            TNum() : TNum(1, 2, 0, 0) { }
+            TNum() : TNum(1, 3, 0, 0) { }
 
         } number;
 
         const TCHAR* bSha1      = _T("");
         const TCHAR* config     = _T("");
-        const TCHAR* product    = _T("1.2.0");
+        const TCHAR* product    = _T("1.3.0");
     };
 }}}

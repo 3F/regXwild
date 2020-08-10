@@ -1,9 +1,9 @@
 
 # [regXwild](https://github.com/3F/regXwild) 
 
-Small and super Fast Advanced wildcards! `*`,`|`,`?`,`^`,`$`,`+`,`#`,`>` in addition to slow regex engines and more.
+Small and super Fast Advanced wildcards! `*`,`|`,`?`,`^`,`$`,`+`,`#`,`>`,[`++??`](https://github.com/3F/regXwild/pull/7),[`##??`](https://github.com/3F/regXwild/pull/7) in addition to slow regex engines and more.
 
-Unique algorithms that was implemented on native unmanaged C++ but easily accessible also in .NET through **[Conari](https://github.com/3F/Conari)** (recommended due to caching of 0x29 opcodes and other related optimization).
+Unique algorithms that was implemented on native unmanaged C++ but easily accessible in .NET through **[Conari](https://github.com/3F/Conari)** (recommended due to caching of 0x29 opcodes + related optimizations), and others such as [python](https://github.com/3F/regXwild/issues/6) etc.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/8knio1ggle0o8ugh/branch/master?svg=true)](https://ci.appveyor.com/project/3Fs/regxwild-github/branch/master)
 [![release](https://img.shields.io/github/v/release/3F/regXwild)](https://github.com/3F/regXwild/releases/latest)
@@ -16,8 +16,8 @@ Unique algorithms that was implemented on native unmanaged C++ but easily access
 Samples [⏯](regXwildTest/EssSamplesTest.cpp) | regXwild filter | n
 ----------------------|----------------------|---------
 number = '1271';      | number = '????';     |  0 - 4
-year = '2020';        | '##'\|'####'         |  2;  4
-year = '20';          | = '##??'             |  2;  4
+year = '2020';        | '##'\|'####'         |  2 \| 4
+year = '20';          | = '##??'             |  2 \| 4
 number = 888;         | number = +??;        |  1 - 3
 
 
@@ -86,19 +86,21 @@ metasymbol | meaning
 
 ### 🧮 Quantifiers
 
+1.3+ [`++??`](https://github.com/3F/regXwild/pull/7); [`##??`](https://github.com/3F/regXwild/pull/7)
+
 regex           | regXwild   | n
 ----------------|------------|---------
 .\*             | \*         | 0+
 .+              | +          | 1+
-.?              | ?          | 0;  1
+.?              | ?          | 0 \| 1
 .{1}            | #          | 1
 .{2}            | ##         | 2
 .{2, }          | ++         | 2+
 .{0, 2}         | ??         | 0 - 2
 .{2, 4}         | ++??       | 2 - 4
-(?:.{2}\|.{4})  | ##??       | 2;  4
+(?:.{2}\|.{4})  | ##??       | 2 \| 4
 .{3, 4}         | +++?       | 3 - 4
-(?:.{1}\|.{3})  | #??        | 1;  3
+(?:.{1}\|.{3})  | #??        | 1 \| 3
 
 and similar ...
 

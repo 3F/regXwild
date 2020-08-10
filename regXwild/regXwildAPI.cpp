@@ -69,7 +69,7 @@ namespace net { namespace r_eg { namespace regXwild
     */
     REGXWILD_API const TCHAR* versionString()
     {
-        return /*vsSBE*/_T("1.2.0");
+        return /*vsSBE*/_T("1.3.0");
     }
 
 }}}
