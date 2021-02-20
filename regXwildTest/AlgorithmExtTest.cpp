@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 
-#include "..\regXwild\regXwildAPI.h"
+#include "..\regXwild\regXwild.common.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace net::r_eg::regXwild;
@@ -10,6 +10,7 @@ namespace regXwildTest
 {
     namespace regXwild = net::r_eg::regXwild;
     using namespace regXwild::rxwtypes;
+    using namespace regXwild::common;
 
     TEST_CLASS(AlgorithmExtTest)
     {
@@ -170,21 +171,21 @@ namespace regXwildTest
 
         TEST_METHOD(caseSensitiveTest1)
         {
-            Assert::AreEqual(false, regXwild::searchExt(_T("system"), _T("syStem"), false));
-            Assert::AreEqual(true, regXwild::searchExt(_T("system"), _T("system"), false));
-            Assert::AreEqual(false, regXwild::searchExt(_T("syStem"), _T("system"), false));
-            Assert::AreEqual(true, regXwild::searchExt(_T("SYSTEM"), _T("SYSTEM"), false));
+            Assert::AreEqual(false, searchExt(_T("system"), _T("syStem"), false));
+            Assert::AreEqual(true, searchExt(_T("system"), _T("system"), false));
+            Assert::AreEqual(false, searchExt(_T("syStem"), _T("system"), false));
+            Assert::AreEqual(true, searchExt(_T("SYSTEM"), _T("SYSTEM"), false));
 
-            Assert::AreEqual(false, regXwild::searchExt(_T("system"), _T("sy*Stem"), false));
-            Assert::AreEqual(false, regXwild::searchExt(_T("system"), _T("syS*tem"), false));
-            Assert::AreEqual(true, regXwild::searchExt(_T("system"), _T("sy*stem"), false));
+            Assert::AreEqual(false, searchExt(_T("system"), _T("sy*Stem"), false));
+            Assert::AreEqual(false, searchExt(_T("system"), _T("syS*tem"), false));
+            Assert::AreEqual(true, searchExt(_T("system"), _T("sy*stem"), false));
         }
 
     private:
 
-        bool searchExt(const tstring& data, const tstring& filter)
+        bool searchExt(const tstring& data, const tstring& filter, bool ignoreCase = true)
         {
-            return regXwild::searchExt(data, filter, true);
+            return regXwild::common::searchExt(data, filter, ignoreCase);
         }
 
     };

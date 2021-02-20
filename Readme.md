@@ -43,10 +43,11 @@ Unmanaged native C++ or managed .NET project. It doesn't matter, just use it:
 
 C++
 ```cpp
-#include "regXwildAPI.h"
+#include <regXwild.h>
 using namespace net::r_eg::regXwild;
 ...
-if(searchEssC(_T("regXwild"), _T("reg?wild"), true)) {
+EssRxW rxw;
+if(rxw.search(_T("regXwild"), _T("reg?wild"))) {
     // ...
 }
 ```

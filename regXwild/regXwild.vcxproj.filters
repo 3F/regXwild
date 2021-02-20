@@ -63,6 +63,9 @@
     <ClInclude Include="conf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="regXwild.common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -74,14 +77,14 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="regXwildAPI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="core\ESS\AlgorithmEss.cpp">
       <Filter>Source Files\core\ESS</Filter>
     </ClCompile>
     <ClCompile Include="core\EXT\AlgorithmExt.cpp">
       <Filter>Source Files\core\EXT</Filter>
+    </ClCompile>
+    <ClCompile Include="regXwild.common.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

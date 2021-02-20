@@ -24,6 +24,7 @@
 */
 
 #pragma once
+
 #include "stdafx.h"
 #include "conf.h"
 #include "typedefs.h"

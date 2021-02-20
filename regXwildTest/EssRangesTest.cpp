@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 
-#include "..\regXwild\regXwildAPI.h"
+#include "..\regXwild\regXwild.common.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace net::r_eg::regXwild;
@@ -11,6 +11,7 @@ namespace regXwildTest
 {
     namespace regXwild = net::r_eg::regXwild;
     using namespace regXwild::rxwtypes;
+    using namespace regXwild::common;
 
     TEST_CLASS(EssRangesTest)
     {
@@ -728,9 +729,9 @@ namespace regXwildTest
 
     private:
 
-        bool searchEss(const tstring& data, const tstring& filter)
+        bool searchEss(const tstring& data, const tstring& filter, bool ignoreCase = true)
         {
-            return regXwild::searchEss(data, filter, true);
+            return regXwild::common::searchEss(data, filter, ignoreCase);
         }
 
     };

@@ -25,13 +25,13 @@
 
 #include "stdafx.h"
 #include "regXwild.h"
-#include "regXwildAPI.h"
+#include "regXwild.common.h"
 #include "core\ESS\AlgorithmEss.h"
 #include "core\EXT\AlgorithmExt.h"
 
-namespace net { namespace r_eg { namespace regXwild 
+namespace net { namespace r_eg { namespace regXwild { namespace common
 {
-    // NOTE: ref + pointers signatures for PE/Invoke outside env
+    // NOTE: ref + pointers signatures for PE/Invoke outside environment etc.
 
     /**
     * To search substring in data with filter by the rules of ESS algorithm.
@@ -124,4 +124,4 @@ namespace net { namespace r_eg { namespace regXwild
         return /*vsSBE*/_T("1.3.0");
     }
 
-}}}
+}}}}

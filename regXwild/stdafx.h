@@ -61,7 +61,6 @@
 #endif
 
 
-
 // For transform() in internal _lowercase processing
 #include <algorithm>
 

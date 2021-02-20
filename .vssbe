@@ -139,7 +139,7 @@
           "#[File write(\"$(pDir)/RXWVersion.h\"):#[$(tpl.Replace('\\n', '\\r\\n'))]]",
           "",
           "",
-          "#[IO replace.Regex(\"$(pDir)/regXwildAPI.cpp\", \"(vsSBE.+?_T\\().+?;\", \"$1\\\"#[$(pVerBuild)]\\\");\")]",
+          "#[IO replace.Regex(\"$(pDir)/regXwild.common.cpp\", \"(vsSBE.+?_T\\().+?;\", \"$1\\\"#[$(pVerBuild)]\\\");\")]",
           "",
           ""
         ]
@@ -213,6 +213,7 @@
           "            \"$(pDir)\\declspec.h\",",
           "            \"$(pDir)\\regXwild.h\",",
           "            \"$(pDir)\\regXwildAPI.h\",",
+          "            \"$(pDir)\\regXwild.common.h\",",
           "            \"$(pDir)\\RXWVersion.h\",",
           "            \"$(pDir)\\conf.h\",",
           "            \"$(pDir)\\stdafx.h\",",

@@ -24,6 +24,7 @@
 */
 
 #pragma once
+
 #include "stdafx.h"
 #include "conf.h"
 #include "typedefs.h"
@@ -71,7 +72,10 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
          */
         const static TCHAR ANYSP_CMP_DEFAULT = _T('/');
 
-        /** entry for match cases */
+        /// <summary>
+        /// Basic search for occurrence using filter.
+        /// </summary>
+        /// <returns>true if found</returns>
         REGXWILD_API bool search(const tstring& text, const tstring& filter, bool ignoreCase = true);
 
     protected:

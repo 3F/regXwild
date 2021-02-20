@@ -154,6 +154,7 @@
     <ClInclude Include="core\ESS\AlgorithmEss.h" />
     <ClInclude Include="core\EXT\AlgorithmExt.h" />
     <ClInclude Include="declspec.h" />
+    <ClInclude Include="regXwild.common.h" />
     <ClInclude Include="regXwild.h" />
     <ClInclude Include="regXwildAPI.h" />
     <ClInclude Include="conf.h" />
@@ -180,7 +181,7 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="regXwild.cpp" />
-    <ClCompile Include="regXwildAPI.cpp" />
+    <ClCompile Include="regXwild.common.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
