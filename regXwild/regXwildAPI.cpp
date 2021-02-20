@@ -31,6 +31,7 @@
 
 namespace net { namespace r_eg { namespace regXwild 
 {
+    // NOTE: ref + pointers signatures for PE/Invoke outside env
 
     /**
     * To search substring in data with filter by the rules of ESS algorithm.
@@ -61,6 +62,19 @@ namespace net { namespace r_eg { namespace regXwild
     }
 
     /**
+    * To search substring in data with filter by the rules of ESS algorithm.
+    * [string* / wstring*]
+    * @param data Where to search.
+    * @param filter The filter of comparison string.
+    * @param ignoreCase To check data with no case sensitive rules if true.
+    * @return Returns true value if the data satisfies the condition of the filter.
+    */
+    REGXWILD_API_L bool searchEssPtr(const rxwtypes::tstring* data, const rxwtypes::tstring* filter, bool ignoreCase)
+    {
+        return searchEss(*data, *filter, ignoreCase);
+    }
+
+    /**
     * To search substring in data with filter by the rules of EXT algorithm.
     * [char* / wchar_t*]
     * @param data Where to search.
@@ -86,6 +100,19 @@ namespace net { namespace r_eg { namespace regXwild
         core::EXT::AlgorithmExt alg;
 
         return alg.main(data, filter, ignoreCase);
+    }
+
+    /**
+    * To search substring in data with filter by the rules of EXT algorithm.
+    * [string* / wstring*]
+    * @param data Where to search.
+    * @param filter The filter of comparison string.
+    * @param ignoreCase To check data with no case sensitive rules if true.
+    * @return Returns true value if the data satisfies the condition of the filter.
+    */
+    REGXWILD_API_L bool searchExtPtr(const rxwtypes::tstring* data, const rxwtypes::tstring* filter, bool ignoreCase)
+    {
+        return searchExt(*data, *filter, ignoreCase);
     }
 
     /**

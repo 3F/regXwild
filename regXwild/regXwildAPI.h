@@ -49,6 +49,16 @@ namespace net { namespace r_eg { namespace regXwild
     REGXWILD_API_L bool searchEss(const rxwtypes::tstring& data, const rxwtypes::tstring& filter, bool ignoreCase);
 
     /**
+    * To search substring in data with filter by the rules of ESS algorithm.
+    * [string* / wstring*]
+    * @param data Where to search.
+    * @param filter The filter of comparison string.
+    * @param ignoreCase To check data with no case sensitive rules if true.
+    * @return Returns true value if the data satisfies the condition of the filter.
+    */
+    REGXWILD_API_L bool searchEssPtr(const rxwtypes::tstring* data, const rxwtypes::tstring* filter, bool ignoreCase);
+
+    /**
     * To search substring in data with filter by the rules of EXT algorithm.
     * [char* / wchar_t*]
     * @param data Where to search.
@@ -67,6 +77,16 @@ namespace net { namespace r_eg { namespace regXwild
     * @return Returns true value if the data satisfies the condition of the filter.
     */
     REGXWILD_API_L bool searchExt(const rxwtypes::tstring& data, const rxwtypes::tstring& filter, bool ignoreCase);
+
+    /**
+    * To search substring in data with filter by the rules of EXT algorithm.
+    * [string* / wstring*]
+    * @param data Where to search.
+    * @param filter The filter of comparison string.
+    * @param ignoreCase To check data with no case sensitive rules if true.
+    * @return Returns true value if the data satisfies the condition of the filter.
+    */
+    REGXWILD_API_L bool searchExtPtr(const rxwtypes::tstring* data, const rxwtypes::tstring* filter, bool ignoreCase);
 
     /**
     * To get current version of regXwild library as a string.
