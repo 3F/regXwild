@@ -1,9 +1,8 @@
-#pragma once
-
 /*
 * The MIT License (MIT)
 *
-* Copyright (c) 2013-2014, 2016-2017, 2020  Denis Kuzmin < x-3F@outlook.com > GitHub/3F
+* Copyright (c) 2013-2021  Denis Kuzmin <x-3F@outlook.com> github/3F
+* Copyright (c) regXwild contributors https://github.com/3F/regXwild
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +22,8 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+
+#pragma once
 
 #include "stdafx.h"
 #include "..\regXwild\typedefs.h"

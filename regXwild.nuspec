@@ -11,110 +11,39 @@
     <projectUrl>https://github.com/3F/regXwild</projectUrl>
     <repository type="git" url="https://github.com/3F/regXwild" />
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Small and super Fast Advanced wildcards! `*,|,?,^,$,+,#,&gt;,++??,##??` in addition to slow regex engines and more.
+    <description>🚀 Superfast ^Advanced wildcards++? `*,|,?,^,$,+,#,&gt;,++??,##??` ...
 
-        Unique algorithms that was implemented on native unmanaged C++ but easily accessible in .NET
-        through Conari (recommended due to caching of 0x29 opcodes + related optimizations) etc.
+Unique algorithms that was implemented on native unmanaged C++ but easily accessible in .NET
+through Conari (recommended due to caching of 0x29 opcodes + related optimizations) etc.
 
-        Samples [⏯](run)    | regXwild filter      | n
-        ----------------------|----------------------|---------
-        number = '1271';      | number = '????';     |  0 - 4
-        year = '2020';        | '##'|'####'          |  2;  4
-        year = '20';          | = '##??'             |  2;  4
-        number = 888;         | number = +??;        |  1 - 3
-        ...
-        ----------------------|----------------------
-        everything is ok      | ^everything*ok$
-        systems               | system?
-        systems               | sys###s
-        A new 'X1' project    | ^A*'+' pro?ect
-        professional system   | pro*system
-        regXwild in action    | pro?ect$|open*source+act|^regXwild
+✔ regex-like quantifiers and amazing meta symbols
+
+Samples [⏯]
+
+number = '1271'; ⬅ number = '????'; ⬅ [0 - 4]
+year = '2020'; ⬅ '##'|'####' ⬅ [2;  4]
+year = '20'; ⬅ = '##??' ⬅ [2;  4]
+number = 888; ⬅ number = +??; ⬅ [1 - 3]
+...
+everything is ok ⬅ ^everything*ok$
+systems ⬅ system?
+systems ⬅ sys###s
+A new 'X1' project ⬅ ^A*'+' pro?ect
+professional system ⬅ pro*system
+regXwild in action ⬅ pro?ect$|open*source+act|^regXwild
 
 
-        This package contains x64 + x32 Unicode + MultiByte modules
-        and provides both support of the unmanaged and managed projects:
-        
-        * For native: .\lib\native\{Platform}-(Unicode or MultiByte)\ ~ regXwild.dll, regXwild.lib, regXwild.exp, include\*.h
-        * For .NET it will put x32 &amp; x64 regXwild into (TargetDir). Use it with your .net modules through Conari ( https://github.com/3F/Conari ) and so on.
+This package contains x64 + x32 Unicode + MultiByte modules
+and provides both support of the unmanaged and managed projects:
 
-        ## Why regXwild ?
+* For native: .\lib\native\{Platform}-(Unicode or MultiByte)\ ~ regXwild.dll, regXwild.lib, regXwild.exp, include\*.h
+* For .NET it will put x32 &amp; x64 regXwild into (TargetDir). Use it with your .net modules through Conari ( https://github.com/3F/Conari ) and so on.
 
-        It was designed to be faster than just fast for features that usually go beyond the typical wildcards.
-        Seriously, We love regex, I love, You love; 2013 far behind but regXwild still relevant for speed and powerful wildcards-like features, 
-        such as `##??` (which means 2 or 4) ...
+...        
+MIT License
 
-        🔍 Easy to start
-
-        Unmanaged native C++ or managed .NET project. It doesn't matter, just use it:
-
-        C++
-        ```cpp
-        #include "regXwildAPI.h"
-        using namespace net::r_eg::regXwild;
-        ...
-        if(searchEssC(_T("regXwild"), _T("reg?wild"), true)) {
-            // ...
-        }
-        ```
-
-        C# if you're using [ [Conari](https://github.com/3F/Conari) ]
-        ```csharp
-        using(var l = new ConariL("regXwild.dll")) 
-        {
-            if(l.DLR.searchEssC&lt;bool&gt;("regXwild", "reg?wild", true)) {
-                // ...
-            }
-        }
-        ```
-
-        🏄 Amazing meta symbols
-
-        ESS version (advanced EXT version)
-
-        metasymbol | meaning
-        -----------|----------------
-        *          | {0, ~}
-        |          | str1 or str2 or ...
-        ?          | {0, 1}, ??? {0, 3}, ...
-        ^          | [str... or [str1... |[str2...
-        $          | ...str] or ...str1]| ...str2]
-        +          | {1, ~}, +++ {3, ~}, ...
-        #          | {1}, ## {2}, ### {3}, ...
-        &gt;       | as [^/]*
-
-        🧮 Quantifiers
-
-        regex           | regXwild   | n
-        ----------------|------------|---------
-        .*              | *          | 0+
-        .+              | +          | 1+
-        .?              | ?          | 0;  1
-        .{1}            | #          | 1
-        .{2}            | ##         | 2
-        .{2, }          | ++         | 2+
-        .{0, 2}         | ??         | 0 - 2
-        .{2, 4}         | ++??       | 2 - 4
-        (?:.{2}|.{4})   | ##??       | 2;  4
-        .{3, 4}         | +++?       | 3 - 4
-        (?:.{1}|.{3})   | #???       | 1;  3
-
-        and similar ...
-
-        Play with our actual **Unit-Tests**.
-
-        🚀 Awesome speed
-
-        * [~2000 times faster when C++](https://github.com/3F/regXwild#speed).
-        * For .NET (including modern .NET Core), [Conari](https://github.com/3F/Conari) provides optional caching of 0x29 opcodes (Calli) and more to get a similar result as possible.
-
-        🍰 Open and Free
-
-        Open Source project; MIT License, Enjoy 🎉
-
-        - - - - - - - - - - - - - - - -
-        https://github.com/3F/regXwild
-        - - - - - - - - - - - - - - - - 
+https://github.com/3F/regXwild
+- - - - - - - - - - - - - - - - 
         
         =======================================
         gnt /p:ngpackages="regXwild/$-version-$"
@@ -124,6 +53,6 @@
     <summary>Small and super Fast advanced wildcards! `*,|,?,^,$,+,#,&gt;,++??,##??` in addition to slow regex engines and... https://github.com/3F/regXwild</summary>
     <tags>wildcards advanced-wildcards fast-wildcards fast-regex extended-wildcards strings text filter search matching search-in-text regex glob filters powerful-wildcards regexp cpp c dotnet dotnetcore csharp Conari regXwild native</tags>
     <releaseNotes> changelog: https://github.com/3F/regXwild/blob/master/changelog.txt </releaseNotes>
-    <copyright>Copyright (c) 2013-2014, 2016-2017, 2020  Denis Kuzmin &lt; x-3F@outlook.com &gt; GitHub/3F</copyright>
+    <copyright>Copyright (c) 2013-2021  Denis Kuzmin &lt;x-3F@outlook.com&gt; github/3F</copyright>
   </metadata>
 </package>

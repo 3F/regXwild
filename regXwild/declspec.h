@@ -1,9 +1,8 @@
-#pragma once
-
 /*
 * The MIT License (MIT)
 *
-* Copyright (c) 2013-2014, 2016-2017, 2020  Denis Kuzmin < x-3F@outlook.com > GitHub/3F
+* Copyright (c) 2013-2021  Denis Kuzmin <x-3F@outlook.com> github/3F
+* Copyright (c) regXwild contributors https://github.com/3F/regXwild
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +23,10 @@
 * THE SOFTWARE.
 */
 
+#pragma once
+#ifndef _RXW_DECLSPEC_
+#define _RXW_DECLSPEC_
+
 #ifdef REGXWILD_AS_DLL
 
     #ifdef REGXWILD_EXPORTS
@@ -41,3 +44,5 @@
     #define REGXWILD_API TLINKAGE 
 
 #endif
+
+#endif // _RXW_DECLSPEC_

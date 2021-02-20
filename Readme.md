@@ -1,7 +1,9 @@
 
 # [regXwild](https://github.com/3F/regXwild) 
 
-Small and super Fast Advanced wildcards! `*`,`|`,`?`,`^`,`$`,`+`,`#`,`>`,[`++??`](https://github.com/3F/regXwild/pull/7),[`##??`](https://github.com/3F/regXwild/pull/7) in addition to slow regex engines and more.
+🚀 Superfast ^Advanced wildcards++? `*`,`|`,`?`,`^`,`$`,`+`,`#`,`>`,[`++??`](https://github.com/3F/regXwild/pull/7),[`##??`](https://github.com/3F/regXwild/pull/7) in addition to slow regex engines and more.
+
+✔ regex-like quantifiers, amazing meta symbols, and speed...
 
 Unique algorithms that was implemented on native unmanaged C++ but easily accessible in .NET through **[Conari](https://github.com/3F/Conari)** (recommended due to caching of 0x29 opcodes + related optimizations), and others such as [python](https://github.com/3F/regXwild/issues/6) etc.
 
@@ -120,7 +122,7 @@ Open Source project; MIT License, Enjoy 🎉
 The [MIT License (MIT)](https://github.com/3F/regXwild/blob/master/LICENSE)
 
 ```
-Copyright (c) 2013-2014, 2016-2017, 2020  Denis Kuzmin < x-3F@outlook.com > GitHub/3F
+Copyright (c) 2013-2021  Denis Kuzmin <x-3F@outlook.com> github/3F
 ```
 
 [ [ ☕ Donate ](https://3F.github.com/Donation/) ]
@@ -131,16 +133,9 @@ We're waiting for your awesome contributions!
 
 ## Speed
 
-Please note:
-
-* **+icase** means ignore case sensitivity when matching the filter(pattern) within the searched string, i.e. `ignoreCase = true`. **Without** this, everything **will be much faster** of course. *That is, icase always adds complexity.*
-* Below, **MultiByte** can be faster than **Unicode** (for the same platform and the same way of module use) but it depends on specific architecture and can be about ~2 times faster when native C++, and about ~4 times faster when .NET + Conari and related.
-* The results below can be different on different machines. You need only look at the difference (in milliseconds) between algorithms for a specific target.
-* To calculate the data, as in the table below, you need execute `algo.exe`
-
 ### Procedure of testing
 
-* Used the `algo` subproject as tester of the main algorithms (***Release*** *cfg - x32 & x64*)
+* Use the `algo` subproject as tester of the main algorithms (***Release*** *cfg - x32 & x64*)
 * In general, calculation is simple and uses average as `i = (t2 - t1); (sum(i) / n)` where:
     * **i** - one iteration for searching by filter. Represents the delta of time `t2 - t1`
     * **n** - the number of repeats of the matching to get average.
@@ -181,6 +176,13 @@ auto rfilter = tregex(
 results += meter.delta();
 ...
 ```
+
+Please note:
+
+* **+icase** means ignore case sensitivity when matching the filter(pattern) within the searched string, i.e. `ignoreCase = true`. **Without** this, everything **will be much faster** of course. *That is, icase always adds complexity.*
+* Below, **MultiByte** can be faster than **Unicode** (for the same platform and the same way of module use) but it depends on specific architecture and can be about ~2 times faster when native C++, and about ~4 times faster when .NET + Conari and related.
+* The results below can be different on different machines. You need only look at the difference (in milliseconds) between algorithms for a specific target.
+* To calculate the data, as in the table below, you need execute `algo.exe`
 
 ### Sample of speed for Unicode
 
