@@ -37,7 +37,6 @@ namespace net { namespace r_eg { namespace regXwild { namespace rxwtypes
     typedef std::wstring tstring;
     #define __toxlower towlower
 
-    //<tchar.h>
     typedef wchar_t TCHAR;
     #ifndef _T
         #define _T(x)  L ## x
@@ -48,7 +47,6 @@ namespace net { namespace r_eg { namespace regXwild { namespace rxwtypes
     typedef std::string tstring;
     #define __toxlower tolower
 
-    //<tchar.h>
     typedef char TCHAR;
     #ifndef _T
         #define _T(x)  x
@@ -58,6 +56,8 @@ namespace net { namespace r_eg { namespace regXwild { namespace rxwtypes
 
     typedef size_t udiff_t;
     typedef ptrdiff_t diff_t;
+
+    typedef unsigned int flagcfg_t;
 
 }}}}
 

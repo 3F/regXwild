@@ -42,8 +42,8 @@ namespace net { namespace r_eg { namespace regXwild {
             return clock() - _started;
         }
 
-        Meter(void){};
-        ~Meter(void){};
+        Meter(void): _started(0) { };
+        ~Meter(void) { };
     
     private:
         clock_t _started;

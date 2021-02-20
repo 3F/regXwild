@@ -164,6 +164,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AlgorithmExtTest.cpp" />
+    <ClCompile Include="EssFlagICASETest.cpp" />
     <ClCompile Include="EssRangesTest.cpp" />
     <ClCompile Include="EssSamplesTest.cpp" />
     <ClCompile Include="EssSplitTest.cpp" />

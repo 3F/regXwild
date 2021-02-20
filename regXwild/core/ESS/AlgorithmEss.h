@@ -37,6 +37,16 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
     {
     public:
 
+        RXW_ENUM_CLASS FlagsRxW: flagcfg_t
+        {
+            F_NONE = 0,
+
+            /// <summary>
+            /// Ignore case sensitivity when matching.
+            /// </summary>
+            F_ICASE = 0x001,
+        };
+
         // TODO: consider upgrading to modern enum class or enum struct
         enum MetaOperation
         {
@@ -75,8 +85,17 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
         /// <summary>
         /// Basic search for occurrence using filter.
         /// </summary>
-        /// <returns>true if found</returns>
+        /// <returns>True if found.</returns>
         REGXWILD_API bool search(const tstring& text, const tstring& filter, bool ignoreCase = true);
+
+        /// <summary>
+        /// Searches an input string for a substring that matches a pattern.
+        /// </summary>
+        /// <param name="input">The string to search for a match.</param>
+        /// <param name="pattern">Compatible pattern to match.</param>
+        /// <param name="options">A bitwise combination of the enumeration values that provide options for matching.</param>
+        /// <returns>True if the match was successful.</returns>
+        REGXWILD_API bool match(const tstring& input, const tstring& pattern, const FlagsRxW& options = FlagsRxW::F_NONE);
 
     protected:
 
@@ -84,7 +103,7 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
         {
             MetaOperation curr;
             MetaOperation prev;
-            Mask(): curr(BOL), prev(BOL){};
+            Mask(): curr(BOL), prev(BOL) { };
         };
 
         /**
@@ -105,54 +124,51 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
             /** enough of this.. */
             tstring prev;
 
-            void reset()
+#pragma warning(push)
+#pragma warning(disable: 26495)
+            //NOTE: C26495; valid for `mixms` (the first use is possible only after `mixpos` that will init `mixms`)
+            //              `curr`, `prev`
+            Item(): pos(0), left(0), delta(0), overlay(0), mixpos(0)
             {
-                pos = left = delta = overlay = mixpos = 0;
-                mask.curr = mask.prev = BOL;
-                curr.clear();
-                prev.clear();
-            };
-            Item(): pos(0), left(0), delta(0), overlay(0), mixpos(0) { };
-        } item;
 
-        /**
-         * to words
-         */
+            };
+#pragma warning(pop)
+
+        };
+
         struct Words
         {
             udiff_t found;
             udiff_t left;
 
-            void reset()
-            {
-                found   = tstring::npos;
-                left    = 0;
-            };
-
-#pragma warning(push)
-#pragma warning(disable: 26495)
-            Words(): left(0) { };
-#pragma warning(pop)
-
-        } words;
+            Words(): found(tstring::npos), left(0) { };
+        };
 
         /**
          * Working with an interval:
          *      _______
          * {word} ... {word}
          */
-        udiff_t interval();
+        udiff_t interval(const Item& item, const Words& words, const tstring& _text);
 
         /** rewind to next SPLIT-block */
-        bool rewindToNextBlock(tstring::const_iterator& it, bool delta = true);
+        bool rewindToNextBlock(Item& item, Words& words, const tstring& _filter, tstring::const_iterator& it, bool delta = true);
 
     private:
 
-        /** work with the target sequence (subject) */
-        tstring _text;
+#if RXW_CPP11_ENUM_CLASS
 
-        /** work with the pattern */
-        tstring _filter;
+        friend flagcfg_t operator& (FlagsRxW l, FlagsRxW r)
+        {
+            return static_cast<flagcfg_t>(l) & static_cast<flagcfg_t>(r);
+        }
+
+        friend FlagsRxW operator| (FlagsRxW l, FlagsRxW r)
+        {
+            return static_cast<FlagsRxW>(static_cast<flagcfg_t>(l) | static_cast<flagcfg_t>(r));
+        }
+
+#endif
 
         inline tstring _lowercase(tstring str) throw()
         {

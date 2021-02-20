@@ -33,6 +33,16 @@
 // https://github.com/3F/Conari/issues/3
 #define TLINKAGE extern "C"
 
+#define _CPP11_OR_ABOVE (__cplusplus >= 201103L || _MSVC_LANG >= 201103L)
+#define RXW_CPP11_ENUM_CLASS _CPP11_OR_ABOVE
+
+#if RXW_CPP11_ENUM_CLASS
+    #define RXW_ENUM_CLASS enum class 
+#else
+    #define RXW_ENUM_CLASS enum 
+#endif
+
+
 #include "declspec.h"
 
 #endif // _RXW_CONF_

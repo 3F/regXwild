@@ -28,30 +28,42 @@
 
 namespace net { namespace r_eg { namespace regXwild { namespace core { namespace ESS {
 
-/**
- * entry for match cases
- * TODO: 
- *  - implement: ONE, MORE, SINGLE for BEGIN & any MS comb. for END [current return value is FALSE]
- *  - MS combination: (item.delta == 0) -> unsigned short int bitmask & pre-comb. variations
- */
+/// <summary>
+/// Basic search for occurrence using filter.
+/// </summary>
+/// <returns>True if found.</returns>
 bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignoreCase)
 {
-    if(filter.empty()) {
+    return match(text, filter, ignoreCase ? FlagsRxW::F_ICASE : FlagsRxW::F_NONE);
+}
+
+/// <summary>
+/// Searches an input string for a substring that matches a pattern.
+/// </summary>
+/// <param name="input">The string to search for a match.</param>
+/// <param name="pattern">Compatible pattern to match.</param>
+/// <param name="options">A bitwise combination of the enumeration values that provide options for matching.</param>
+/// <returns>True if the match was successful.</returns>
+bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const FlagsRxW& options)
+{
+    if(pattern.empty()) {
         return true;
     }
 
-    if(ignoreCase) {
+    tstring _text, _filter;
+
+    if(options & FlagsRxW::F_ICASE) {
         //TODO: [perfomance] by single char for iterator
-        _text   = _lowercase(text);
-        _filter = _lowercase(filter); //: ~18ms
+        _text   = _lowercase(input);
+        _filter = _lowercase(pattern);
     }
     else {
-        _text   = text;
-        _filter = filter;
+        _text   = input;
+        _filter = pattern;
     }
 
-    item.reset();
-    words.reset();
+    Item item;
+    Words words;
 
     for(tstring::const_iterator it = _filter.begin(), itEnd = _filter.end(); it != itEnd; ++it)
     {
@@ -111,11 +123,11 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
             
             if(item.mask.curr & BEGIN && (item.mask.prev & (BOL | SPLIT)) == 0) // is not: BOL^__ or SPLIT^__
             {
-                if(rewindToNextBlock(it)){ continue; } return false;
+                if(rewindToNextBlock(item, words, _filter, it)){ continue; } return false;
             }
             else if(item.mask.curr & END) // combination found, e.g.: *$, ??$, etc. TODO: stub - _stubENDCombination()
             {
-                if(rewindToNextBlock(it)){ continue; } return false;
+                if(rewindToNextBlock(item, words, _filter, it)){ continue; } return false;
             }
 
             // ++?? and ##??
@@ -146,7 +158,7 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
         /* Otherwise work with a part of word ... */
 
         if(item.mask.curr & BEGIN){ // __^xxx
-            if(rewindToNextBlock(it)){ continue; } return false;
+            if(rewindToNextBlock(item, words, _filter, it)){ continue; } return false;
         }
 
         // getting of current word
@@ -166,7 +178,7 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
                 }
             }
             // __$x
-            if(rewindToNextBlock(it)){ continue; } return false;
+            if(rewindToNextBlock(item, words, _filter, it)){ continue; } return false;
         }
 
         if(item.mask.prev & BEGIN)
@@ -184,7 +196,7 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
                 if(item.mask.curr & SPLIT){
                     continue;
                 }
-                if(rewindToNextBlock(it)){ continue; } return false;
+                if(rewindToNextBlock(item, words, _filter, it)){ continue; } return false;
             }
         }
         else{
@@ -197,7 +209,7 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
 
         // working with an interval
         if(words.found != tstring::npos){
-            words.found = interval();
+            words.found = interval(item, words, _text);
         }
         item.overlay = 0; //flush sequence
 
@@ -217,7 +229,7 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
                 item.mask.prev = BOL;
                 continue; //to next block
             }
-            if(rewindToNextBlock(it, false)){ continue; } return false;
+            if(rewindToNextBlock(item, words, _filter, it, false)){ continue; } return false;
         }
 
         /* Success: */
@@ -252,7 +264,7 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
     return true;
 }
 
-udiff_t AlgorithmEss::interval()
+udiff_t AlgorithmEss::interval(const Item& item, const Words& words, const tstring& _text)
 {
     // ++?? or ##??
     if(item.mask.prev & ONE && item.mixpos > 0)
@@ -276,7 +288,6 @@ udiff_t AlgorithmEss::interval()
         }
 
         return tstring::npos;
-
     }
 
     // "#"
@@ -346,7 +357,7 @@ udiff_t AlgorithmEss::interval()
     return words.found;
 }
 
-inline bool AlgorithmEss::rewindToNextBlock(tstring::const_iterator& it, bool delta)
+inline bool AlgorithmEss::rewindToNextBlock(Item& item, Words& words, const tstring& _filter, tstring::const_iterator& it, bool delta)
 {
     item.left = _filter.find(MS_SPLIT, item.left);
     if(item.left == tstring::npos){
