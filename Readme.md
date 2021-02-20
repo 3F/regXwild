@@ -1,7 +1,7 @@
 
 # [regXwild](https://github.com/3F/regXwild) 
 
-🚀 Superfast ^Advanced wildcards++? `*`,`|`,`?`,`^`,`$`,`+`,`#`,`>`,[`++??`](https://github.com/3F/regXwild/pull/7),[`##??`](https://github.com/3F/regXwild/pull/7) in addition to slow regex engines and more.
+🚀 Superfast ^Advanced wildcards++? `*`,`|`,`?`,`^`,`$`,`+`,`#`,`>`,[`++??`](https://github.com/3F/regXwild/pull/7),[`##??`](https://github.com/3F/regXwild/pull/7),`>c` in addition to slow regex engines and more.
 
 ✔ regex-like quantifiers, amazing meta symbols, and speed...
 
@@ -75,7 +75,8 @@ metasymbol | meaning
 $          | ...str] or ...str1]| ...str2]
 \+         | {1, ~}, +++ {3, ~}, ...
 \#         | {1}, ## {2}, ### {3}, ...
-\>         | as [^/]*
+\>         | Legacy `>` (F_LEGACY_ANYSP = 0x008) as *[^/]\*str \| [^/]\*$*
+\>c        | 1.4+ Modern `>` as *[^**c**]\*str \| [^**c**]\*$*
 
 EXT version (more simplified than ESS)
 

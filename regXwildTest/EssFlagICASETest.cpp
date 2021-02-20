@@ -31,7 +31,7 @@ namespace regXwildTest
         TEST_METHOD(uMatchTest1)
         {
             uMatchTest1Set(EssRxW::FlagsRxW::F_NONE);
-            uMatchTest1Set(static_cast<EssRxW::FlagsRxW>(4));
+            uMatchTest1Set(EssRxW::FlagsRxW::F_LEGACY_ANYSP | EssRxW::FlagsRxW::F_MATCH_RESULT);
         }
 
         void uMatchTest2Set(const EssRxW::FlagsRxW& cfg)
@@ -49,7 +49,7 @@ namespace regXwildTest
         TEST_METHOD(uMatchTest2)
         {
             uMatchTest2Set(EssRxW::FlagsRxW::F_ICASE);
-            uMatchTest2Set(EssRxW::FlagsRxW::F_ICASE | static_cast<EssRxW::FlagsRxW>(4));
+            uMatchTest2Set(EssRxW::FlagsRxW::F_ICASE | EssRxW::FlagsRxW::F_MATCH_RESULT);
         }
 
         TEST_METHOD(uMatchTest3)

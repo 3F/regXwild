@@ -44,7 +44,29 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
             /// <summary>
             /// Ignore case sensitivity when matching.
             /// </summary>
-            F_ICASE = 0x001,
+            F_ICASE         = 0x001,
+
+            /// <summary>
+            /// Activates the collection of additional data for the MatchResult.
+            /// </summary>
+            F_MATCH_RESULT  = 0x002,
+
+            /// <summary>
+            /// Activates the collection of the positions of all occurrences 
+            /// between each presented meta-symbol.
+            /// </summary>
+            F_MATCH_MAP     = 0x004,
+
+            /// <summary>
+            /// Use MS_ANYSP as [^/]* (legacy).
+            /// Otherwise as [^c]* where `c` is a symbol from the next presented symbol after MS_ANYSP.
+            /// </summary>
+            F_LEGACY_ANYSP  = 0x008,
+        };
+
+        struct Match
+        {
+
         };
 
         // TODO: consider upgrading to modern enum class or enum struct
@@ -73,12 +95,12 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
             MS_END      = _T('$'), // ...str] or ...str1]| ...str2]
             MS_MORE     = _T('+'), // {1, ~}, +++ {3, ~}, ...
             MS_SINGLE   = _T('#'), // {1}, ## {2}, ### {3}, ...
-            MS_ANYSP    = _T('>'), // as [^/]*  //TODO: >\>/ i.e. '>' + {symbol}
+            MS_ANYSP    = _T('>'), // [^/]*str|[^/]*$ (legacy); [^{symbol}]*str|[^{symbol}]*$ for ('>' + {symbol})
         };
 
         /**
-         * default symbol for special case
-         * regexp equivalent search is a [^/]* (EXT version: [^/\\]+)
+         * (legacy) symbol for special case
+         * regex equivalent is [^/]*str|[^/]*$ (EXT version: [^/\\]+)
          */
         const static TCHAR ANYSP_CMP_DEFAULT = _T('/');
 
@@ -94,8 +116,9 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
         /// <param name="input">The string to search for a match.</param>
         /// <param name="pattern">Compatible pattern to match.</param>
         /// <param name="options">A bitwise combination of the enumeration values that provide options for matching.</param>
+        /// <param name="result">Information about the match.</param>
         /// <returns>True if the match was successful.</returns>
-        REGXWILD_API bool match(const tstring& input, const tstring& pattern, const FlagsRxW& options = FlagsRxW::F_NONE);
+        REGXWILD_API bool match(const tstring& input, const tstring& pattern, const FlagsRxW& options = FlagsRxW::F_NONE, Match* result = nullptr);
 
     protected:
 
@@ -106,9 +129,6 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
             Mask(): curr(BOL), prev(BOL) { };
         };
 
-        /**
-         * to wildcards
-         */
         struct Item
         {
             tstring curr;
@@ -121,14 +141,16 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
             unsigned short int mixpos; // ++??
             MetaOperation mixms;
 
-            /** enough of this.. */
             tstring prev;
+
+            tstring::const_iterator* it;
+            TCHAR anysp;
 
 #pragma warning(push)
 #pragma warning(disable: 26495)
             //NOTE: C26495; valid for `mixms` (the first use is possible only after `mixpos` that will init `mixms`)
             //              `curr`, `prev`
-            Item(): pos(0), left(0), delta(0), overlay(0), mixpos(0)
+            Item(): pos(0), left(0), delta(0), overlay(0), mixpos(0), anysp(NULL)
             {
 
             };
@@ -149,12 +171,14 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
          *      _______
          * {word} ... {word}
          */
-        udiff_t interval(const Item& item, const Words& words, const tstring& _text);
+        udiff_t interval(Item& item, Words& words, const FlagsRxW& options, const tstring& _text, const tstring& filter);
 
         /** rewind to next SPLIT-block */
         bool rewindToNextBlock(Item& item, Words& words, const tstring& _filter, tstring::const_iterator& it, bool delta = true);
 
     private:
+
+        TCHAR AlgorithmEss::getSPSymbol(const Item& item, const FlagsRxW& options);
 
 #if RXW_CPP11_ENUM_CLASS
 

@@ -34,7 +34,7 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
 /// <returns>True if found.</returns>
 bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignoreCase)
 {
-    return match(text, filter, ignoreCase ? FlagsRxW::F_ICASE : FlagsRxW::F_NONE);
+    return match(text, filter, (ignoreCase ? FlagsRxW::F_ICASE : FlagsRxW::F_NONE) | FlagsRxW::F_LEGACY_ANYSP);
 }
 
 /// <summary>
@@ -43,8 +43,9 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
 /// <param name="input">The string to search for a match.</param>
 /// <param name="pattern">Compatible pattern to match.</param>
 /// <param name="options">A bitwise combination of the enumeration values that provide options for matching.</param>
+/// <param name="result">Information about the match.</param>
 /// <returns>True if the match was successful.</returns>
-bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const FlagsRxW& options)
+bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const FlagsRxW& options, Match* result)
 {
     if(pattern.empty()) {
         return true;
@@ -65,11 +66,15 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
     Item item;
     Words words;
 
-    for(tstring::const_iterator it = _filter.begin(), itEnd = _filter.end(); it != itEnd; ++it)
+    tstring::const_iterator it = _filter.begin();
+    item.it = &it;
+
+    for(tstring::const_iterator itEnd = _filter.end(); it != itEnd; item.it = &++it)
     {
         ++item.left;
 
-        switch(*it){
+        switch(*it)
+        {
             case MS_ANY:{
                 item.mask.curr = ANY;
                 break;
@@ -102,7 +107,8 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
                 item.mask.curr = SINGLE;
                 break;
             }
-            default:{
+            default:
+            {
                 if(it + 1 == itEnd){
                     item.mask.curr = EOL;
                     ++item.left;
@@ -148,11 +154,16 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
 
             ++item.pos;
 
-            // TODO: implement non-sequential MS combinations ~ unsigned short int ..
-            if((item.mask.prev & ANYSP) == 0){
-                item.mask.prev = item.mask.curr;
+            if((options & FlagsRxW::F_LEGACY_ANYSP) == 0 && item.mask.curr & ANYSP)
+            {
+                ++item.pos;
+                if(item.left > 1) continue;
             }
-            continue;
+            else
+            {
+                if((item.mask.prev & ANYSP) == 0) item.mask.prev = item.mask.curr;
+                continue;
+            }
         }
 
         /* Otherwise work with a part of word ... */
@@ -161,8 +172,8 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
             if(rewindToNextBlock(item, words, _filter, it)){ continue; } return false;
         }
 
-        // getting of current word
-        item.curr = _filter.substr(item.pos, item.delta);
+        // getting the current word
+        item.curr = (item.pos < _filter.length()) ? _filter.substr(item.pos, item.delta) : _T("");
 
         if(item.mask.curr & END)
         {
@@ -209,7 +220,7 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
 
         // working with an interval
         if(words.found != tstring::npos){
-            words.found = interval(item, words, _text);
+            words.found = interval(item, words, options, _text, _filter);
         }
         item.overlay = 0; //flush sequence
 
@@ -256,15 +267,15 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
         }
     }
 
-    if(item.mask.prev & ANYSP){ // {word}>***??* etc.
-        if(_text.substr(words.left).find(ANYSP_CMP_DEFAULT) != tstring::npos){
+    if(item.mask.prev & ANYSP) { // disables MS combination if legacy mode ({word} >*) and completes >{char}{EOL} as [^{char}]*$
+        if(_text.substr(words.left).find(getSPSymbol(item, options)) != tstring::npos) {
             return false;
         }
     }
     return true;
 }
 
-udiff_t AlgorithmEss::interval(const Item& item, const Words& words, const tstring& _text)
+udiff_t AlgorithmEss::interval(Item& item, Words& words, const FlagsRxW& options, const tstring& _text, const tstring& filter)
 {
     // ++?? or ##??
     if(item.mask.prev & ONE && item.mixpos > 0)
@@ -344,10 +355,22 @@ udiff_t AlgorithmEss::interval(const Item& item, const Words& words, const tstri
     }
 
     // ">"
+
+    if(item.mask.curr & ANYSP && (options & FlagsRxW::F_LEGACY_ANYSP) == 0)
+    {
+        if(item.left < filter.length() /* *(item.it)+1 != filter.end() */)
+        {
+            // ">" + {symbol}
+            item.anysp = filter[item.left++];
+            ++*item.it;
+        }
+        return words.found;
+    }
+    // ^v - `curr & ANYSP` must be processed before `prev & ANYSP` - ^v
     if(item.mask.prev & ANYSP)
     {
         tstring inside = _text.substr(words.left, words.found - words.left);
-        if(inside.find(ANYSP_CMP_DEFAULT) != tstring::npos){
+        if(inside.find(getSPSymbol(item, options)) != tstring::npos) {
             return tstring::npos;
         }
         return words.found;
@@ -375,6 +398,11 @@ inline bool AlgorithmEss::rewindToNextBlock(Item& item, Words& words, const tstr
     words.left      = 0;
     item.mask.prev  = SPLIT;
     return true;
+}
+
+inline TCHAR AlgorithmEss::getSPSymbol(const Item& item, const FlagsRxW& options)
+{
+    return options & FlagsRxW::F_LEGACY_ANYSP ? ANYSP_CMP_DEFAULT : item.anysp;
 }
 
 }}}}}
