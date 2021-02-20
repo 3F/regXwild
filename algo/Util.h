@@ -27,9 +27,10 @@
 
 #include "typedefs.h"
 
-using namespace std;
-
-namespace net { namespace r_eg { namespace regXwild { 
+namespace net { namespace r_eg { namespace regXwild 
+{
+    using namespace std;
+    using namespace net::r_eg::regXwild::rxwtypes;
 
     class Util
     {

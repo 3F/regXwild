@@ -10,6 +10,7 @@ using namespace net::r_eg::regXwild;
 namespace regXwildTest
 {
     namespace regXwild = net::r_eg::regXwild;
+    using namespace regXwild::rxwtypes;
 
     TEST_CLASS(EssRangesTest)
     {

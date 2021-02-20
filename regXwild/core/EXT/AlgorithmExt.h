@@ -29,6 +29,8 @@
 
 namespace net { namespace r_eg { namespace regXwild { namespace core { namespace EXT {
 
+    using namespace net::r_eg::regXwild::rxwtypes;
+
     class AlgorithmExt
     {
     public:

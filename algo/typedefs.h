@@ -31,6 +31,7 @@
 namespace net { namespace r_eg { namespace regXwild
 {
     using namespace std;
+    using namespace net::r_eg::regXwild::rxwtypes;
 
     typedef const tstring& refstr_t;
 

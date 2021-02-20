@@ -29,7 +29,7 @@
 
 #include "stdafx.h"
 
-namespace net { namespace r_eg { namespace regXwild
+namespace net { namespace r_eg { namespace regXwild { namespace rxwtypes
 {
     using namespace std;
 
@@ -48,6 +48,6 @@ namespace net { namespace r_eg { namespace regXwild
     typedef size_t udiff_t;
     typedef ptrdiff_t diff_t;
 
-}}}
+}}}}
 
 #endif // _RXW_TYPEDEFS_

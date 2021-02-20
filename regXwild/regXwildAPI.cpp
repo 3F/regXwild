@@ -53,7 +53,7 @@ namespace net { namespace r_eg { namespace regXwild
     * @param ignoreCase To check data with no case sensitive rules if true.
     * @return Returns true value if the data satisfies the condition of the filter.
     */
-    REGXWILD_API bool searchEss(const tstring& data, const tstring& filter, bool ignoreCase)
+    REGXWILD_API bool searchEss(const rxwtypes::tstring& data, const rxwtypes::tstring& filter, bool ignoreCase)
     {
         core::ESS::AlgorithmEss alg;
 
@@ -81,7 +81,7 @@ namespace net { namespace r_eg { namespace regXwild
     * @param ignoreCase To check data with no case sensitive rules if true.
     * @return Returns true value if the data satisfies the condition of the filter.
     */
-    REGXWILD_API bool searchExt(const tstring& data, const tstring& filter, bool ignoreCase)
+    REGXWILD_API bool searchExt(const rxwtypes::tstring& data, const rxwtypes::tstring& filter, bool ignoreCase)
     {
         core::EXT::AlgorithmExt alg;
 
