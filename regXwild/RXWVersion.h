@@ -18,16 +18,15 @@ namespace net { namespace r_eg { namespace regXwild
             const int patch;
             const int build;
 
-            TNum(int major, int minor, int patch, int build = 0)
-                : major(major), minor(minor), patch(patch), build(build) { }
-
-            TNum() : TNum(1, 3, 0, 0) { }
+            TNum() : major(1), minor(3), patch(0), build(0) { }
 
         } number;
 
-        const TCHAR* bSha1      = _T("");
-        const TCHAR* config     = _T("");
-        const TCHAR* product    = _T("1.3.0");
+        const TCHAR* bSha1;
+        const TCHAR* config;
+        const TCHAR* product;
+
+        RXWVersion() : bSha1(_T("")), config(_T("")), product(_T("1.3.0")) { }
     };
 }}}
 
