@@ -27,7 +27,7 @@
 #ifndef _RXW_DECLSPEC_
 #define _RXW_DECLSPEC_
 
-#ifdef REGXWILD_AS_DLL
+#ifdef REGXWILD_AS_LIB
 
     #ifdef REGXWILD_EXPORTS
 

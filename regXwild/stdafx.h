@@ -24,9 +24,44 @@
 */
 
 #pragma once
+#ifndef _RXW_STDAFX_
+#define _RXW_STDAFX_
+
+// L-42, helps to avoid std::length_error (or like) when Release <-> Debug
+// This, however, will not resolve the case when user includes <string> (or iostream, etc) manually
+// because the definitions may differ from the compiled module as compared to the end user environment.
+#ifndef RXW_NO_NDEBUG_STRING
+
+    #if _DEBUG
+        #define __DEBUG_USR_D 1
+        #undef _DEBUG
+    #endif
+
+    #ifndef NDEBUG
+        #define _NDEBUG_USR_D 1
+        #define NDEBUG 1
+    #endif
+
+    #include <string>
+
+    #if _NDEBUG_USR_D
+        #undef NDEBUG
+        #undef _NDEBUG_USR_D
+    #endif
+
+    #if __DEBUG_USR_D
+        #define _DEBUG 1
+        #undef __DEBUG_USR_D
+    #endif
+
+#else
+
+    #include <string>
+
+#endif
 
 #include <tchar.h>
-#include <string>
+
 
 // For transform() in internal _lowercase processing
 #include <algorithm>
@@ -42,3 +77,5 @@
     #include <windows.h>
 
 #endif
+
+#endif // _RXW_STDAFX_
