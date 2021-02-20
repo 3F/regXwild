@@ -31,17 +31,28 @@
 
 namespace net { namespace r_eg { namespace regXwild { namespace rxwtypes
 {
-    using namespace std;
 
 #ifdef UNICODE
 
-    typedef wstring tstring;
+    typedef std::wstring tstring;
     #define __toxlower towlower
+
+    //<tchar.h>
+    typedef wchar_t TCHAR;
+    #ifndef _T
+        #define _T(x)  L ## x
+    #endif // !_T
 
 #else
 
-    typedef string tstring;
+    typedef std::string tstring;
     #define __toxlower tolower
+
+    //<tchar.h>
+    typedef char TCHAR;
+    #ifndef _T
+        #define _T(x)  x
+    #endif // !_T
 
 #endif
 

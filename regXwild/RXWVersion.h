@@ -22,9 +22,9 @@ namespace net { namespace r_eg { namespace regXwild
 
         } number;
 
-        const TCHAR* bSha1;
-        const TCHAR* config;
-        const TCHAR* product;
+        const rxwtypes::TCHAR* bSha1;
+        const rxwtypes::TCHAR* config;
+        const rxwtypes::TCHAR* product;
 
         RXWVersion() : bSha1(_T("")), config(_T("")), product(_T("1.3.0")) { }
     };

@@ -40,7 +40,7 @@ namespace net { namespace r_eg { namespace regXwild
     * @param ignoreCase To check data with no case sensitive rules if true.
     * @return Returns true value if the data satisfies the condition of the filter.
     */
-    REGXWILD_API_L bool searchEssC(const TCHAR* data, const TCHAR* filter, bool ignoreCase)
+    REGXWILD_API_L bool searchEssC(const rxwtypes::TCHAR* data, const rxwtypes::TCHAR* filter, bool ignoreCase)
     {
         return searchEss(data, filter, ignoreCase);
     }
@@ -68,7 +68,7 @@ namespace net { namespace r_eg { namespace regXwild
     * @param ignoreCase To check data with no case sensitive rules if true.
     * @return Returns true value if the data satisfies the condition of the filter.
     */
-    REGXWILD_API_L bool searchExtC(const TCHAR* data, const TCHAR* filter, bool ignoreCase)
+    REGXWILD_API_L bool searchExtC(const rxwtypes::TCHAR* data, const rxwtypes::TCHAR* filter, bool ignoreCase)
     {
         return searchExt(data, filter, ignoreCase);
     }
@@ -92,7 +92,7 @@ namespace net { namespace r_eg { namespace regXwild
     * obsolete due to RXWVersion
     * @return Returns current RXWVersion.product version of regXwild library.
     */
-    REGXWILD_API_L const TCHAR* versionString()
+    REGXWILD_API_L const rxwtypes::TCHAR* versionString()
     {
         return /*vsSBE*/_T("1.3.0");
     }

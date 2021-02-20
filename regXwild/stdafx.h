@@ -60,7 +60,6 @@
 
 #endif
 
-#include <tchar.h>
 
 
 // For transform() in internal _lowercase processing
