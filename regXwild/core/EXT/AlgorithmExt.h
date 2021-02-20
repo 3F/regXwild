@@ -24,7 +24,8 @@
 */
 
 #pragma once
-
+#include "stdafx.h"
+#include "conf.h"
 #include "typedefs.h"
 
 namespace net { namespace r_eg { namespace regXwild { namespace core { namespace EXT {
@@ -59,7 +60,7 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
             MS_END      = _T('$'),
         };
 
-        bool main(const tstring& text, const tstring& filter, bool ignoreCase);
+        REGXWILD_API bool main(const tstring& text, const tstring& filter, bool ignoreCase);
 
     protected:
 

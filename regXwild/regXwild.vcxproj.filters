@@ -45,9 +45,6 @@
     <ClInclude Include="declspec.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="regXwildConf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="regXwildAPI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -61,6 +58,9 @@
       <Filter>Header Files\core\EXT</Filter>
     </ClInclude>
     <ClInclude Include="RXWVersion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="conf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -28,6 +28,9 @@
 #include <tchar.h>
 #include <string>
 
+// For transform() in internal _lowercase processing
+#include <algorithm>
+
 #if REGXWILD_COMPILE_PCH
 
     // Exclude rarely-used stuff from Windows headers
@@ -35,9 +38,7 @@
 
     #include "targetver.h"
 
-    // Only for DllMain:
+    // Only for DllMain
     #include <windows.h>
-
-    #include <algorithm>
 
 #endif

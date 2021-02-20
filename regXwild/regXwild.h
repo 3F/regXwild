@@ -26,11 +26,27 @@
 #pragma once
 
 #include "stdafx.h"
-#include "regXwildConf.h"
+#include "conf.h"
 #include "typedefs.h"
 #include "RXWVersion.h"
 
+#include "./core/EXT/AlgorithmExt.h"
+#include "./core/ESS/AlgorithmEss.h"
+
 namespace net { namespace r_eg { namespace regXwild
 {
-    
+    /// <summary>
+    /// ESS version (advanced EXT version).
+    /// </summary>
+    typedef core::ESS::AlgorithmEss EssRxW;
+
+    /// <summary>
+    /// Leading implementation for regXwild.
+    /// </summary>
+    typedef EssRxW RxW;
+
+    /// <summary>
+    /// EXT version (more simplified than ESS).
+    /// </summary>
+    typedef core::EXT::AlgorithmExt ExtRxW;
 }}}

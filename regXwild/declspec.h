@@ -31,17 +31,20 @@
 
     #ifdef REGXWILD_EXPORTS
 
-        #define REGXWILD_API TLINKAGE __declspec(dllexport)
+        #define REGXWILD_API __declspec(dllexport)
 
     #else
 
-        #define REGXWILD_API TLINKAGE __declspec(dllimport)
+        #define REGXWILD_API __declspec(dllimport)
 
     #endif
 
+    #define REGXWILD_API_L TLINKAGE REGXWILD_API
+
 #else
 
-    #define REGXWILD_API TLINKAGE 
+    #define REGXWILD_API
+    #define REGXWILD_API_L TLINKAGE 
 
 #endif
 

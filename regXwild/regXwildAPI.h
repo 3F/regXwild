@@ -36,7 +36,7 @@ namespace net { namespace r_eg { namespace regXwild
     * @param ignoreCase To check data with no case sensitive rules if true.
     * @return Returns true value if the data satisfies the condition of the filter.
     */
-    REGXWILD_API bool searchEssC(const TCHAR* data, const TCHAR* filter, bool ignoreCase);
+    REGXWILD_API_L bool searchEssC(const TCHAR* data, const TCHAR* filter, bool ignoreCase);
 
     /**
     * To search substring in data with filter by the rules of ESS algorithm.
@@ -46,7 +46,7 @@ namespace net { namespace r_eg { namespace regXwild
     * @param ignoreCase To check data with no case sensitive rules if true.
     * @return Returns true value if the data satisfies the condition of the filter.
     */
-    REGXWILD_API bool searchEss(const rxwtypes::tstring& data, const rxwtypes::tstring& filter, bool ignoreCase);
+    REGXWILD_API_L bool searchEss(const rxwtypes::tstring& data, const rxwtypes::tstring& filter, bool ignoreCase);
 
     /**
     * To search substring in data with filter by the rules of EXT algorithm.
@@ -56,7 +56,7 @@ namespace net { namespace r_eg { namespace regXwild
     * @param ignoreCase To check data with no case sensitive rules if true.
     * @return Returns true value if the data satisfies the condition of the filter.
     */
-    REGXWILD_API bool searchExtC(const TCHAR* data, const TCHAR* filter, bool ignoreCase);
+    REGXWILD_API_L bool searchExtC(const TCHAR* data, const TCHAR* filter, bool ignoreCase);
 
     /**
     * To search substring in data with filter by the rules of EXT algorithm.
@@ -66,12 +66,12 @@ namespace net { namespace r_eg { namespace regXwild
     * @param ignoreCase To check data with no case sensitive rules if true.
     * @return Returns true value if the data satisfies the condition of the filter.
     */
-    REGXWILD_API bool searchExt(const rxwtypes::tstring& data, const rxwtypes::tstring& filter, bool ignoreCase);
+    REGXWILD_API_L bool searchExt(const rxwtypes::tstring& data, const rxwtypes::tstring& filter, bool ignoreCase);
 
     /**
     * To get current version of regXwild library as a string.
     * @return Returns version as Major.Minor [.Revision] etc.
     */
-    REGXWILD_API const TCHAR* versionString();
+    REGXWILD_API_L const TCHAR* versionString();
 
 }}}
