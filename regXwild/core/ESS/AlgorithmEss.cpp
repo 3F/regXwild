@@ -218,7 +218,7 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
             if(item.mask.prev & MORE){
                 ++words.left;
             }
-            words.found = _text.find(item.curr, words.left);
+            words.found = _text.find(item.curr, words.left + ((item.mask.prev & MORE) ? item.overlay : 0));
         }
 
         // working with an interval
@@ -258,16 +258,10 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
         item.prev       = item.curr;
     }
 
-    /* after ending iteration: */
+    /* After the end of iterations */
 
-    if(item.mask.prev & MORE && words.left > 0){ // e.g: {word}EOL + {1,~}
-        return false;
-    }
-
-    if(item.mask.prev & SINGLE){
-        if(words.left == _text.length()){ // e.g: {word}EOL + {1}
-            return false;
-        }
+    if(item.mask.prev & (MORE | SINGLE) && words.left >= _text.length()) {
+        return false; // {word}EOL + {1,~}
     }
 
     if(item.mask.prev & ANYSP) { // disables MS combination if legacy mode ({word} >*) and completes >{char}{EOL} as [^{char}]*$

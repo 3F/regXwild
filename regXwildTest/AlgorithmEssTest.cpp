@@ -390,6 +390,7 @@ namespace regXwildTest
             Assert::AreEqual(false, searchEss(data, _T("+new")));
             Assert::AreEqual(false, searchEss(data, _T("+new+")));
 
+            Assert::AreEqual(true, searchEss(data, _T("system+")));
             Assert::AreEqual(false, searchEss(data, _T("systems+")));
             Assert::AreEqual(false, searchEss(data, _T("systems++")));
             Assert::AreEqual(false, searchEss(data, _T("+systems+")));

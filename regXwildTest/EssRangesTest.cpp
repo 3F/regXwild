@@ -183,6 +183,27 @@ namespace regXwildTest
             Assert::IsFalse(searchEss(_T("number = '1234';"), filter));
         }
 
+        TEST_METHOD(rangeAtOneTest5)
+        {
+            Assert::AreEqual(true, searchEss(_T("43210"), _T("4???0")));
+            Assert::AreEqual(true, searchEss(_T("43200"), _T("4???0")));
+
+            Assert::AreEqual(true, searchEss(_T("43210"), _T("4????0")));
+            Assert::AreEqual(true, searchEss(_T("43200"), _T("4????0")));
+
+            Assert::AreEqual(false, searchEss(_T("43210"), _T("4??0")));
+            Assert::AreEqual(true, searchEss(_T("43200"), _T("4??0")));
+            Assert::AreEqual(false, searchEss(_T("43200"), _T("4?0")));
+
+            Assert::AreEqual(true, searchEss(_T("3210"), _T("3??0")));
+            Assert::AreEqual(true, searchEss(_T("3210"), _T("3???0")));
+            Assert::AreEqual(false, searchEss(_T("3210"), _T("3?0")));
+
+            Assert::AreEqual(true, searchEss(_T("32100"), _T("2???0")));
+            Assert::AreEqual(true, searchEss(_T("32100"), _T("2??0")));
+            Assert::AreEqual(true, searchEss(_T("32100"), _T("2?0")));
+        }
+
         TEST_METHOD(rangeAtSingleTest1)
         {
             tstring data = _T("number = '123';");
@@ -277,6 +298,15 @@ namespace regXwildTest
             Assert::IsFalse(searchEss(_T("number = '12';"), filter));
             Assert::IsTrue(searchEss(_T("number = '123';"), filter));
             Assert::IsTrue(searchEss(_T("number = '1234';"), filter));
+        }
+
+        TEST_METHOD(rangeAtMoreTest5)
+        {
+            Assert::AreEqual(true, searchEss(_T("43210"), _T("4+++0")));
+            Assert::AreEqual(true, searchEss(_T("43200"), _T("4+++0")));
+
+            Assert::AreEqual(true, searchEss(_T("3210"), _T("3++0")));
+            Assert::AreEqual(false, searchEss(_T("3210"), _T("3+++0")));
         }
 
         TEST_METHOD(rangeAtAnyTest1)
