@@ -142,6 +142,7 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
             MetaOperation mixms;
 
             tstring prev;
+            MetaOperation bems;
 
             tstring::const_iterator* it;
             TCHAR anysp;
@@ -150,7 +151,7 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
 #pragma warning(disable: 26495)
             //NOTE: C26495; valid for `mixms` (the first use is possible only after `mixpos` that will init `mixms`)
             //              `curr`, `prev`
-            Item(): pos(0), left(0), delta(0), overlay(0), mixpos(0), anysp(NULL)
+            Item(): pos(0), left(0), delta(0), overlay(0), mixpos(0), anysp(NULL), bems(NONE)
             {
 
             };

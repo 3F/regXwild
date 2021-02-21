@@ -198,6 +198,9 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
                 if(item.mask.curr & (SPLIT | EOL)){
                     return true;
                 }
+                if(item.mask.curr & (SINGLE | ONE)) {
+                    item.bems = BEGIN;
+                }
                 words.found = 0;
             }
             else{
@@ -307,8 +310,10 @@ udiff_t AlgorithmEss::interval(Item& item, Words& words, const FlagsRxW& options
         udiff_t len = item.prev.length();
         diff_t lPos = words.found - len - item.overlay - 1;
 
+        if(item.bems & BEGIN && lPos != 0) return tstring::npos;
+
         // [pro]ject ... [pro]t[ection] -> [pro]<-#-ection
-        if(lPos < 0 || _text.substr(lPos, len).compare(item.prev) != 0){
+        if(lPos < 0 || _text.substr(lPos, len).compare(item.prev) != 0) {
             return tstring::npos;
         }
         return words.found;
@@ -343,6 +348,8 @@ udiff_t AlgorithmEss::interval(Item& item, Words& words, const FlagsRxW& options
         if(lPos < 0) { // When filter ???? (0-4) is more than origin data.
             lPos = 0;  //TOOD: currently no info about mixed ms like ??#?
         }
+
+        if(item.bems & BEGIN && lPos != 0) return tstring::npos;
 
         do // ????? - min<->max:
         {
