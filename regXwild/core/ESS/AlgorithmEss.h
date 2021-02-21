@@ -33,6 +33,38 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
 
     using namespace net::r_eg::regXwild::rxwtypes;
 
+    namespace def
+    {
+        // TODO: consider upgrading to modern enum class
+
+        enum MetaOp: flagmeta_t
+        {
+            NONE    = 0,
+            BOL     = 0x001,
+            ANY     = 0x002,
+            SPLIT   = 0x004,
+            ONE     = 0x008,
+            BEGIN   = 0x010,
+            END     = 0x020,
+            MORE    = 0x040,
+            SINGLE  = 0x080,
+            ANYSP   = 0x100,
+            EOL     = 0x200,
+        };
+
+        enum MetaSymbols
+        {
+            MS_ANY      = _T('*'), // {0, ~}
+            MS_SPLIT    = _T('|'), // str1 or str2 or ...
+            MS_ONE      = _T('?'), // {0, 1}, ??? {0, 3}, ...
+            MS_BEGIN    = _T('^'), // [str... or [str1... |[str2...
+            MS_END      = _T('$'), // ...str] or ...str1]| ...str2]
+            MS_MORE     = _T('+'), // {1, ~}, +++ {3, ~}, ...
+            MS_SINGLE   = _T('#'), // {1}, ## {2}, ### {3}, ...
+            MS_ANYSP    = _T('>'), // [^/]*str|[^/]*$ (legacy); [^{symbol}]*str|[^{symbol}]*$ for ('>' + {symbol})
+        };
+    }
+
     class AlgorithmEss
     {
     public:
@@ -47,15 +79,17 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
             F_ICASE         = 0x001,
 
             /// <summary>
-            /// Activates the collection of additional data for the MatchResult.
+            /// Activates the collection of additional data for the Match result.
             /// </summary>
             F_MATCH_RESULT  = 0x002,
 
+#if _RXW_FEATURE_MATCH_MAP
             /// <summary>
             /// Activates the collection of the positions of all occurrences 
             /// between each presented meta-symbol.
             /// </summary>
             F_MATCH_MAP     = 0x004,
+#endif
 
             /// <summary>
             /// Use MS_ANYSP as [^/]* (legacy).
@@ -66,43 +100,37 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
 
         struct Match
         {
+            const static udiff_t npos = -1;
 
+            /// <summary>
+            /// Position of the first occurrence or Match::npos.
+            /// It also will be Match::npos if not FlagsRxW::F_MATCH_RESULT.
+            /// </summary>
+            udiff_t start;
+
+            /// <summary>
+            /// Position of the last occurrence.
+            /// Valid only if `Match::start` != Match::npos.
+            /// </summary>
+            udiff_t end;
+
+#if _RXW_FEATURE_MATCH_MAP
+            /// <summary>
+            /// The positions of all occurrences between each presented meta-symbol.
+            /// Use FlagsRxW::F_MATCH_MAP to activate it.
+            /// </summary>
+            matchmap_t map;
+#endif
+
+#pragma warning(push)
+#pragma warning(disable: 26495)
+            //NOTE: C26495; valid for `start`
+            Match(): start(npos)
+            {
+
+            };
+#pragma warning(pop)
         };
-
-        // TODO: consider upgrading to modern enum class or enum struct
-        enum MetaOperation
-        {
-            NONE    = 0x000,
-            BOL     = 0x001,
-            ANY     = 0x002,
-            SPLIT   = 0x004,
-            ONE     = 0x008,
-            BEGIN   = 0x010,
-            END     = 0x020,
-            MORE    = 0x040,
-            SINGLE  = 0x080,
-            ANYSP   = 0x100,
-            EOL     = 0x200,
-        };
-
-        // TODO: consider upgrading to modern enum class or enum struct
-        enum MetaSymbols
-        {
-            MS_ANY      = _T('*'), // {0, ~}
-            MS_SPLIT    = _T('|'), // str1 or str2 or ...
-            MS_ONE      = _T('?'), // {0, 1}, ??? {0, 3}, ...
-            MS_BEGIN    = _T('^'), // [str... or [str1... |[str2...
-            MS_END      = _T('$'), // ...str] or ...str1]| ...str2]
-            MS_MORE     = _T('+'), // {1, ~}, +++ {3, ~}, ...
-            MS_SINGLE   = _T('#'), // {1}, ## {2}, ### {3}, ...
-            MS_ANYSP    = _T('>'), // [^/]*str|[^/]*$ (legacy); [^{symbol}]*str|[^{symbol}]*$ for ('>' + {symbol})
-        };
-
-        /**
-         * (legacy) symbol for special case
-         * regex equivalent is [^/]*str|[^/]*$ (EXT version: [^/\\]+)
-         */
-        const static TCHAR ANYSP_CMP_DEFAULT = _T('/');
 
         /// <summary>
         /// Basic search for occurrence using filter.
@@ -122,11 +150,20 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
 
     protected:
 
+        /**
+         * (legacy) symbol for special case
+         * regex equivalent is [^/]*str|[^/]*$ (EXT version: [^/\\]+)
+         */
+        const static TCHAR ANYSP_CMP_DEFAULT = _T('/');
+
         struct Mask
         {
-            MetaOperation curr;
-            MetaOperation prev;
-            Mask(): curr(BOL), prev(BOL) { };
+            def::MetaOp curr;
+            def::MetaOp prev;
+#pragma warning(push)
+#pragma warning(disable: 26812) // enum^
+            Mask(): curr(def::MetaOp::BOL), prev(def::MetaOp::BOL) { };
+#pragma warning(pop)
         };
 
         struct Item
@@ -139,19 +176,29 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
             unsigned short int overlay;
 
             unsigned short int mixpos; // ++??
-            MetaOperation mixms;
+            def::MetaOp mixms;
 
             tstring prev;
-            MetaOperation bems;
+            def::MetaOp bems;
+
+#if _RXW_FEATURE_MATCH_RESULT
+            bool shiftms;
+#endif
+            Match* mres;
 
             tstring::const_iterator* it;
             TCHAR anysp;
+
+            const FlagsRxW* flags;
 
 #pragma warning(push)
 #pragma warning(disable: 26495)
             //NOTE: C26495; valid for `mixms` (the first use is possible only after `mixpos` that will init `mixms`)
             //              `curr`, `prev`
-            Item(): pos(0), left(0), delta(0), overlay(0), mixpos(0), anysp(NULL), bems(NONE)
+            Item(): pos(0), left(0), delta(0), overlay(0), mixpos(0), anysp(NULL), bems(def::NONE)
+#if _RXW_FEATURE_MATCH_RESULT
+                , shiftms(false)
+#endif
             {
 
             };
@@ -159,27 +206,41 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
 
         };
 
-        struct Words
+        struct FWord
         {
             udiff_t found;
             udiff_t left;
+            udiff_t len;
 
-            Words(): found(tstring::npos), left(0) { };
+#pragma warning(push)
+#pragma warning(disable: 26495)
+            //NOTE: C26495; valid for `len`
+            FWord(): found(tstring::npos), left(0) { };
+#pragma warning(pop)
         };
 
-        /**
-         * Working with an interval:
-         *      _______
-         * {word} ... {word}
-         */
-        udiff_t interval(Item& item, Words& words, const FlagsRxW& options, const tstring& _text, const tstring& filter);
+        /** {word}<- ... ->{word} */
+        udiff_t parseInterval(Item& item, FWord& word, const FlagsRxW& options, const tstring& text, const tstring& filter);
 
-        /** rewind to next SPLIT-block */
-        bool rewindToNextBlock(Item& item, Words& words, const tstring& _filter, tstring::const_iterator& it, bool delta = true);
+        /** jump to the next SPLIT block */
+        bool jumpRight(Item& item, FWord& word, const tstring& filter, tstring::const_iterator& it, bool delta = true);
 
     private:
 
-        TCHAR AlgorithmEss::getSPSymbol(const Item& item, const FlagsRxW& options);
+        TCHAR getSPSymbol(const Item& item, const FlagsRxW& options);
+
+        /* FlagsRxW::F_MATCH_RESULT -> */
+
+        inline bool set(Match* result, const FlagsRxW& options, udiff_t start, udiff_t end);
+        inline void reset(Match* result);
+        inline bool unsetMatch(Item& item);
+        inline void setStart(Item& item, udiff_t start);
+        inline void shiftStart(udiff_t start, Item& item);
+        bool setEnd(Item& item, const FWord& word);
+        inline bool isOnResult(const Match* result, const FlagsRxW& options);
+        inline bool isEqPrev(const tstring& input, const Item& item, udiff_t len);
+
+        /* <- FlagsRxW::F_MATCH_RESULT */
 
 #if RXW_CPP11_ENUM_CLASS
 

@@ -167,6 +167,7 @@
     <ClCompile Include="EssANYSPTest.cpp" />
     <ClCompile Include="EssBeginEndTest.cpp" />
     <ClCompile Include="EssFlagICASETest.cpp" />
+    <ClCompile Include="EssMatchTest.cpp" />
     <ClCompile Include="EssRangesTest.cpp" />
     <ClCompile Include="EssSamplesTest.cpp" />
     <ClCompile Include="EssSplitTest.cpp" />

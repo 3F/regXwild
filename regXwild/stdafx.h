@@ -64,6 +64,13 @@
 // For transform() in internal _lowercase processing
 #include <algorithm>
 
+#if _RXW_FEATURE_MATCH_MAP
+
+    // ESS F_MATCH_MAP
+    #include <vector>
+
+#endif
+
 #if REGXWILD_COMPILE_PCH
 
     // Exclude rarely-used stuff from Windows headers

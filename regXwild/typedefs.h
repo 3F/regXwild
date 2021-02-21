@@ -57,7 +57,12 @@ namespace net { namespace r_eg { namespace regXwild { namespace rxwtypes
     typedef size_t udiff_t;
     typedef ptrdiff_t diff_t;
 
+    typedef unsigned int flagmeta_t;
     typedef unsigned int flagcfg_t;
+
+#if _RXW_FEATURE_MATCH_MAP
+    typedef std::vector<udiff_t> matchmap_t;
+#endif
 
 }}}}
 

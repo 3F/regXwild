@@ -41,6 +41,9 @@
     <ClCompile Include="EssSamplesTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EssMatchTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="EssFlagICASETest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

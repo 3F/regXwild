@@ -42,6 +42,8 @@
     #define RXW_ENUM_CLASS enum 
 #endif
 
+#define _RXW_FEATURE_MATCH_RESULT 1
+#define _RXW_FEATURE_MATCH_MAP 0
 
 #include "declspec.h"
 
