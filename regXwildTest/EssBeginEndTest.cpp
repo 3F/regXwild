@@ -96,10 +96,16 @@ namespace regXwildTest
 
         TEST_METHOD(msEndTest1)
         {
+            Assert::AreEqual(false, searchEss(_T("43210"), _T("3#0$")));
+            Assert::AreEqual(true, searchEss(_T("43210"), _T("3#1")));
+            Assert::AreEqual(false, searchEss(_T("43210"), _T("3#1$")));
+            Assert::AreEqual(true, searchEss(_T("43210"), _T("2#0$")));
+
             tstring data = _T("32100");
-            Assert::AreEqual(false, searchEss(data, _T("10$")));
-            Assert::AreEqual(false, searchEss(data, _T("2#0$"))); //Failed
+            Assert::AreEqual(false, searchEss(data, _T("2#0$")));
             Assert::AreEqual(true, searchEss(data, _T("2#00$")));
+            Assert::AreEqual(true, searchEss(data, _T("2##0$")));
+            Assert::AreEqual(false, searchEss(data, _T("10$")));
             Assert::AreEqual(false, searchEss(data, _T("210$")));
             Assert::AreEqual(true, searchEss(data, _T("2100$")));
             Assert::AreEqual(false, searchEss(data, _T("1200$")));
@@ -108,57 +114,63 @@ namespace regXwildTest
         TEST_METHOD(msEndTest2)
         {
             tstring data = _T("32100");
-            Assert::AreEqual(true, searchEss(data, _T("2*0$")));
+            Assert::AreEqual(false, searchEss(data, _T("2*0$")));
             Assert::AreEqual(true, searchEss(data, _T("2*00$")));
             Assert::AreEqual(true, searchEss(data, _T("2*100$")));
-            Assert::AreEqual(false, searchEss(data, _T("2*2100$"))); //Failed
+            Assert::AreEqual(false, searchEss(data, _T("2*2100$")));
 
-            Assert::AreEqual(true, searchEss(data, _T("2+0$")));
+            Assert::AreEqual(false, searchEss(data, _T("2+0$")));
             Assert::AreEqual(true, searchEss(data, _T("2+00$")));
-            Assert::AreEqual(false, searchEss(data, _T("2+100$"))); //Failed
+            Assert::AreEqual(false, searchEss(data, _T("2+100$")));
 
-            Assert::AreEqual(false, searchEss(data, _T("2?0$"))); // Failed
+            Assert::AreEqual(false, searchEss(data, _T("2?0$")));
             Assert::AreEqual(true, searchEss(data, _T("2?00$")));
             Assert::AreEqual(true, searchEss(data, _T("2?100$")));
-            Assert::AreEqual(false, searchEss(data, _T("2?2100$"))); // Failed
+            Assert::AreEqual(false, searchEss(data, _T("2?2100$")));
         }
 
         TEST_METHOD(msEndTest3)
         {
             tstring data = _T("32100");
-            Assert::AreEqual(true, searchEss(data, _T("2?+0$")));
-            Assert::AreEqual(false, searchEss(data, _T("2?+00$"))); // Failed
+            Assert::AreEqual(false, searchEss(data, _T("2+?0$"))); // TODO: ? ambiguous; 1-2; 32[10]0->$ and 32[1]->0
+            Assert::AreEqual(false, searchEss(data, _T("2#?0$"))); // TODO: ? ambiguous; 1|2; 32[10]0->$ and 32[1]->0 
 
-            Assert::AreEqual(true, searchEss(data, _T("2?#0$")));
-            Assert::AreEqual(true, searchEss(data, _T("2?#00$")));
-            Assert::AreEqual(false, searchEss(data, _T("2?#100$"))); // Failed
+            Assert::AreEqual(false, searchEss(data, _T("3+?0$")));
+            Assert::AreEqual(true, searchEss(data, _T("3+?00$")));
+            Assert::AreEqual(true, searchEss(data, _T("2+?00$")));
+
+            Assert::AreEqual(true, searchEss(data, _T("2#?00$")));
+            Assert::AreEqual(false, searchEss(data, _T("2#?100$")));
         }
 
         TEST_METHOD(msEndTest4)
         {
             tstring data = _T("32100");
-            Assert::AreEqual(false, searchEss(data, _T("3##0$"))); // Failed
+            
+            Assert::AreEqual(true, searchEss(data, _T("3+++0$")));
+            Assert::AreEqual(false, searchEss(data, _T("3##0$")));
             Assert::AreEqual(true, searchEss(data, _T("3##00$")));
 
-            Assert::AreEqual(true, searchEss(data, _T("3++0$")));
-            Assert::AreEqual(true, searchEss(data, _T("3++00$")));
-            Assert::AreEqual(false, searchEss(data, _T("3++100$"))); // Failed
+            Assert::AreEqual(false, searchEss(data, _T("3++0$"))); // TODO: ? ambiguous; 2+; 3[21]0->$ and 3[210]->0
 
-            Assert::AreEqual(true, searchEss(data, _T("2??0$")));
-            Assert::AreEqual(false, searchEss(data, _T("3??0$"))); // Failed
-            Assert::AreEqual(true, searchEss(data, _T("2???0$")));
-            Assert::AreEqual(true, searchEss(data, _T("3???0$")));
+            Assert::AreEqual(true, searchEss(data, _T("3++00$")));
+            Assert::AreEqual(false, searchEss(data, _T("3++100$")));
+
+            Assert::AreEqual(false, searchEss(data, _T("2??0$"))); // TODO: ? ambiguous; 0,1,2; 2[1]0->$ and 2[10]->0
+            Assert::AreEqual(false, searchEss(data, _T("3??0$")));
+            Assert::AreEqual(false, searchEss(data, _T("2???0$"))); // TODO: ? ambiguous; 0,1,2,3; 2[1]0->$ and 2[10]->0
+            Assert::AreEqual(false, searchEss(data, _T("3???0$"))); // TODO: ? ambiguous; 0,1,2,3; 3[21]0->$ and 3[210]->0
         }
 
         TEST_METHOD(msEndTest5)
         {
             Assert::AreEqual(true, rxw.match(_T("00123"), _T("0>/3$"), EssRxW::FlagsRxW::F_NONE));
-            Assert::AreEqual(false, rxw.match(_T("00/123"), _T("0>/3$"), EssRxW::FlagsRxW::F_NONE)); // Failed
+            Assert::AreEqual(false, rxw.match(_T("00/123"), _T("0>/3$"), EssRxW::FlagsRxW::F_NONE));
 
             Assert::AreEqual(false, rxw.match(_T("0123"), _T("0>/2$"), EssRxW::FlagsRxW::F_NONE));
-            Assert::AreEqual(false, rxw.match(_T("0123"), _T("3>/3$"), EssRxW::FlagsRxW::F_NONE)); // Failed
+            Assert::AreEqual(false, rxw.match(_T("0123"), _T("3>/3$"), EssRxW::FlagsRxW::F_NONE));
             Assert::AreEqual(true, rxw.match(_T("0123"), _T("2>/3$"), EssRxW::FlagsRxW::F_NONE));
-            Assert::AreEqual(false, rxw.match(_T("012/3"), _T("2>/3$"), EssRxW::FlagsRxW::F_NONE)); // Failed
+            Assert::AreEqual(false, rxw.match(_T("012/3"), _T("2>/3$"), EssRxW::FlagsRxW::F_NONE));
         }
         
         TEST_METHOD(filterBeginTest1)

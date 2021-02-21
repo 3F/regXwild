@@ -175,23 +175,6 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
         // getting the current word
         item.curr = (item.pos < _filter.length()) ? _filter.substr(item.pos, item.delta) : _T("");
 
-        if(item.mask.curr & END)
-        {
-            if(item.delta <= _text.length() 
-                && _text.substr(_text.length() - item.delta).compare(item.curr) == 0)
-            {
-                if(it + 1 == itEnd){ return true; /*EOL*/ }
-
-                switch(*(it + 1)){
-                    case MS_SPLIT:{
-                        return true;
-                    }
-                }
-            }
-            // __$x
-            if(rewindToNextBlock(item, words, _filter, it)){ continue; } return false;
-        }
-
         if(item.mask.prev & BEGIN)
         {
             if(_text.substr(0, item.delta).compare(item.curr) == 0){
@@ -213,12 +196,12 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
                 if(rewindToNextBlock(item, words, _filter, it)){ continue; } return false;
             }
         }
-        else{
+        else
+        {
+            udiff_t roff = (item.mask.prev & (MORE | SINGLE)) ? ++words.left + item.overlay : words.left;
+
             // find a part
-            if(item.mask.prev & MORE){
-                ++words.left;
-            }
-            words.found = _text.find(item.curr, words.left + ((item.mask.prev & MORE) ? item.overlay : 0));
+            words.found = _text.find(item.curr, roff);
         }
 
         // working with an interval
@@ -231,7 +214,7 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
 
         if(words.found == tstring::npos)
         {
-            if(item.mask.curr & EOL){ //TODO: [optimize]: ...or last split-block
+            if(item.mask.curr & (EOL | END)) { //TODO: [optimize]: ...or last split-block
                 return false;
             }
 
@@ -244,6 +227,24 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
                 continue; //to next block
             }
             if(rewindToNextBlock(item, words, _filter, it, false)){ continue; } return false;
+        }
+        else
+        {
+            if(item.mask.curr & END)
+            {
+                if(_text.substr(words.found).compare(item.curr) == 0)
+                {
+                    const tstring::const_iterator itUp = it + 1;
+
+                    if(itUp == itEnd) return true; /*EOL*/
+
+                    switch(*(itUp)) {
+                        case MS_SPLIT: return true;
+                    }
+                }
+                // __$x
+                if(rewindToNextBlock(item, words, _filter, it)) { continue; } return false;
+            }
         }
 
         /* Success: */
