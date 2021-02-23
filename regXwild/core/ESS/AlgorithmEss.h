@@ -133,6 +133,16 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
         };
 
         /// <summary>
+        /// In a specified input, replaces first substring that match a specified pattern with a specified replacement string.
+        /// </summary>
+        /// <param name="input">The input string that will be modified if matched.</param>
+        /// <param name="pattern">Compatible pattern to match.</param>
+        /// <param name="replacement">The replacement string.</param>
+        /// <param name="options">A bitwise combination of the enumeration values that provide options for matching or modifications.</param>
+        /// <returns>True if the match was successful.</returns>
+        REGXWILD_API bool replace(tstring& input, const tstring& pattern, const tstring& replacement, const FlagsRxW& options = FlagsRxW::F_NONE);
+
+        /// <summary>
         /// Basic search for occurrence using filter.
         /// </summary>
         /// <returns>True if found.</returns>

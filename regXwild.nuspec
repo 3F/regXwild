@@ -11,7 +11,7 @@
     <projectUrl>https://github.com/3F/regXwild</projectUrl>
     <repository type="git" url="https://github.com/3F/regXwild" />
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>🚀 Superfast ^Advanced wildcards++? `*,|,?,^,$,+,#,&gt;,++??,##??,&gt;c` ...
+    <description>⏱ Superfast ^Advanced wildcards++? `*,|,?,^,$,+,#,&gt;,++??,##??,&gt;c` ...
 
 Unique algorithms that was implemented on native unmanaged C++ but easily accessible in .NET
 through Conari (recommended due to caching of 0x29 opcodes + related optimizations) etc.

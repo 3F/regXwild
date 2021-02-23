@@ -1,7 +1,7 @@
 
 # [regXwild](https://github.com/3F/regXwild) 
 
-🚀 Superfast ^Advanced wildcards++? `*`,`|`,`?`,`^`,`$`,`+`,`#`,`>`,[`++??`](https://github.com/3F/regXwild/pull/7),[`##??`](https://github.com/3F/regXwild/pull/7),`>c` in addition to slow regex engines and more.
+⏱ Superfast ^Advanced wildcards++? `*`,`|`,`?`,`^`,`$`,`+`,`#`,`>`,[`++??`](https://github.com/3F/regXwild/pull/7),[`##??`](https://github.com/3F/regXwild/pull/7),`>c` in addition to slow regex engines and more.
 
 ✔ regex-like quantifiers, amazing meta symbols, and speed...
 
@@ -47,7 +47,7 @@ C++
 using namespace net::r_eg::regXwild;
 ...
 EssRxW rxw;
-if(rxw.search(_T("regXwild"), _T("reg?wild"))) {
+if(rxw.match(_T("regXwild"), _T("reg?wild"))) {
     // ...
 }
 ```
@@ -113,7 +113,34 @@ Play with our actual **Unit-Tests**.
 ### 🚀 Awesome speed
 
 * [~2000 times faster when C++](#speed).
-* For .NET (including modern .NET Core), [Conari](https://github.com/3F/Conari) provides optional caching of 0x29 opcodes (Calli) and more to get a similar result as possible.
+* For .NET (including modern .NET Core), [Conari](https://github.com/3F/Conari) provides optional caching of 0x29 opcodes (Calli) and more to get similar to C++ result as possible.
+
+### Match result and Replacements
+
+1.4+
+
+```cpp
+EssRxW::Match m;
+rxw.match
+(
+    _T("number = '8888'; //TODO: up"),
+    _T("'+'"),
+    EssRxW::FlagsRxW::F_MATCH_RESULT,
+    &m
+);
+//m.start = 9
+//m.end = 15
+...
+input.replace(m.start, m.end - m.start, _T("'9777'"));
+```
+
+```cpp
+tstring str = _T("year = 2021; dd = 17;");
+...
+if(rxw.replace(str, _T(" ##;"), _T(" 00;"))) {
+    // year = 2021; dd = 00;
+}
+```
 
 ### 🍰 Open and Free
 

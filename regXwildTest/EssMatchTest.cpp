@@ -627,6 +627,50 @@ namespace regXwildTest
             assertTrueAndEqual(input, _T(" ++??;"), 6, 12, m);
         }
 
+        TEST_METHOD(mixTest3)
+        {
+            EssRxW::Match m;
+
+            tstring input = _T("year = 2021; pnum = 24617; vd = 1; dd = 17; vt = 55;");
+
+            assertTrueAndEqual(input, _T(" ##;"), 39, 43, m);
+            assertTrueAndEqual(input, _T(" ??;"), 31, 34, m);
+        }
+
+        TEST_METHOD(uReplaceTest1)
+        {
+            tstring input       = _T("number = '8888'; //TODO: up");
+            tstring expected    = _T("number = '9777'; //TODO: up");
+
+            EssRxW::Match m;
+            rxw.match(input, _T("'+'"), EssRxW::FlagsRxW::F_MATCH_RESULT, &m);
+            input = input.replace(m.start, m.end - m.start, _T("'9777'"));
+
+            Assert::AreEqual(expected, input);
+        }
+
+        TEST_METHOD(uReplaceTest2)
+        {
+            tstring input       = _T("year = 2021; age = 21; future = 'up';");
+            tstring expected    = _T("year = 2022; age = 22; future = 'up';");
+
+            Assert::IsTrue(rxw.replace(input, _T(" ##;"), _T(" 22;")));
+            Assert::IsTrue(rxw.replace(input, _T(" ++??;"), _T(" 2022;")));
+            Assert::AreEqual(expected, input);
+        }
+
+        TEST_METHOD(uReplaceTest3)
+        {
+
+            tstring input       = _T("year = 2021; pnum = 24617; vd = 1; dd = 17; vt = 55;");
+            tstring expected    = _T("year = 2021; pnum = 24617; vd = 7; dd = 00; vt = 55;");
+
+            Assert::IsTrue(rxw.replace(input, _T(" ##;"), _T(" 00;")));
+            Assert::IsTrue(rxw.replace(input, _T(" ??;"), _T(" 7;")));
+            Assert::AreEqual(expected, input);
+        }
+
+
     private:
 
         EssRxW rxw;
