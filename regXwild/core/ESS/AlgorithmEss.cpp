@@ -159,7 +159,7 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
                 if(item.mask.curr & (SPLIT | EOL)) {
                     return setEnd(item, word);
                 }
-                if(item.mask.curr & (SINGLE | ONE)) {
+                if(item.mask.curr & (SINGLE | ONE | MORE)) {
                     item.bems = BEGIN;
                 }
                 word.found = 0;
@@ -286,11 +286,18 @@ udiff_t AlgorithmEss::parseInterval(Item& item, FWord& word, const FlagsRxW& opt
         diff_t min = item.mixpos;
         diff_t max = min + item.overlay + 1;
 
-        if(item.mixms & SINGLE && delta != min && delta != max) {
-            return tstring::npos;
-        }
+        if(item.mixms & SINGLE && delta != min && delta != max || /*& MORE*/delta > max) // " = 12" -> "= 123"
+        {
+            diff_t lPos = word.found - len - max;
 
-        if(delta < min || delta > max) return tstring::npos;
+            if(lPos < 0 || (item.bems & BEGIN && lPos != 0) || text.substr(lPos, len).compare(item.prev) != 0) {
+                return tstring::npos;
+            }
+
+            if(isOnResult(item.mres, options) && isEqPrev(text, item, len)) shiftStart(lPos, item);
+            return word.found;
+        }
+        if(/*& MORE*/delta < min) return tstring::npos;
 
         if(text.substr(word.found - len - delta, len).compare(item.prev) == 0) {
             return word.found;

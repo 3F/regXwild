@@ -595,6 +595,36 @@ namespace regXwildTest
             assertFalse(_T("012/3"), _T("2>/3$"), m);
         }
 
+        TEST_METHOD(mixTest1)
+        {
+            EssRxW::Match m;
+
+            tstring input = _T("year = 2021;");
+
+            assertTrueAndEqual(input, _T(" ##??;"), 6, 12, m);
+            assertTrueAndEqual(input, _T(" ++??;"), 6, 12, m);
+
+            assertTrueAndEqual(input, _T(" +???;"), 6, 12, m);
+            assertTrueAndEqual(input, _T(" +++?;"), 6, 12, m);
+            assertTrueAndEqual(input, _T(" ++??????;"), 4, 12, m);
+            assertTrueAndEqual(input, _T(" ++????????;"), 4, 12, m);
+
+            assertFalse(input, _T(" ++++?;"), m);
+
+            assertTrueAndEqual(input, _T(" ###?;"), 6, 12, m);
+            assertTrueAndEqual(input, _T(" #####?;"), 4, 12, m);
+            assertTrueAndEqual(input, _T(" ####??;"), 4, 12, m);
+            assertFalse(input, _T(" ####???;"), m);
+        }
+
+        TEST_METHOD(mixTest2)
+        {
+            EssRxW::Match m;
+
+            tstring input = _T("year = 2021; age = 21; future = 'up';");
+
+            assertTrueAndEqual(input, _T(" ++??;"), 6, 12, m);
+        }
 
     private:
 
