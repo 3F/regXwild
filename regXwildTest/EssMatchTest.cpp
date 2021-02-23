@@ -623,6 +623,7 @@ namespace regXwildTest
 
             tstring input = _T("year = 2021; age = 21; future = 'up';");
 
+            assertTrueAndEqual(input, _T(" ##;"), 18, 22, m);
             assertTrueAndEqual(input, _T(" ++??;"), 6, 12, m);
         }
 

@@ -72,6 +72,8 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
     FWord word;
     word.len = text.length();
 
+    _newoffset: // FIXME: I don't really want labels
+
     tstring::const_iterator it = filter.begin();
     item.it = &it;
 
@@ -154,6 +156,8 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
 
         if(item.mask.prev & BEGIN)
         {
+            if(word.left > 0) return unsetMatch(item); // means not the first attempt after curr & (EOL | END)
+
             if(text.substr(0, item.delta).compare(item.curr) == 0)
             {
                 if(item.mask.curr & (SPLIT | EOL)) {
@@ -171,13 +175,12 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
                 if(jumpRight(item, word, filter, it)) { continue; } return unsetMatch(item);
             }
         }
-        else
-        {
-            udiff_t roff = (item.mask.prev & (MORE | SINGLE)) ? ++word.left + item.overlay 
-                                                              : word.left;
-
-            word.found = text.find(item.curr, roff);
-        }
+        else word.found = text.find
+        (
+            item.curr, 
+            (item.mask.prev & (MORE | SINGLE)) ? ++word.left + item.overlay
+                                               : word.left
+        );
 
         if(isOnResult(result, options) && result->start == Match::npos)
         {
@@ -185,16 +188,29 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
                                                                : word.found;
         }
 
-        if(word.found != tstring::npos) {
+        if(word.found != tstring::npos)
+        {
+            word.roff = word.found + item.delta;
             word.found = parseInterval(item, word, options, text, filter);
         }
+        else { word.roff = tstring::npos; }
+
         item.overlay = 0; //flush sequence
 
         /* End of block control */
 
         if(word.found == tstring::npos)
         {
-            if(item.mask.curr & (EOL | END)) { //TODO: [optimize]: ...or last split-block
+            if(item.mask.curr & (EOL | END)) //TODO: [optimize]: ...or last split-block
+            {
+                if(word.roff != tstring::npos && word.roff + 1 < word.len)
+                {
+                    word.left = word.roff;
+                    item.pos = item.left = 0;
+                    item.mask.prev = BOL;
+                    goto _newoffset; // FIXME: use the continue operator with no ++it
+                }
+
                 return unsetMatch(item);
             }
 

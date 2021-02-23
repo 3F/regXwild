@@ -210,11 +210,12 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
         {
             udiff_t found;
             udiff_t left;
+            udiff_t roff;
             udiff_t len;
 
 #pragma warning(push)
 #pragma warning(disable: 26495)
-            //NOTE: C26495; valid for `len`
+            //NOTE: C26495; valid for `len`, `roff`
             FWord(): found(tstring::npos), left(0) { };
 #pragma warning(pop)
         };
