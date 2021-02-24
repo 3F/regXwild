@@ -40,8 +40,22 @@ using namespace def;
 /// <returns>True if the match was successful.</returns>
 bool AlgorithmEss::replace(tstring& input, const tstring& pattern, const tstring& replacement, const EngineOptions& options)
 {
+    return replace(input, pattern, replacement, 0, options);
+}
+
+/// <summary>
+/// In a specified input, replaces first substring that match a specified pattern with a specified replacement string.
+/// </summary>
+/// <param name="input">The input string that will be modified if matched.</param>
+/// <param name="pattern">Compatible pattern to match.</param>
+/// <param name="replacement">The replacement string.</param>
+/// <param name="offset">The starting position to start matching.</param>
+/// <param name="options">A bitwise combination of the enumeration values that provide options for matching or modifications.</param>
+/// <returns>True if the match was successful.</returns>
+bool AlgorithmEss::replace(tstring& input, const tstring& pattern, const tstring& replacement, udiff_t offset, const EngineOptions& options)
+{
     MatchResult m;
-    if(match(input, pattern, options | EngineOptions::F_MATCH_RESULT, &m))
+    if(match(input, pattern, offset, options | EngineOptions::F_MATCH_RESULT, &m))
     {
         input = input.replace(m.start, m.end - m.start, replacement);
         return true;
@@ -69,6 +83,20 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
 /// <returns>True if the match was successful.</returns>
 bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const EngineOptions& options, MatchResult* result)
 {
+    return match(input, pattern, 0, options, result);
+}
+
+/// <summary>
+/// Searches an input string for a substring that matches a pattern.
+/// </summary>
+/// <param name="input">The string to search for a match.</param>
+/// <param name="pattern">Compatible pattern to match.</param>
+/// <param name="offset">The starting position to start matching.</param>
+/// <param name="options">A bitwise combination of the enumeration values that provide options for matching.</param>
+/// <param name="result">Information about the match.</param>
+/// <returns>True if the match was successful.</returns>
+bool AlgorithmEss::match(const tstring& input, const tstring& pattern, udiff_t offset, const EngineOptions& options, MatchResult* result)
+{
     if(pattern.empty()) return set(result, options, 0, input.length());
     reset(result);
 
@@ -84,7 +112,7 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Eng
         filter  = pattern;
     }
 
-    FWord word(text);
+    FWord word(text, offset);
     Item item(filter);
 
     item.mres  = result;
@@ -196,7 +224,7 @@ LoopAct AlgorithmEss::loop(Item& item, FWord& word, const EngineOptions& options
 
     if(item.mask.prev & BEGIN)
     {
-        if(word.left > 0) return unsetMatch(item); // means not the first attempt after curr & (EOL | END)
+        if(word.left > 0) return unsetMatch(item); // it also means not the first attempt after curr & (EOL | END)
 
         if(cmp(word.text, item.curr, 0, item.delta))
         {
@@ -245,7 +273,8 @@ LoopAct AlgorithmEss::loop(Item& item, FWord& word, const EngineOptions& options
         {
             if(word.roff != tstring::npos && word.roff + 1 < word.len)
             {
-                word.left = word.roff;
+                word.rewind(word.roff);
+
                 item.pos = item.left = 0;
                 item.mask.prev = BOL;
 

@@ -52,6 +52,17 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
         REGXWILD_API bool replace(tstring& input, const tstring& pattern, const tstring& replacement, const EngineOptions& options = EngineOptions::F_NONE);
 
         /// <summary>
+        /// In a specified input, replaces first substring that match a specified pattern with a specified replacement string.
+        /// </summary>
+        /// <param name="input">The input string that will be modified if matched.</param>
+        /// <param name="pattern">Compatible pattern to match.</param>
+        /// <param name="replacement">The replacement string.</param>
+        /// <param name="offset">The starting position to start matching.</param>
+        /// <param name="options">A bitwise combination of the enumeration values that provide options for matching or modifications.</param>
+        /// <returns>True if the match was successful.</returns>
+        REGXWILD_API bool replace(tstring& input, const tstring& pattern, const tstring& replacement, udiff_t offset, const EngineOptions& options = EngineOptions::F_NONE);
+
+        /// <summary>
         /// [Obsolete] This method is obsolete and can be removed in future major versions. Please use `match()`.
         /// Basic search for occurrence using filter.
         /// </summary>
@@ -67,6 +78,17 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
         /// <param name="result">Information about the match.</param>
         /// <returns>True if the match was successful.</returns>
         REGXWILD_API bool match(const tstring& input, const tstring& pattern, const EngineOptions& options = EngineOptions::F_NONE, MatchResult* result = nullptr);
+
+        /// <summary>
+        /// Searches an input string for a substring that matches a pattern.
+        /// </summary>
+        /// <param name="input">The string to search for a match.</param>
+        /// <param name="pattern">Compatible pattern to match.</param>
+        /// <param name="offset">The starting position to start matching.</param>
+        /// <param name="options">A bitwise combination of the enumeration values that provide options for matching.</param>
+        /// <param name="result">Information about the match.</param>
+        /// <returns>True if the match was successful.</returns>
+        REGXWILD_API bool match(const tstring& input, const tstring& pattern, udiff_t offset, const EngineOptions& options = EngineOptions::F_NONE, MatchResult* result = nullptr);
 
         using EngineOptions = core::ESS::EngineOptions;
         using MatchResult = core::ESS::MatchResult;
@@ -85,7 +107,11 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
             def::MetaOp prev;
 #pragma warning(push)
 #pragma warning(disable: 26812) // enum^
-            Mask(): curr(def::MetaOp::BOL), prev(def::MetaOp::BOL) { };
+            Mask()
+                : curr(def::MetaOp::BOL), prev(def::MetaOp::BOL)
+            {
+
+            }
 #pragma warning(pop)
         };
 
@@ -97,7 +123,8 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
 
             void reset() { c = begin; }
 
-            ItStr(const tstring& str): begin(str.cbegin()), end(str.cend())
+            ItStr(const tstring& str)
+                : begin(str.cbegin()), end(str.cend())
             {
                 reset();
             }
@@ -132,14 +159,15 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
 #pragma warning(disable: 26495)
             //NOTE: C26495; valid for `mixms` (the first use is possible only after `mixpos` that will init `mixms`)
             //              `curr`, `prev`
-            Item(const tstring& input): input(input), pos(0), left(0), delta(0), overlay(0), mixpos(0), 
-                                        anysp(NULL), bems(def::NONE), it(input)
+            Item(const tstring& input)
+                : input(input), pos(0), left(0), delta(0), overlay(0), mixpos(0), 
+                  anysp(NULL), bems(def::NONE), it(input)
 #if _RXW_FEATURE_MATCH_RESULT
                 , shiftms(false)
 #endif
             {
 
-            };
+            }
 #pragma warning(pop)
 
         };
@@ -153,14 +181,19 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
             udiff_t len;
             const tstring& text;
 
+            //initial offset
+            const udiff_t& offset;
+
+            void rewind(udiff_t opt = 0) { left = offset + opt; }
+
 #pragma warning(push)
 #pragma warning(disable: 26495)
             //NOTE: C26495; valid for `roff`
-            FWord(const tstring& input): found(tstring::npos), left(0), 
-                                         text(input), len(input.length())
+            FWord(const tstring& input, const udiff_t& offset)
+                : found(tstring::npos), offset(offset), left(offset), text(input), len(input.length())
             {
 
-            };
+            }
 #pragma warning(pop)
         };
 

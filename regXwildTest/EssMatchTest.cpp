@@ -670,16 +670,116 @@ namespace regXwildTest
             Assert::AreEqual(expected, input);
         }
 
+        TEST_METHOD(offsetTest1)
+        {
+            EssRxW::MatchResult m;
+
+            tstring input   = _T("a = 1; b = 2; c = 3; d = 4;");
+            tstring pattern = _T(" #;");
+
+            assertTrueAndEqual(input, pattern, 3, 6, m, 0);
+            assertTrueAndEqual(input, pattern, 3, 6, m, 1);
+            assertTrueAndEqual(input, pattern, 3, 6, m, 2);
+            assertTrueAndEqual(input, pattern, 3, 6, m, 3);
+
+            assertTrueAndEqual(input, pattern, 10, 13, m, 4);
+            assertTrueAndEqual(input, pattern, 10, 13, m, 5);
+            assertTrueAndEqual(input, pattern, 10, 13, m, 6);
+            assertTrueAndEqual(input, pattern, 10, 13, m, 7);
+            assertTrueAndEqual(input, pattern, 10, 13, m, 8);
+            assertTrueAndEqual(input, pattern, 10, 13, m, 9);
+            assertTrueAndEqual(input, pattern, 10, 13, m, 10);
+
+            assertTrueAndEqual(input, pattern, 17, 20, m, 11);
+            assertTrueAndEqual(input, pattern, 17, 20, m, 12);
+            assertTrueAndEqual(input, pattern, 17, 20, m, 13);
+            assertTrueAndEqual(input, pattern, 17, 20, m, 14);
+            assertTrueAndEqual(input, pattern, 17, 20, m, 15);
+            assertTrueAndEqual(input, pattern, 17, 20, m, 16);
+            assertTrueAndEqual(input, pattern, 17, 20, m, 17);
+
+            assertTrueAndEqual(input, pattern, 24, 27, m, 18);
+            assertTrueAndEqual(input, pattern, 24, 27, m, 19);
+            assertTrueAndEqual(input, pattern, 24, 27, m, 20);
+            assertTrueAndEqual(input, pattern, 24, 27, m, 21);
+            assertTrueAndEqual(input, pattern, 24, 27, m, 22);
+            assertTrueAndEqual(input, pattern, 24, 27, m, 23);
+            assertTrueAndEqual(input, pattern, 24, 27, m, 24);
+
+            assertFalse(input, pattern, m, 25);
+            assertFalse(input, pattern, m, 26);
+            assertFalse(input, pattern, m, 27);
+        }
+
+        TEST_METHOD(offsetTest2)
+        {
+            EssRxW::MatchResult m;
+
+            tstring input   = _T("a = 1; b = 2;");
+            tstring pattern = _T(" #;");
+
+            assertFalse(input, pattern, m, -1);
+            assertFalse(input, pattern, m, -2);
+            assertFalse(input, pattern, m, input.length() - 1);
+            assertFalse(input, pattern, m, input.length());
+            assertFalse(input, pattern, m, input.length() + 1);
+        }
+
+        TEST_METHOD(offsetTest3)
+        {
+            EssRxW::MatchResult m;
+
+            tstring input   = _T("a = 1; b = 2; c = 3; d = 4;");
+            tstring pattern = _T(" #;");
+
+            Assert::IsTrue(rxw.replace(input, pattern, _T(" 5;"), 24));
+            Assert::AreEqual(static_cast<tstring>(_T("a = 1; b = 2; c = 3; d = 5;")), input);
+
+            Assert::IsTrue(rxw.replace(input, pattern, _T(" 6;"), 17));
+            Assert::AreEqual(static_cast<tstring>(_T("a = 1; b = 2; c = 6; d = 5;")), input);
+
+            Assert::IsTrue(rxw.replace(input, pattern, _T(" 7;"), 10));
+            Assert::AreEqual(static_cast<tstring>(_T("a = 1; b = 7; c = 6; d = 5;")), input);
+
+            Assert::IsTrue(rxw.replace(input, pattern, _T(" 8;"), 3));
+            Assert::AreEqual(static_cast<tstring>(_T("a = 8; b = 7; c = 6; d = 5;")), input);
+        }
+
+        TEST_METHOD(offsetTest4)
+        {
+            EssRxW::MatchResult m;
+
+            tstring input       = _T("a = 1; b = 2;");
+            tstring expected    = input;
+            tstring pattern     = _T(" #;");
+            tstring replacement = _T(" 7;");
+
+            Assert::IsFalse(rxw.replace(input, pattern, replacement, -1));
+            Assert::AreEqual(expected, input);
+
+            Assert::IsFalse(rxw.replace(input, pattern, replacement, -2));
+            Assert::AreEqual(expected, input);
+
+            Assert::IsFalse(rxw.replace(input, pattern, replacement, input.length() - 1));
+            Assert::AreEqual(expected, input);
+
+            Assert::IsFalse(rxw.replace(input, pattern, replacement, input.length()));
+            Assert::AreEqual(expected, input);
+
+            Assert::IsFalse(rxw.replace(input, pattern, replacement, input.length() + 1));
+            Assert::AreEqual(expected, input);
+        }
+
 
     private:
 
         EssRxW rxw;
 
-        void assertTrueAndEqual(tstring input, tstring pattern, udiff_t expectedStart, udiff_t expectedEnd, EssRxW::MatchResult& actual)
+        void assertTrueAndEqual(tstring input, tstring pattern, udiff_t expectedStart, udiff_t expectedEnd, EssRxW::MatchResult& actual, udiff_t ofs = 0)
         {
             assertTrueAndEqual
             (
-                rxw.match(input, pattern, EssRxW::EngineOptions::F_MATCH_RESULT, &actual),
+                rxw.match(input, pattern, ofs, EssRxW::EngineOptions::F_MATCH_RESULT, &actual),
                 expectedStart, expectedEnd, actual
             );
         }
@@ -696,11 +796,11 @@ namespace regXwildTest
             Assert::AreEqual(static_cast<rxwtypes::udiff_t>(EssRxW::MatchResult::npos), actual.start);
         }
 
-        void assertFalse(tstring input, tstring pattern, EssRxW::MatchResult& actual)
+        void assertFalse(tstring input, tstring pattern, EssRxW::MatchResult& actual, udiff_t ofs = 0)
         {
             assertFalse
             (
-                rxw.match(input, pattern, EssRxW::EngineOptions::F_MATCH_RESULT, &actual),
+                rxw.match(input, pattern, ofs, EssRxW::EngineOptions::F_MATCH_RESULT, &actual),
                 actual
             );
         }
