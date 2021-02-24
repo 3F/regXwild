@@ -66,6 +66,18 @@
     <ClInclude Include="regXwild.common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="core\ESS\def.h">
+      <Filter>Header Files\core\ESS</Filter>
+    </ClInclude>
+    <ClInclude Include="core\ESS\MatchResult.h">
+      <Filter>Header Files\core\ESS</Filter>
+    </ClInclude>
+    <ClInclude Include="core\ESS\EngineOptions.h">
+      <Filter>Header Files\core\ESS</Filter>
+    </ClInclude>
+    <ClInclude Include="core\ESS\LoopAct.h">
+      <Filter>Header Files\core\ESS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

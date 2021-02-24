@@ -28,27 +28,43 @@
 #include "stdafx.h"
 #include "conf.h"
 #include "typedefs.h"
-#include "RXWVersion.h"
 
-#include "./core/EXT/AlgorithmExt.h"
-#include "./core/ESS/AlgorithmEss.h"
-
-namespace net { namespace r_eg { namespace regXwild
+namespace net { namespace r_eg { namespace regXwild { namespace core { namespace ESS
 {
-    /// <summary>
-    /// ESS version (advanced EXT version).
-    /// </summary>
-    typedef core::ESS::AlgorithmEss EssRxW;
+    using namespace net::r_eg::regXwild::rxwtypes;
 
-    /// <summary>
-    /// Leading implementation for regXwild.
-    /// </summary>
-    typedef EssRxW RxW;
-    typedef core::ESS::EngineOptions FlagsRxW;
-    typedef core::ESS::MatchResult MatchRxW;
+    struct MatchResult
+    {
+        const static udiff_t npos = -1;
 
-    /// <summary>
-    /// EXT version (more simplified than ESS).
-    /// </summary>
-    typedef core::EXT::AlgorithmExt ExtRxW;
-}}}
+        /// <summary>
+        /// Position of the first occurrence or MatchResult::npos.
+        /// It also will be MatchResult::npos if not EngineOptions::F_MATCH_RESULT.
+        /// </summary>
+        udiff_t start;
+
+        /// <summary>
+        /// Position of the last occurrence.
+        /// Valid only if `MatchResult::start` != MatchResult::npos.
+        /// </summary>
+        udiff_t end;
+
+#if _RXW_FEATURE_MATCH_MAP
+        /// <summary>
+        /// The positions of all occurrences between each presented metasymbol.
+        /// Use EngineOptions::F_MATCH_MAP to activate it.
+        /// </summary>
+        matchmap_t map;
+#endif
+
+#pragma warning(push)
+#pragma warning(disable: 26495)
+        //NOTE: C26495; valid for `start`
+        MatchResult(): start(npos)
+        {
+
+        };
+#pragma warning(pop)
+    };
+
+}}}}}

@@ -18,14 +18,14 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest1)
         {
-            EssRxW::FlagsRxW cfg = EssRxW::FlagsRxW::F_LEGACY_ANYSP;
+            EssRxW::EngineOptions cfg = EssRxW::EngineOptions::F_LEGACY_ANYSP;
 
             Assert::AreEqual(false, rxw.match(_T("/dir/test.zip"), _T("dir>/.zip"), cfg));
             Assert::AreEqual(false, rxw.match(_T("/dir_test.zip"), _T("dir>/.zip"), cfg));
             Assert::AreEqual(false, rxw.match(_T("/dir/test.zip"), _T("dir>_.zip"), cfg));
             Assert::AreEqual(false, rxw.match(_T("/dir_test.zip"), _T("dir>_.zip"), cfg));
 
-            cfg = EssRxW::FlagsRxW::F_NONE;
+            cfg = EssRxW::EngineOptions::F_NONE;
 
             Assert::AreEqual(false, rxw.match(_T("/dir/test.zip"), _T("dir>/.zip"), cfg));
             Assert::AreEqual(true, rxw.match(_T("/dir_test.zip"), _T("dir>/.zip"), cfg));
@@ -35,7 +35,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest2)
         {
-            EssRxW::FlagsRxW cfg = EssRxW::FlagsRxW::F_LEGACY_ANYSP;
+            EssRxW::EngineOptions cfg = EssRxW::EngineOptions::F_LEGACY_ANYSP;
             
             Assert::AreEqual(false, rxw.match(_T("/dir/test.zip"), _T("dir>.zip"), cfg));
             Assert::AreEqual(true, rxw.match(_T("/dir_test.zip"), _T("dir>.zip"), cfg));
@@ -43,7 +43,7 @@ namespace regXwildTest
             Assert::AreEqual(true, rxw.match(_T("/dir_test/.zip"), _T("dir>/.zip"), cfg));
             Assert::AreEqual(false, rxw.match(_T("/dir/test_.zip"), _T("dir>_.zip"), cfg));
 
-            cfg = EssRxW::FlagsRxW::F_NONE;
+            cfg = EssRxW::EngineOptions::F_NONE;
             
             Assert::AreEqual(false, rxw.match(_T("/dir/test.zip"), _T("dir>.zip"), cfg));
             Assert::AreEqual(false, rxw.match(_T("/dir_test.zip"), _T("dir>.zip"), cfg));
@@ -54,7 +54,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest3)
         {
-            EssRxW::FlagsRxW cfg = EssRxW::FlagsRxW::F_NONE;
+            EssRxW::EngineOptions cfg = EssRxW::EngineOptions::F_NONE;
 
             Assert::AreEqual(false, rxw.match(_T("/dir test.zip"), _T("dir> "), cfg));
             Assert::AreEqual(false, rxw.match(_T("/dir/test.zip"), _T("dir>/"), cfg));
@@ -65,7 +65,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest4)
         {
-            EssRxW::FlagsRxW cfg = EssRxW::FlagsRxW::F_NONE;
+            EssRxW::EngineOptions cfg = EssRxW::EngineOptions::F_NONE;
 
             Assert::AreEqual(true, rxw.match(_T("/dir/test.zip"), _T("dir>"), cfg));
             Assert::AreEqual(true, rxw.match(_T("/dir/test.zip"), _T("dir> "), cfg));
@@ -80,7 +80,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest5)
         {
-            EssRxW::FlagsRxW cfg = EssRxW::FlagsRxW::F_LEGACY_ANYSP;
+            EssRxW::EngineOptions cfg = EssRxW::EngineOptions::F_LEGACY_ANYSP;
 
             Assert::AreEqual(false, rxw.match(_T("/dir/test.zip"), _T("dir>"), cfg));
             Assert::AreEqual(false, rxw.match(_T("/dir /test.zip"), _T("dir>"), cfg));
@@ -91,7 +91,7 @@ namespace regXwildTest
             Assert::AreEqual(false, rxw.match(_T("/dir/test.zip"), _T("zip>/"), cfg));
         }
 
-        void uMatchTest6(EssRxW::FlagsRxW cfg)
+        void uMatchTest6(EssRxW::EngineOptions cfg)
         {
             Assert::AreEqual(false, rxw.match(_T("/dir/test.zip"), _T("dir>/zip"), cfg));
             Assert::AreEqual(false, rxw.match(_T("/dir/test.zip"), _T("dir>/ "), cfg));
@@ -99,19 +99,19 @@ namespace regXwildTest
         }
         TEST_METHOD(uMatchTest6)
         {
-            uMatchTest6(EssRxW::FlagsRxW::F_NONE);
-            uMatchTest6(EssRxW::FlagsRxW::F_LEGACY_ANYSP);
+            uMatchTest6(EssRxW::EngineOptions::F_NONE);
+            uMatchTest6(EssRxW::EngineOptions::F_LEGACY_ANYSP);
 
-            Assert::AreEqual(true, rxw.match(_T("/dir/test.zip"), _T("dir>/*"), EssRxW::FlagsRxW::F_LEGACY_ANYSP));
-            Assert::AreEqual(true, rxw.match(_T("/dir/test.zip"), _T("dir>*"), EssRxW::FlagsRxW::F_NONE));
+            Assert::AreEqual(true, rxw.match(_T("/dir/test.zip"), _T("dir>/*"), EssRxW::EngineOptions::F_LEGACY_ANYSP));
+            Assert::AreEqual(true, rxw.match(_T("/dir/test.zip"), _T("dir>*"), EssRxW::EngineOptions::F_NONE));
 
             // due to disbaled MS combinations in legacy mode
-            Assert::AreEqual(false, rxw.match(_T("/dir/test.zip"), _T("dir>*"), EssRxW::FlagsRxW::F_LEGACY_ANYSP));
+            Assert::AreEqual(false, rxw.match(_T("/dir/test.zip"), _T("dir>*"), EssRxW::EngineOptions::F_LEGACY_ANYSP));
         }
 
         TEST_METHOD(uMatchTest7)
         {
-            EssRxW::FlagsRxW cfg = EssRxW::FlagsRxW::F_NONE;
+            EssRxW::EngineOptions cfg = EssRxW::EngineOptions::F_NONE;
 
             Assert::AreEqual(false, rxw.match(_T("/dir/test.zip"), _T("dir>/*ip"), cfg));
             Assert::AreEqual(false, rxw.match(_T("/dir/test.zip"), _T("dir>/st*ip"), cfg));
@@ -126,7 +126,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest8)
         {
-            EssRxW::FlagsRxW cfg = EssRxW::FlagsRxW::F_NONE;
+            EssRxW::EngineOptions cfg = EssRxW::EngineOptions::F_NONE;
 
             Assert::AreEqual(true, rxw.match(_T("/dir/test\\sub1.zip"), _T("dir>\\st>/b1.zip"), cfg));
             Assert::AreEqual(true, rxw.match(_T("/dir\\test/sub1.zip"), _T("dir>/st>\\b1.zip"), cfg));
@@ -134,7 +134,7 @@ namespace regXwildTest
             Assert::AreEqual(false, rxw.match(_T("/dir/test\\sub1.zip"), _T("dir>/st>\\b1.zip"), cfg));
             Assert::AreEqual(false, rxw.match(_T("/dir\\test/sub1.zip"), _T("dir>\\st>/b1.zip"), cfg));
 
-            cfg = EssRxW::FlagsRxW::F_LEGACY_ANYSP;
+            cfg = EssRxW::EngineOptions::F_LEGACY_ANYSP;
 
             Assert::AreEqual(false, rxw.match(_T("/dir/test\\sub1.zip"), _T("dir>\\st>/b1.zip"), cfg));
             Assert::AreEqual(false, rxw.match(_T("/dir\\test/sub1.zip"), _T("dir>/st>\\b1.zip"), cfg));
@@ -145,7 +145,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest9)
         {
-            EssRxW::FlagsRxW cfg = EssRxW::FlagsRxW::F_NONE;
+            EssRxW::EngineOptions cfg = EssRxW::EngineOptions::F_NONE;
 
             Assert::AreEqual(true, rxw.match(_T("/dir/test\\sub1.zip"), _T("dir>\\s>/b1.zip"), cfg));
             Assert::AreEqual(true, rxw.match(_T("/dir\\test/sub1.zip"), _T("dir>/s>\\b1.zip"), cfg));
@@ -162,7 +162,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest10)
         {
-            EssRxW::FlagsRxW cfg = EssRxW::FlagsRxW::F_NONE;
+            EssRxW::EngineOptions cfg = EssRxW::EngineOptions::F_NONE;
 
             // >a >b >c  - `a` will dominate; ie. `b`, `c`, `...` symbols will not be applied if sequential
 
@@ -191,7 +191,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest11)
         {
-            EssRxW::FlagsRxW cfg = EssRxW::FlagsRxW::F_NONE;
+            EssRxW::EngineOptions cfg = EssRxW::EngineOptions::F_NONE;
 
             Assert::AreEqual(false, rxw.match(_T("/dir/test\\sub1.zip"), _T("dir>/st*b1.zip"), cfg));
             Assert::AreEqual(true, rxw.match(_T("/dir/test\\sub1.zip"), _T("dir> st*b1.zip"), cfg));
@@ -202,7 +202,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest12)
         {
-            EssRxW::FlagsRxW cfg = EssRxW::FlagsRxW::F_NONE;
+            EssRxW::EngineOptions cfg = EssRxW::EngineOptions::F_NONE;
 
             Assert::AreEqual(false, rxw.match(_T("/dir/test\\sub1.zip"), _T("dir>/st*sub#.zip"), cfg));
             Assert::AreEqual(false, rxw.match(_T("/dir test\\sub1.zip"), _T("dir> st*sub#.zip"), cfg));
@@ -216,7 +216,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest13)
         {
-            EssRxW::FlagsRxW cfg = EssRxW::FlagsRxW::F_NONE;
+            EssRxW::EngineOptions cfg = EssRxW::EngineOptions::F_NONE;
 
             Assert::AreEqual(false, rxw.match(_T("/new/user_myhid_t/est.bzip2"), _T("myhid>/bzip"), cfg));  // __.../...__
             Assert::AreEqual(false, rxw.match(_T("/new/user_myhid/_test.bzip2"), _T("myhid>/bzip"), cfg));  // __/...__
@@ -227,7 +227,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest14)
         {
-            EssRxW::FlagsRxW cfg = EssRxW::FlagsRxW::F_NONE;
+            EssRxW::EngineOptions cfg = EssRxW::EngineOptions::F_NONE;
 
             Assert::AreEqual(true, rxw.match(_T("/dir/test.zip"), _T(">"), cfg)); // > + \0
             Assert::AreEqual(true, rxw.match(_T("/dir/test.zip"), _T("> "), cfg));

@@ -1,22 +1,18 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 
-#include "..\regXwild\regXwild.common.h"
+#include "..\regXwild\regXwild.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace net::r_eg::regXwild;
 
-
 namespace regXwildTest
 {
-    namespace regXwild = net::r_eg::regXwild;
-    using namespace regXwild::rxwtypes;
-
     TEST_CLASS(EssFlagICASETest)
     {
     public:
 
-        void uMatchTest1Set(const EssRxW::FlagsRxW& cfg)
+        void uMatchTest1Set(const EssRxW::EngineOptions& cfg)
         {
             Assert::AreEqual(false, rxw.match(_T("system"), _T("syStem"), cfg));
             Assert::AreEqual(true, rxw.match(_T("system"), _T("system"), cfg));
@@ -30,11 +26,11 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest1)
         {
-            uMatchTest1Set(EssRxW::FlagsRxW::F_NONE);
-            uMatchTest1Set(EssRxW::FlagsRxW::F_LEGACY_ANYSP | EssRxW::FlagsRxW::F_MATCH_RESULT);
+            uMatchTest1Set(EssRxW::EngineOptions::F_NONE);
+            uMatchTest1Set(EssRxW::EngineOptions::F_LEGACY_ANYSP | EssRxW::EngineOptions::F_MATCH_RESULT);
         }
 
-        void uMatchTest2Set(const EssRxW::FlagsRxW& cfg)
+        void uMatchTest2Set(const EssRxW::EngineOptions& cfg)
         {
             Assert::AreEqual(true, rxw.match(_T("system"), _T("syStem"), cfg));
             Assert::AreEqual(true, rxw.match(_T("system"), _T("system"), cfg));
@@ -48,8 +44,8 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest2)
         {
-            uMatchTest2Set(EssRxW::FlagsRxW::F_ICASE);
-            uMatchTest2Set(EssRxW::FlagsRxW::F_ICASE | EssRxW::FlagsRxW::F_MATCH_RESULT);
+            uMatchTest2Set(EssRxW::EngineOptions::F_ICASE);
+            uMatchTest2Set(EssRxW::EngineOptions::F_ICASE | EssRxW::EngineOptions::F_MATCH_RESULT);
         }
 
         TEST_METHOD(uMatchTest3)

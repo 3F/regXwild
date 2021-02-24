@@ -154,7 +154,7 @@ The [MIT License (MIT)](https://github.com/3F/regXwild/blob/master/LICENSE)
 Copyright (c) 2013-2021  Denis Kuzmin <x-3F@outlook.com> github/3F
 ```
 
-[ [ ☕ Donate ](https://3F.github.com/Donation/) ]
+[ [ ☕ Donate ](https://3F.github.io/Donation/) ]
 
 regXwild contributors: https://github.com/3F/regXwild/graphs/contributors
 

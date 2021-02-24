@@ -1,17 +1,15 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 
-#include "..\regXwild\regXwild.common.h"
+#include "..\regXwild\regXwild.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace net::r_eg::regXwild;
-
 
 namespace regXwildTest
 {
     namespace regXwild = net::r_eg::regXwild;
     using namespace regXwild::rxwtypes;
-    using namespace regXwild::common;
 
     TEST_CLASS(EssBeginEndTest)
     {
@@ -20,166 +18,166 @@ namespace regXwildTest
         TEST_METHOD(msBeginTest1)
         {
             tstring data = _T("00123");
-            Assert::AreEqual(false, searchEss(data, _T("^0#2")));
-            Assert::AreEqual(false, searchEss(data, _T("^0##3")));
-            Assert::AreEqual(false, searchEss(data, _T("^01")));
-            Assert::AreEqual(true, searchEss(data, _T("^00#2")));
-            Assert::AreEqual(false, searchEss(data, _T("^012")));
-            Assert::AreEqual(true, searchEss(data, _T("^0012")));
-            Assert::AreEqual(false, searchEss(data, _T("^0021")));
+            Assert::IsFalse(match(data, _T("^0#2")));
+            Assert::IsFalse(match(data, _T("^0##3")));
+            Assert::IsFalse(match(data, _T("^01")));
+            Assert::IsTrue(match(data, _T("^00#2")));
+            Assert::IsFalse(match(data, _T("^012")));
+            Assert::IsTrue(match(data, _T("^0012")));
+            Assert::IsFalse(match(data, _T("^0021")));
 
             data = _T("0123");
-            Assert::AreEqual(false, searchEss(data, _T("^0#3")));
-            Assert::AreEqual(true, searchEss(data, _T("^0#2")));
+            Assert::IsFalse(match(data, _T("^0#3")));
+            Assert::IsTrue(match(data, _T("^0#2")));
         }
 
         TEST_METHOD(msBeginTest2)
         {
             tstring data = _T("00123");
-            Assert::AreEqual(true, searchEss(data, _T("^0*2")));
-            Assert::AreEqual(true, searchEss(data, _T("^00*2")));
-            Assert::AreEqual(true, searchEss(data, _T("^001*2")));
-            Assert::AreEqual(false, searchEss(data, _T("^0012*2")));
+            Assert::IsTrue(match(data, _T("^0*2")));
+            Assert::IsTrue(match(data, _T("^00*2")));
+            Assert::IsTrue(match(data, _T("^001*2")));
+            Assert::IsFalse(match(data, _T("^0012*2")));
 
-            Assert::AreEqual(true, searchEss(data, _T("^0+2")));
-            Assert::AreEqual(true, searchEss(data, _T("^00+2")));
-            Assert::AreEqual(false, searchEss(data, _T("^001+2")));
+            Assert::IsTrue(match(data, _T("^0+2")));
+            Assert::IsTrue(match(data, _T("^00+2")));
+            Assert::IsFalse(match(data, _T("^001+2")));
 
-            Assert::AreEqual(false, searchEss(data, _T("^0?2")));
-            Assert::AreEqual(true, searchEss(data, _T("^00?2")));
-            Assert::AreEqual(true, searchEss(data, _T("^001?2")));
-            Assert::AreEqual(false, searchEss(data, _T("^0012?2")));
+            Assert::IsFalse(match(data, _T("^0?2")));
+            Assert::IsTrue(match(data, _T("^00?2")));
+            Assert::IsTrue(match(data, _T("^001?2")));
+            Assert::IsFalse(match(data, _T("^0012?2")));
         }
 
         TEST_METHOD(msBeginTest3)
         {
             tstring data = _T("001234");
-            Assert::AreEqual(true, searchEss(data, _T("^00+?2")));
-            Assert::AreEqual(true, searchEss(data, _T("^00+?3")));
-            Assert::AreEqual(false, searchEss(data, _T("^00+?4")));
-            Assert::AreEqual(true, searchEss(data, _T("^0+?2")));
-            Assert::AreEqual(false, searchEss(data, _T("^0+?3")));
+            Assert::IsTrue(match(data, _T("^00+?2")));
+            Assert::IsTrue(match(data, _T("^00+?3")));
+            Assert::IsFalse(match(data, _T("^00+?4")));
+            Assert::IsTrue(match(data, _T("^0+?2")));
+            Assert::IsFalse(match(data, _T("^0+?3")));
 
-            Assert::AreEqual(true, searchEss(data, _T("^0#?2")));
-            Assert::AreEqual(true, searchEss(data, _T("^00#?2")));
-            Assert::AreEqual(false, searchEss(data, _T("^001#?2")));
+            Assert::IsTrue(match(data, _T("^0#?2")));
+            Assert::IsTrue(match(data, _T("^00#?2")));
+            Assert::IsFalse(match(data, _T("^001#?2")));
         }
 
         TEST_METHOD(msBeginTest4)
         {
             tstring data = _T("00123");
-            Assert::AreEqual(false, searchEss(data, _T("^0##3")));
-            Assert::AreEqual(true, searchEss(data, _T("^00##3")));
+            Assert::IsFalse(match(data, _T("^0##3")));
+            Assert::IsTrue(match(data, _T("^00##3")));
 
-            Assert::AreEqual(true, searchEss(data, _T("^0++3")));
-            Assert::AreEqual(true, searchEss(data, _T("^00++3")));
-            Assert::AreEqual(false, searchEss(data, _T("^001++3")));
+            Assert::IsTrue(match(data, _T("^0++3")));
+            Assert::IsTrue(match(data, _T("^00++3")));
+            Assert::IsFalse(match(data, _T("^001++3")));
 
-            Assert::AreEqual(true, searchEss(data, _T("^0??2")));
-            Assert::AreEqual(false, searchEss(data, _T("^0??3")));
+            Assert::IsTrue(match(data, _T("^0??2")));
+            Assert::IsFalse(match(data, _T("^0??3")));
 
-            Assert::AreEqual(true, searchEss(data, _T("0???2")));
-            Assert::AreEqual(true, searchEss(data, _T("^0???2")));
-            Assert::AreEqual(true, searchEss(data, _T("^0???3")));
+            Assert::IsTrue(match(data, _T("0???2")));
+            Assert::IsTrue(match(data, _T("^0???2")));
+            Assert::IsTrue(match(data, _T("^0???3")));
         }
 
         TEST_METHOD(msBeginTest5)
         {
-            Assert::AreEqual(true, rxw.match(_T("00123"), _T("^0>/3"), EssRxW::FlagsRxW::F_NONE));
-            Assert::AreEqual(false, rxw.match(_T("00/123"), _T("^0>/3"), EssRxW::FlagsRxW::F_NONE));
+            Assert::IsTrue(rxw.match(_T("00123"), _T("^0>/3"), EssRxW::EngineOptions::F_NONE));
+            Assert::IsFalse(rxw.match(_T("00/123"), _T("^0>/3"), EssRxW::EngineOptions::F_NONE));
 
-            Assert::AreEqual(false, rxw.match(_T("0123"), _T("^1>/3"), EssRxW::FlagsRxW::F_NONE));
-            Assert::AreEqual(false, rxw.match(_T("0123"), _T("^0>/0"), EssRxW::FlagsRxW::F_NONE));
-            Assert::AreEqual(true, rxw.match(_T("0123"), _T("^0>/1"), EssRxW::FlagsRxW::F_NONE));
-            Assert::AreEqual(false, rxw.match(_T("0/123"), _T("^0>/1"), EssRxW::FlagsRxW::F_NONE));
+            Assert::IsFalse(rxw.match(_T("0123"), _T("^1>/3"), EssRxW::EngineOptions::F_NONE));
+            Assert::IsFalse(rxw.match(_T("0123"), _T("^0>/0"), EssRxW::EngineOptions::F_NONE));
+            Assert::IsTrue(rxw.match(_T("0123"), _T("^0>/1"), EssRxW::EngineOptions::F_NONE));
+            Assert::IsFalse(rxw.match(_T("0/123"), _T("^0>/1"), EssRxW::EngineOptions::F_NONE));
         }
 
         TEST_METHOD(msEndTest1)
         {
-            Assert::AreEqual(false, searchEss(_T("43210"), _T("3#0$")));
-            Assert::AreEqual(true, searchEss(_T("43210"), _T("3#1")));
-            Assert::AreEqual(false, searchEss(_T("43210"), _T("3#1$")));
-            Assert::AreEqual(true, searchEss(_T("43210"), _T("2#0$")));
+            Assert::IsFalse(match(_T("43210"), _T("3#0$")));
+            Assert::IsTrue(match(_T("43210"), _T("3#1")));
+            Assert::IsFalse(match(_T("43210"), _T("3#1$")));
+            Assert::IsTrue(match(_T("43210"), _T("2#0$")));
 
             tstring data = _T("32100");
-            Assert::AreEqual(false, searchEss(data, _T("2#0$")));
-            Assert::AreEqual(true, searchEss(data, _T("2#00$")));
-            Assert::AreEqual(true, searchEss(data, _T("2##0$")));
-            Assert::AreEqual(false, searchEss(data, _T("10$")));
-            Assert::AreEqual(false, searchEss(data, _T("210$")));
-            Assert::AreEqual(true, searchEss(data, _T("2100$")));
-            Assert::AreEqual(false, searchEss(data, _T("1200$")));
+            Assert::IsFalse(match(data, _T("2#0$")));
+            Assert::IsTrue(match(data, _T("2#00$")));
+            Assert::IsTrue(match(data, _T("2##0$")));
+            Assert::IsFalse(match(data, _T("10$")));
+            Assert::IsFalse(match(data, _T("210$")));
+            Assert::IsTrue(match(data, _T("2100$")));
+            Assert::IsFalse(match(data, _T("1200$")));
         }
 
         TEST_METHOD(msEndTest2)
         {
             tstring data = _T("32100");
-            Assert::AreEqual(false, searchEss(data, _T("2*0$")));
-            Assert::AreEqual(true, searchEss(data, _T("2*00$")));
-            Assert::AreEqual(true, searchEss(data, _T("2*100$")));
-            Assert::AreEqual(false, searchEss(data, _T("2*2100$")));
+            Assert::IsFalse(match(data, _T("2*0$")));
+            Assert::IsTrue(match(data, _T("2*00$")));
+            Assert::IsTrue(match(data, _T("2*100$")));
+            Assert::IsFalse(match(data, _T("2*2100$")));
 
-            Assert::AreEqual(false, searchEss(data, _T("2+0$")));
-            Assert::AreEqual(true, searchEss(data, _T("2+00$")));
-            Assert::AreEqual(false, searchEss(data, _T("2+100$")));
+            Assert::IsFalse(match(data, _T("2+0$")));
+            Assert::IsTrue(match(data, _T("2+00$")));
+            Assert::IsFalse(match(data, _T("2+100$")));
 
-            Assert::AreEqual(false, searchEss(data, _T("2?0$")));
-            Assert::AreEqual(true, searchEss(data, _T("2?00$")));
-            Assert::AreEqual(true, searchEss(data, _T("2?100$")));
-            Assert::AreEqual(false, searchEss(data, _T("2?2100$")));
+            Assert::IsFalse(match(data, _T("2?0$")));
+            Assert::IsTrue(match(data, _T("2?00$")));
+            Assert::IsTrue(match(data, _T("2?100$")));
+            Assert::IsFalse(match(data, _T("2?2100$")));
         }
 
         TEST_METHOD(msEndTest3)
         {
             tstring data = _T("32100");
-            Assert::AreEqual(false, searchEss(data, _T("2+?0$"))); // TODO: ? ambiguous; 1-2; 32[10]0->$ and 32[1]->0
-            Assert::AreEqual(false, searchEss(data, _T("2#?0$"))); // TODO: ? ambiguous; 1|2; 32[10]0->$ and 32[1]->0 
+            Assert::IsFalse(match(data, _T("2+?0$"))); // TODO: ? ambiguous; 1-2; 32[10]0->$ and 32[1]->0
+            Assert::IsFalse(match(data, _T("2#?0$"))); // TODO: ? ambiguous; 1|2; 32[10]0->$ and 32[1]->0 
 
-            Assert::AreEqual(false, searchEss(data, _T("3+?0$")));
-            Assert::AreEqual(true, searchEss(data, _T("3+?00$")));
-            Assert::AreEqual(true, searchEss(data, _T("2+?00$")));
+            Assert::IsFalse(match(data, _T("3+?0$")));
+            Assert::IsTrue(match(data, _T("3+?00$")));
+            Assert::IsTrue(match(data, _T("2+?00$")));
 
-            Assert::AreEqual(true, searchEss(data, _T("2#?00$")));
-            Assert::AreEqual(false, searchEss(data, _T("2#?100$")));
+            Assert::IsTrue(match(data, _T("2#?00$")));
+            Assert::IsFalse(match(data, _T("2#?100$")));
         }
 
         TEST_METHOD(msEndTest4)
         {
             tstring data = _T("32100");
             
-            Assert::AreEqual(true, searchEss(data, _T("3+++0$")));
-            Assert::AreEqual(false, searchEss(data, _T("3##0$")));
-            Assert::AreEqual(true, searchEss(data, _T("3##00$")));
+            Assert::IsTrue(match(data, _T("3+++0$")));
+            Assert::IsFalse(match(data, _T("3##0$")));
+            Assert::IsTrue(match(data, _T("3##00$")));
 
-            Assert::AreEqual(false, searchEss(data, _T("3++0$"))); // TODO: ? ambiguous; 2+; 3[21]0->$ and 3[210]->0
+            Assert::IsFalse(match(data, _T("3++0$"))); // TODO: ? ambiguous; 2+; 3[21]0->$ and 3[210]->0
 
-            Assert::AreEqual(true, searchEss(data, _T("3++00$")));
-            Assert::AreEqual(false, searchEss(data, _T("3++100$")));
+            Assert::IsTrue(match(data, _T("3++00$")));
+            Assert::IsFalse(match(data, _T("3++100$")));
 
-            Assert::AreEqual(false, searchEss(data, _T("2??0$"))); // TODO: ? ambiguous; 0,1,2; 2[1]0->$ and 2[10]->0
-            Assert::AreEqual(false, searchEss(data, _T("3??0$")));
-            Assert::AreEqual(false, searchEss(data, _T("2???0$"))); // TODO: ? ambiguous; 0,1,2,3; 2[1]0->$ and 2[10]->0
-            Assert::AreEqual(false, searchEss(data, _T("3???0$"))); // TODO: ? ambiguous; 0,1,2,3; 3[21]0->$ and 3[210]->0
+            Assert::IsFalse(match(data, _T("2??0$"))); // TODO: ? ambiguous; 0,1,2; 2[1]0->$ and 2[10]->0
+            Assert::IsFalse(match(data, _T("3??0$")));
+            Assert::IsFalse(match(data, _T("2???0$"))); // TODO: ? ambiguous; 0,1,2,3; 2[1]0->$ and 2[10]->0
+            Assert::IsFalse(match(data, _T("3???0$"))); // TODO: ? ambiguous; 0,1,2,3; 3[21]0->$ and 3[210]->0
         }
 
         TEST_METHOD(msEndTest5)
         {
-            Assert::AreEqual(true, rxw.match(_T("00123"), _T("0>/3$"), EssRxW::FlagsRxW::F_NONE));
-            Assert::AreEqual(false, rxw.match(_T("00/123"), _T("0>/3$"), EssRxW::FlagsRxW::F_NONE));
+            Assert::IsTrue(rxw.match(_T("00123"), _T("0>/3$"), EssRxW::EngineOptions::F_NONE));
+            Assert::IsFalse(rxw.match(_T("00/123"), _T("0>/3$"), EssRxW::EngineOptions::F_NONE));
 
-            Assert::AreEqual(false, rxw.match(_T("0123"), _T("0>/2$"), EssRxW::FlagsRxW::F_NONE));
-            Assert::AreEqual(false, rxw.match(_T("0123"), _T("3>/3$"), EssRxW::FlagsRxW::F_NONE));
-            Assert::AreEqual(true, rxw.match(_T("0123"), _T("2>/3$"), EssRxW::FlagsRxW::F_NONE));
-            Assert::AreEqual(false, rxw.match(_T("012/3"), _T("2>/3$"), EssRxW::FlagsRxW::F_NONE));
+            Assert::IsFalse(rxw.match(_T("0123"), _T("0>/2$"), EssRxW::EngineOptions::F_NONE));
+            Assert::IsFalse(rxw.match(_T("0123"), _T("3>/3$"), EssRxW::EngineOptions::F_NONE));
+            Assert::IsTrue(rxw.match(_T("0123"), _T("2>/3$"), EssRxW::EngineOptions::F_NONE));
+            Assert::IsFalse(rxw.match(_T("012/3"), _T("2>/3$"), EssRxW::EngineOptions::F_NONE));
         }
         
         TEST_METHOD(filterBeginTest1)
         {
             tstring data = _T("new tes;ted project-12, and 75_protection of various systems");
 
-            Assert::AreEqual(true, searchEss(data, _T("^new")));
-            Assert::AreEqual(true, searchEss(data, _T("^new*")));
-            Assert::AreEqual(true, searchEss(data, _T("^new*pro?ection")));
+            Assert::IsTrue(match(data, _T("^new")));
+            Assert::IsTrue(match(data, _T("^new*")));
+            Assert::IsTrue(match(data, _T("^new*pro?ection")));
         }
 
         TEST_METHOD(filterBeginTest2)
@@ -188,18 +186,18 @@ namespace regXwildTest
 
             // split
             {
-                Assert::AreEqual(true, searchEss(data, _T("notfound|^new*pro?ection")));
-                Assert::AreEqual(true, searchEss(data, _T("notfound|^")));
-                Assert::AreEqual(true, searchEss(data, _T("notfound|^|")));
-                Assert::AreEqual(true, searchEss(data, _T("^|notfound")));
-                Assert::AreEqual(true, searchEss(data, _T("|^|notfound")));
+                Assert::IsTrue(match(data, _T("notfound|^new*pro?ection")));
+                Assert::IsTrue(match(data, _T("notfound|^")));
+                Assert::IsTrue(match(data, _T("notfound|^|")));
+                Assert::IsTrue(match(data, _T("^|notfound")));
+                Assert::IsTrue(match(data, _T("|^|notfound")));
 
-                Assert::AreEqual(true, searchEss(data, _T(" ^new|notfound|^new")));
-                Assert::AreEqual(true, searchEss(data, _T(" ^new|^new|notfound")));
-                Assert::AreEqual(true, searchEss(data, _T("^new|*^new|notfound")));
+                Assert::IsTrue(match(data, _T(" ^new|notfound|^new")));
+                Assert::IsTrue(match(data, _T(" ^new|^new|notfound")));
+                Assert::IsTrue(match(data, _T("^new|*^new|notfound")));
 
-                Assert::AreEqual(true, searchEss(data, _T("^*new*|notfound|^new")));
-                Assert::AreEqual(true, searchEss(data, _T("^*n0ew*|notfound|^new")));
+                Assert::IsTrue(match(data, _T("^*new*|notfound|^new")));
+                Assert::IsTrue(match(data, _T("^*n0ew*|notfound|^new")));
             }
         }
 
@@ -212,35 +210,32 @@ namespace regXwildTest
             {
                 // *
                 {
-                    Assert::AreEqual(true, searchEss(datam, _T("^*systems")));
-                    Assert::AreEqual(true, searchEss(data, _T("^*new")));
-                    Assert::AreEqual(true, searchEss(data, _T("^**new")));
+                    Assert::IsTrue(match(datam, _T("^*systems")));
+                    Assert::IsTrue(match(data, _T("^*new")));
+                    Assert::IsTrue(match(data, _T("^**new")));
                 }
                 // >
                 {
-                    Assert::AreEqual(true, searchEss(data, _T("^>new")));
-                    Assert::AreEqual(true, searchEss(data, _T("^>**new")));
-                    Assert::AreEqual(true, searchEss(data, _T("^>>new")));
-                    Assert::AreEqual(true, searchEss(data, _T("^>systems")));
+                    Assert::IsTrue(match(data, _T("^>new")));
+                    Assert::IsTrue(match(data, _T("^>**new")));
+                    Assert::IsTrue(match(data, _T("^>>new")));
+                    Assert::IsTrue(match(data, _T("^>systems")));
                 }
 
-                //TODO: implement ?,+,# and combination
+                // ?
                 {
-                    //// ?
-                    //{
-                    //    Assert::AreEqual(true, searchEss(datam, _T("^?ain")));
-                    //    Assert::AreEqual(true, searchEss(datam, _T("^?main")));
-                    //}
-                    //// +
-                    //{
-                    //    Assert::AreEqual(true, searchEss(datam, _T("^+ain")));
-                    //    Assert::AreEqual(true, searchEss(datam, _T("^+in")));
-                    //}
-                    //// #
-                    //{
-                    //    Assert::AreEqual(true, searchEss(datam, _T("^#ain")));
-                    //    Assert::AreEqual(true, searchEss(datam, _T("^##in")));
-                    //}
+                    Assert::IsTrue(match(datam, _T("^?ain")));
+                    Assert::IsTrue(match(datam, _T("^?main")));
+                }
+                // +
+                {
+                    Assert::IsTrue(match(datam, _T("^+ain")));
+                    Assert::IsTrue(match(datam, _T("^+in")));
+                }
+                // #
+                {
+                    Assert::IsTrue(match(datam, _T("^#ain")));
+                    Assert::IsTrue(match(datam, _T("^##in")));
                 }
             }
         }
@@ -251,19 +246,19 @@ namespace regXwildTest
 
             // _^word
             {
-                Assert::AreEqual(false, searchEss(data, _T("systems^")));
-                Assert::AreEqual(false, searchEss(data, _T("*systems^")));
-                Assert::AreEqual(false, searchEss(data, _T("*systems*^")));
-                Assert::AreEqual(false, searchEss(data, _T("*systems* ^")));
-                Assert::AreEqual(false, searchEss(data, _T("*systems* ^ ")));
-                Assert::AreEqual(false, searchEss(data, _T("*systems*^*")));
-                Assert::AreEqual(false, searchEss(data, _T("new^pro?ection")));
-                Assert::AreEqual(false, searchEss(data, _T("pro^ection")));
-                Assert::AreEqual(false, searchEss(data, _T("*^new*pro?ection")));
-                Assert::AreEqual(false, searchEss(data, _T(" *^new*pro?ection")));
-                Assert::AreEqual(false, searchEss(data, _T("* ^new*pro?ection")));
-                Assert::AreEqual(false, searchEss(data, _T(" * ^new*pro?ection")));
-                Assert::AreEqual(false, searchEss(data, _T(" ^new*pro?ection")));
+                Assert::IsFalse(match(data, _T("systems^")));
+                Assert::IsFalse(match(data, _T("*systems^")));
+                Assert::IsFalse(match(data, _T("*systems*^")));
+                Assert::IsFalse(match(data, _T("*systems* ^")));
+                Assert::IsFalse(match(data, _T("*systems* ^ ")));
+                Assert::IsFalse(match(data, _T("*systems*^*")));
+                Assert::IsFalse(match(data, _T("new^pro?ection")));
+                Assert::IsFalse(match(data, _T("pro^ection")));
+                Assert::IsFalse(match(data, _T("*^new*pro?ection")));
+                Assert::IsFalse(match(data, _T(" *^new*pro?ection")));
+                Assert::IsFalse(match(data, _T("* ^new*pro?ection")));
+                Assert::IsFalse(match(data, _T(" * ^new*pro?ection")));
+                Assert::IsFalse(match(data, _T(" ^new*pro?ection")));
             }
         }
 
@@ -273,12 +268,12 @@ namespace regXwildTest
 
             // ^_word
             {
-                Assert::AreEqual(false, searchEss(data, _T("^ new*pro?ection")));
-                Assert::AreEqual(false, searchEss(data, _T(" ^ new*pro?ection")));
-                Assert::AreEqual(false, searchEss(data, _T("some^new*pro?ection")));
-                Assert::AreEqual(false, searchEss(data, _T("some ^new*pro?ection")));
-                Assert::AreEqual(false, searchEss(data, _T("some*^new*pro?ection")));
-                Assert::AreEqual(false, searchEss(data, _T("sys*^new*pro?ection")));
+                Assert::IsFalse(match(data, _T("^ new*pro?ection")));
+                Assert::IsFalse(match(data, _T(" ^ new*pro?ection")));
+                Assert::IsFalse(match(data, _T("some^new*pro?ection")));
+                Assert::IsFalse(match(data, _T("some ^new*pro?ection")));
+                Assert::IsFalse(match(data, _T("some*^new*pro?ection")));
+                Assert::IsFalse(match(data, _T("sys*^new*pro?ection")));
             }
         }
 
@@ -288,17 +283,17 @@ namespace regXwildTest
 
             // split
             {
-                Assert::AreEqual(false, searchEss(data, _T("notfound|^ new")));
-                Assert::AreEqual(false, searchEss(data, _T("notfound| ^new*pro?ection")));
-                Assert::AreEqual(false, searchEss(data, _T("notfound| ^new")));
-                Assert::AreEqual(false, searchEss(data, _T("notfound| ^")));
-                Assert::AreEqual(false, searchEss(data, _T(" ^ |notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("^ |notfound")));
-                Assert::AreEqual(false, searchEss(data, _T(" ^ * |notfound")));
-                Assert::AreEqual(false, searchEss(data, _T(" ^notfound* |notfound|not^*found")));
-                Assert::AreEqual(false, searchEss(data, _T("*systems*^|notfound|systems^")));
-                Assert::AreEqual(false, searchEss(data, _T("*systems*^|notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("*systems*^|notfound|systems0*^")));
+                Assert::IsFalse(match(data, _T("notfound|^ new")));
+                Assert::IsFalse(match(data, _T("notfound| ^new*pro?ection")));
+                Assert::IsFalse(match(data, _T("notfound| ^new")));
+                Assert::IsFalse(match(data, _T("notfound| ^")));
+                Assert::IsFalse(match(data, _T(" ^ |notfound")));
+                Assert::IsFalse(match(data, _T("^ |notfound")));
+                Assert::IsFalse(match(data, _T(" ^ * |notfound")));
+                Assert::IsFalse(match(data, _T(" ^notfound* |notfound|not^*found")));
+                Assert::IsFalse(match(data, _T("*systems*^|notfound|systems^")));
+                Assert::IsFalse(match(data, _T("*systems*^|notfound")));
+                Assert::IsFalse(match(data, _T("*systems*^|notfound|systems0*^")));
             }
         }
 
@@ -309,38 +304,38 @@ namespace regXwildTest
 
             // MS combination
             {
-                Assert::AreEqual(false, searchEss(data, _T("^^new")));
-                Assert::AreEqual(false, searchEss(data, _T("systems>^")));
-                Assert::AreEqual(false, searchEss(data, _T(">^new")));
-                Assert::AreEqual(false, searchEss(data, _T("sys*^*^new*pro?ection")));
-                Assert::AreEqual(false, searchEss(data, _T("*^*^new*pro?ection")));
-                Assert::AreEqual(false, searchEss(data, _T("*^new")));
-                Assert::AreEqual(false, searchEss(data, _T("systems>^*")));
+                Assert::IsFalse(match(data, _T("^^new")));
+                Assert::IsFalse(match(data, _T("systems>^")));
+                Assert::IsFalse(match(data, _T(">^new")));
+                Assert::IsFalse(match(data, _T("sys*^*^new*pro?ection")));
+                Assert::IsFalse(match(data, _T("*^*^new*pro?ection")));
+                Assert::IsFalse(match(data, _T("*^new")));
+                Assert::IsFalse(match(data, _T("systems>^*")));
 
                 // *
                 {
-                    Assert::AreEqual(false, searchEss(datam, _T("^*notfound")));
+                    Assert::IsFalse(match(datam, _T("^*notfound")));
                 }
                 // >
                 {
-                    Assert::AreEqual(false, searchEss(datam, _T("^>is")));
+                    Assert::IsFalse(match(datam, _T("^>is")));
                 }
 
                 //TODO: implement ?,+,# and combination
                 {
                     //// ?
                     //{
-                    //    Assert::AreEqual(false, searchEss(datam, _T("^?in")));
+                    //    Assert::IsFalse(match(datam, _T("^?in")));
                     //}
                     //// +
                     //{
-                    //    Assert::AreEqual(false, searchEss(datam, _T("^+main")));
+                    //    Assert::IsFalse(match(datam, _T("^+main")));
                     //}
                     //// #
                     //{
-                    //    Assert::AreEqual(false, searchEss(datam, _T("^#main")));
-                    //    Assert::AreEqual(false, searchEss(datam, _T("^##ain")));
-                    //    Assert::AreEqual(false, searchEss(datam, _T("^##main")));
+                    //    Assert::IsFalse(match(datam, _T("^#main")));
+                    //    Assert::IsFalse(match(datam, _T("^##ain")));
+                    //    Assert::IsFalse(match(datam, _T("^##main")));
                     //}
                 }
             }
@@ -352,11 +347,11 @@ namespace regXwildTest
 
             // word$
             {
-                Assert::AreEqual(true, searchEss(data, _T("systems$")));
-                Assert::AreEqual(true, searchEss(data, _T("*systems$")));
-                Assert::AreEqual(true, searchEss(data, _T(" * systems$")));
-                Assert::AreEqual(true, searchEss(data, _T("*tems$")));
-                Assert::AreEqual(true, searchEss(data, _T("new*pro?ection*systems$")));
+                Assert::IsTrue(match(data, _T("systems$")));
+                Assert::IsTrue(match(data, _T("*systems$")));
+                Assert::IsTrue(match(data, _T(" * systems$")));
+                Assert::IsTrue(match(data, _T("*tems$")));
+                Assert::IsTrue(match(data, _T("new*pro?ection*systems$")));
             }
         }
 
@@ -367,9 +362,9 @@ namespace regXwildTest
 
             // ^word$
             {
-                Assert::AreEqual(true, searchEss(data, _T("^new*systems$")));
-                Assert::AreEqual(true, searchEss(datam, _T("^main systems 1272/is ok$")));
-                Assert::AreEqual(true, searchEss(datam, _T("^main*is ok$")));
+                Assert::IsTrue(match(data, _T("^new*systems$")));
+                Assert::IsTrue(match(datam, _T("^main systems 1272/is ok$")));
+                Assert::IsTrue(match(datam, _T("^main*is ok$")));
 
             }
         }
@@ -381,21 +376,21 @@ namespace regXwildTest
 
             // split
             {
-                Assert::AreEqual(true, searchEss(data, _T("dwarf|*tems$")));
-                Assert::AreEqual(true, searchEss(data, _T("dwarf|getting|tems$")));
-                Assert::AreEqual(true, searchEss(datam, _T("^old*is ok$|^main*ok$")));
-                Assert::AreEqual(true, searchEss(datam, _T("^main|*ok$")));
-                Assert::AreEqual(true, searchEss(datam, _T("*ok$|^main")));
-                Assert::AreEqual(true, searchEss(datam, _T("^old*is ok|main*ok$")));
-                Assert::AreEqual(true, searchEss(data, _T("*systems$|notfound")));
-                Assert::AreEqual(true, searchEss(data, _T("systems$|notfound")));
-                Assert::AreEqual(true, searchEss(data, _T("project*systems$|notfound")));
-                Assert::AreEqual(true, searchEss(data, _T("project*systems$|notfound")));
-                Assert::AreEqual(true, searchEss(data, _T("new*project*systems$|notfound")));
-                Assert::AreEqual(true, searchEss(data, _T("systems$ |notfound|systems$")));
-                Assert::AreEqual(true, searchEss(data, _T("systems$ |systems$|notfound")));
-                Assert::AreEqual(true, searchEss(data, _T("systems$|systems$*|notfound")));
-                Assert::AreEqual(true, searchEss(data, _T("*systems*$|notfound|systems$")));
+                Assert::IsTrue(match(data, _T("dwarf|*tems$")));
+                Assert::IsTrue(match(data, _T("dwarf|getting|tems$")));
+                Assert::IsTrue(match(datam, _T("^old*is ok$|^main*ok$")));
+                Assert::IsTrue(match(datam, _T("^main|*ok$")));
+                Assert::IsTrue(match(datam, _T("*ok$|^main")));
+                Assert::IsTrue(match(datam, _T("^old*is ok|main*ok$")));
+                Assert::IsTrue(match(data, _T("*systems$|notfound")));
+                Assert::IsTrue(match(data, _T("systems$|notfound")));
+                Assert::IsTrue(match(data, _T("project*systems$|notfound")));
+                Assert::IsTrue(match(data, _T("project*systems$|notfound")));
+                Assert::IsTrue(match(data, _T("new*project*systems$|notfound")));
+                Assert::IsTrue(match(data, _T("systems$ |notfound|systems$")));
+                Assert::IsTrue(match(data, _T("systems$ |systems$|notfound")));
+                Assert::IsTrue(match(data, _T("systems$|systems$*|notfound")));
+                Assert::IsTrue(match(data, _T("*systems*$|notfound|systems$")));
             }
         }
 
@@ -410,43 +405,43 @@ namespace regXwildTest
                 {
                     //// *
                     //{
-                    //    Assert::AreEqual(true, searchEss(data, _T("systems*$")));
-                    //    Assert::AreEqual(true, searchEss(data, _T("systems**$")));
-                    //    Assert::AreEqual(true, searchEss(datam, _T("main*$")));
-                    //    Assert::AreEqual(true, searchEss(datam, _T("main**$")));
-                    //    Assert::AreEqual(true, searchEss(data, _T("systems*$")));
-                    //    Assert::AreEqual(true, searchEss(data, _T("project*$")));
-                    //    Assert::AreEqual(true, searchEss(datam, _T("^main*$")));
+                    //    Assert::IsTrue(match(data, _T("systems*$")));
+                    //    Assert::IsTrue(match(data, _T("systems**$")));
+                    //    Assert::IsTrue(match(datam, _T("main*$")));
+                    //    Assert::IsTrue(match(datam, _T("main**$")));
+                    //    Assert::IsTrue(match(data, _T("systems*$")));
+                    //    Assert::IsTrue(match(data, _T("project*$")));
+                    //    Assert::IsTrue(match(datam, _T("^main*$")));
                     //    {
-                    //        Assert::AreEqual(true, searchEss(data, _T("^*new*$")));
-                    //        Assert::AreEqual(true, searchEss(data, _T("^*$")));
-                    //        Assert::AreEqual(true, searchEss(data, _T("^*$")));
-                    //        Assert::AreEqual(true, searchEss(datam, _T("^*1272*$")));
+                    //        Assert::IsTrue(match(data, _T("^*new*$")));
+                    //        Assert::IsTrue(match(data, _T("^*$")));
+                    //        Assert::IsTrue(match(data, _T("^*$")));
+                    //        Assert::IsTrue(match(datam, _T("^*1272*$")));
                     //    }
                     //}
                     //// >
                     //{
-                    //    Assert::AreEqual(true, searchEss(data, _T("systems>$")));
-                    //    Assert::AreEqual(true, searchEss(data, _T("systems>*$")));
-                    //    Assert::AreEqual(true, searchEss(data, _T("various>$")));
-                    //    Assert::AreEqual(true, searchEss(data, _T("various>*$")));
-                    //    Assert::AreEqual(true, searchEss(data, _T("various>>$")));
+                    //    Assert::IsTrue(match(data, _T("systems>$")));
+                    //    Assert::IsTrue(match(data, _T("systems>*$")));
+                    //    Assert::IsTrue(match(data, _T("various>$")));
+                    //    Assert::IsTrue(match(data, _T("various>*$")));
+                    //    Assert::IsTrue(match(data, _T("various>>$")));
                     //}
 
                     //// ?
                     //{
-                    //    Assert::AreEqual(true, searchEss(data, _T("system?$")));
-                    //    Assert::AreEqual(true, searchEss(data, _T("systems?$")));
+                    //    Assert::IsTrue(match(data, _T("system?$")));
+                    //    Assert::IsTrue(match(data, _T("systems?$")));
                     //}
                     //// +
                     //{
-                    //    Assert::AreEqual(true, searchEss(data, _T("system+$")));
-                    //    Assert::AreEqual(true, searchEss(data, _T("syste+$")));
+                    //    Assert::IsTrue(match(data, _T("system+$")));
+                    //    Assert::IsTrue(match(data, _T("syste+$")));
                     //}
                     //// #
                     //{
-                    //    Assert::AreEqual(true, searchEss(data, _T("system#$")));
-                    //    Assert::AreEqual(true, searchEss(data, _T("syste##$")));
+                    //    Assert::IsTrue(match(data, _T("system#$")));
+                    //    Assert::IsTrue(match(data, _T("syste##$")));
                     //}
                 }
             }
@@ -457,11 +452,11 @@ namespace regXwildTest
             tstring data = _T("new tes;ted project-12, and 75_protection of various systems");
             tstring datam = _T("main systems 1272/is ok");
 
-            Assert::AreEqual(false, searchEss(datam, _T("m^a$in")));
-            Assert::AreEqual(false, searchEss(data, _T("notfound$systems")));
-            Assert::AreEqual(false, searchEss(data, _T("systems*new$")));
-            Assert::AreEqual(false, searchEss(data, _T("$*new")));
-            Assert::AreEqual(false, searchEss(data, _T("$new")));
+            Assert::IsFalse(match(datam, _T("m^a$in")));
+            Assert::IsFalse(match(data, _T("notfound$systems")));
+            Assert::IsFalse(match(data, _T("systems*new$")));
+            Assert::IsFalse(match(data, _T("$*new")));
+            Assert::IsFalse(match(data, _T("$new")));
         }
 
         TEST_METHOD(filterEndTest6)
@@ -471,19 +466,19 @@ namespace regXwildTest
 
             // ^,$
             {
-                Assert::AreEqual(false, searchEss(datam, _T("^main$")));
-                Assert::AreEqual(false, searchEss(datam, _T("^1272$")));
-                Assert::AreEqual(false, searchEss(data, _T("^ $")));
-                Assert::AreEqual(false, searchEss(datam, _T("$main systems 1272/is ok^")));
-                Assert::AreEqual(true, searchEss(datam, _T("^main systems 1272/is ok$")));
-                Assert::AreEqual(false, searchEss(datam, _T("^$main systems 1272/is ok^$")));
-                Assert::AreEqual(false, searchEss(datam, _T("^$main")));
-                Assert::AreEqual(false, searchEss(datam, _T("^*$$main")));
-                Assert::AreEqual(false, searchEss(data, _T("^new systems$")));
-                Assert::AreEqual(false, searchEss(data, _T("^new^systems$")));
-                Assert::AreEqual(false, searchEss(data, _T("^new*systems$*")));
-                Assert::AreEqual(false, searchEss(datam, _T("^$")));
-                Assert::AreEqual(false, searchEss(datam, _T("$^")));
+                Assert::IsFalse(match(datam, _T("^main$")));
+                Assert::IsFalse(match(datam, _T("^1272$")));
+                Assert::IsFalse(match(data, _T("^ $")));
+                Assert::IsFalse(match(datam, _T("$main systems 1272/is ok^")));
+                Assert::IsTrue(match(datam, _T("^main systems 1272/is ok$")));
+                Assert::IsFalse(match(datam, _T("^$main systems 1272/is ok^$")));
+                Assert::IsFalse(match(datam, _T("^$main")));
+                Assert::IsFalse(match(datam, _T("^*$$main")));
+                Assert::IsFalse(match(data, _T("^new systems$")));
+                Assert::IsFalse(match(data, _T("^new^systems$")));
+                Assert::IsFalse(match(data, _T("^new*systems$*")));
+                Assert::IsFalse(match(datam, _T("^$")));
+                Assert::IsFalse(match(datam, _T("$^")));
             }
         }
 
@@ -493,12 +488,12 @@ namespace regXwildTest
 
             // $word
             {
-                Assert::AreEqual(false, searchEss(data, _T("$systems")));
-                Assert::AreEqual(false, searchEss(data, _T("*$systems")));
-                Assert::AreEqual(false, searchEss(data, _T("* $systems")));
-                Assert::AreEqual(false, searchEss(data, _T(" $systems")));
-                Assert::AreEqual(false, searchEss(data, _T(">$systems")));
-                Assert::AreEqual(false, searchEss(data, _T(">$^systems")));
+                Assert::IsFalse(match(data, _T("$systems")));
+                Assert::IsFalse(match(data, _T("*$systems")));
+                Assert::IsFalse(match(data, _T("* $systems")));
+                Assert::IsFalse(match(data, _T(" $systems")));
+                Assert::IsFalse(match(data, _T(">$systems")));
+                Assert::IsFalse(match(data, _T(">$^systems")));
             }
         }
 
@@ -509,14 +504,14 @@ namespace regXwildTest
 
             // word$_
             {
-                Assert::AreEqual(false, searchEss(data, _T("systems$ ")));
-                Assert::AreEqual(false, searchEss(data, _T("systems$*")));
-                Assert::AreEqual(false, searchEss(data, _T("systems$>")));
-                Assert::AreEqual(false, searchEss(data, _T("systems$new")));
-                Assert::AreEqual(false, searchEss(data, _T("systems$notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("systems$*notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("systems$*new")));
-                Assert::AreEqual(false, searchEss(datam, _T("$ |notfound")));
+                Assert::IsFalse(match(data, _T("systems$ ")));
+                Assert::IsFalse(match(data, _T("systems$*")));
+                Assert::IsFalse(match(data, _T("systems$>")));
+                Assert::IsFalse(match(data, _T("systems$new")));
+                Assert::IsFalse(match(data, _T("systems$notfound")));
+                Assert::IsFalse(match(data, _T("systems$*notfound")));
+                Assert::IsFalse(match(data, _T("systems$*new")));
+                Assert::IsFalse(match(datam, _T("$ |notfound")));
             }
         }
 
@@ -527,49 +522,49 @@ namespace regXwildTest
 
             // word_$
             {
-                Assert::AreEqual(false, searchEss(data, _T("system$s")));
-                Assert::AreEqual(false, searchEss(data, _T("systems $")));
+                Assert::IsFalse(match(data, _T("system$s")));
+                Assert::IsFalse(match(data, _T("systems $")));
 
                 // MS combination
                 {
-                    Assert::AreEqual(false, searchEss(data, _T("systems$$")));
-                    Assert::AreEqual(false, searchEss(data, _T("systems$*")));
-                    Assert::AreEqual(false, searchEss(data, _T("systems$*")));
-                    Assert::AreEqual(false, searchEss(data, _T("systems$>*")));
-                    Assert::AreEqual(false, searchEss(data, _T("notfound*$")));
-                    Assert::AreEqual(false, searchEss(data, _T("systems*$")));
-                    Assert::AreEqual(false, searchEss(data, _T("systems>$")));
-                    Assert::AreEqual(false, searchEss(data, _T("systems>*$")));
-                    Assert::AreEqual(false, searchEss(datam, _T(" $|notfound")));
+                    Assert::IsFalse(match(data, _T("systems$$")));
+                    Assert::IsFalse(match(data, _T("systems$*")));
+                    Assert::IsFalse(match(data, _T("systems$*")));
+                    Assert::IsFalse(match(data, _T("systems$>*")));
+                    Assert::IsFalse(match(data, _T("notfound*$")));
+                    Assert::IsFalse(match(data, _T("systems*$")));
+                    Assert::IsFalse(match(data, _T("systems>$")));
+                    Assert::IsFalse(match(data, _T("systems>*$")));
+                    Assert::IsFalse(match(datam, _T(" $|notfound")));
 
                     // *
                     {
-                        Assert::AreEqual(false, searchEss(datam, _T("notfound*$")));
+                        Assert::IsFalse(match(datam, _T("notfound*$")));
                         {
-                            Assert::AreEqual(false, searchEss(data, _T("*systems*$|notfound")));
-                            Assert::AreEqual(false, searchEss(data, _T("*systems*$|notfound|systems0*$")));
+                            Assert::IsFalse(match(data, _T("*systems*$|notfound")));
+                            Assert::IsFalse(match(data, _T("*systems*$|notfound|systems0*$")));
                         }
                     }
                     // >
                     {
-                        Assert::AreEqual(false, searchEss(datam, _T("systems>$")));
+                        Assert::IsFalse(match(datam, _T("systems>$")));
                     }
 
                     //TODO: implement ?,+,# and combination
                     {
                         //// ?
                         //{
-                        //    Assert::AreEqual(false, searchEss(data, _T("syste?$")));
+                        //    Assert::IsFalse(match(data, _T("syste?$")));
                         //}
                         //// +
                         //{
-                        //    Assert::AreEqual(false, searchEss(data, _T("systems+$")));
+                        //    Assert::IsFalse(match(data, _T("systems+$")));
                         //}
                         //// #
                         //{
-                        //    Assert::AreEqual(false, searchEss(data, _T("systems#$")));
-                        //    Assert::AreEqual(false, searchEss(data, _T("system##$")));
-                        //    Assert::AreEqual(false, searchEss(data, _T("systems##$")));
+                        //    Assert::IsFalse(match(data, _T("systems#$")));
+                        //    Assert::IsFalse(match(data, _T("system##$")));
+                        //    Assert::IsFalse(match(data, _T("systems##$")));
                         //}
                     }
                 }
@@ -582,30 +577,30 @@ namespace regXwildTest
 
             // split
             {
-                Assert::AreEqual(false, searchEss(data, _T("*systems$ |notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("systems0$ |notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("*systems$  |notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("*systems$ zero|notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("*systems$*zero|notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("*systems$*zero |notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("project*systems$ |notfound")));
+                Assert::IsFalse(match(data, _T("*systems$ |notfound")));
+                Assert::IsFalse(match(data, _T("systems0$ |notfound")));
+                Assert::IsFalse(match(data, _T("*systems$  |notfound")));
+                Assert::IsFalse(match(data, _T("*systems$ zero|notfound")));
+                Assert::IsFalse(match(data, _T("*systems$*zero|notfound")));
+                Assert::IsFalse(match(data, _T("*systems$*zero |notfound")));
+                Assert::IsFalse(match(data, _T("project*systems$ |notfound")));
 
-                Assert::AreEqual(false, searchEss(data, _T("project systems$ |notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("project*systems$  |notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("project*systems$ zero|notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("project*systems$*zero|notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("project*systems$*zero |notfound")));
+                Assert::IsFalse(match(data, _T("project systems$ |notfound")));
+                Assert::IsFalse(match(data, _T("project*systems$  |notfound")));
+                Assert::IsFalse(match(data, _T("project*systems$ zero|notfound")));
+                Assert::IsFalse(match(data, _T("project*systems$*zero|notfound")));
+                Assert::IsFalse(match(data, _T("project*systems$*zero |notfound")));
 
-                Assert::AreEqual(false, searchEss(data, _T("new*project systems$ |notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("new*project*systems$  |notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("new*project*systems$ zero|notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("new*project*systems$*zero|notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("new*project*systems$*zero |notfound")));
+                Assert::IsFalse(match(data, _T("new*project systems$ |notfound")));
+                Assert::IsFalse(match(data, _T("new*project*systems$  |notfound")));
+                Assert::IsFalse(match(data, _T("new*project*systems$ zero|notfound")));
+                Assert::IsFalse(match(data, _T("new*project*systems$*zero|notfound")));
+                Assert::IsFalse(match(data, _T("new*project*systems$*zero |notfound")));
 
-                Assert::AreEqual(false, searchEss(data, _T("systems$ |notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("systems$ |notfound|systems$ ")));
-                Assert::AreEqual(false, searchEss(data, _T("systems$ |systems$ |notfound")));
-                Assert::AreEqual(false, searchEss(data, _T("systems$*|notfound")));
+                Assert::IsFalse(match(data, _T("systems$ |notfound")));
+                Assert::IsFalse(match(data, _T("systems$ |notfound|systems$ ")));
+                Assert::IsFalse(match(data, _T("systems$ |systems$ |notfound")));
+                Assert::IsFalse(match(data, _T("systems$*|notfound")));
             }
         }
 
@@ -613,13 +608,13 @@ namespace regXwildTest
         {
             // test of filter length
             {
-                Assert::AreEqual(false, searchEss(_T("system"), _T("systems$")));
-                Assert::AreEqual(false, searchEss(_T("systems"), _T("system$")));
-                Assert::AreEqual(true, searchEss(_T("s"), _T("s$")));
-                Assert::AreEqual(false, searchEss(_T(""), _T("s$")));
+                Assert::IsFalse(match(_T("system"), _T("systems$")));
+                Assert::IsFalse(match(_T("systems"), _T("system$")));
+                Assert::IsTrue(match(_T("s"), _T("s$")));
+                Assert::IsFalse(match(_T(""), _T("s$")));
 
-                //Assert::AreEqual(false, searchEss(_T("s"), _T("$")));
-                //Assert::AreEqual(false, searchEss(_T(""), _T("$")));
+                //Assert::IsFalse(match(_T("s"), _T("$")));
+                //Assert::IsFalse(match(_T(""), _T("$")));
             }
         }
 
@@ -627,9 +622,9 @@ namespace regXwildTest
 
         EssRxW rxw;
 
-        bool searchEss(const tstring& data, const tstring& filter, bool ignoreCase = true)
+        bool match(const tstring& data, const tstring& filter, bool ignoreCase = true)
         {
-            return regXwild::common::searchEss(data, filter, ignoreCase);
+            return rxw.match(data, filter, (ignoreCase ? EssRxW::EngineOptions::F_ICASE : EssRxW::EngineOptions::F_NONE) | EssRxW::EngineOptions::F_LEGACY_ANYSP);
         }
 
     };

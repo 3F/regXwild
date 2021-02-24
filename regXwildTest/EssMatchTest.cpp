@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 
-#include "..\regXwild\regXwild.common.h"
+#include "..\regXwild\regXwild.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace net::r_eg::regXwild;
@@ -20,7 +20,7 @@ namespace regXwildTest
         TEST_METHOD(uMatchTest1)
         {
             tstring input = _T("number = 8888; //TODO: up");
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(input, _T("= +;"), 7, 14, m);
             assertTrueAndEqual(input, _T("= +;*//TODO"), 7, 21, m);
@@ -29,7 +29,7 @@ namespace regXwildTest
         TEST_METHOD(uMatchTest2)
         {
             tstring input = _T("number = 8888; //TODO: up");
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(input, _T("//+:"), 15, 22, m);
 
@@ -38,7 +38,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest3)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("0123456789"), _T("456"), 4, 7, m);
             assertTrueAndEqual(_T("01298"), _T("0#2?9"), 0, 4, m);
@@ -46,14 +46,14 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest4)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
             tstring input = _T("0012398");
 
             assertTrueAndEqual(input, _T("0#2?9"), 1, 6, m);
 
             assertTrueAndNpos
             (
-                rxw.match(input, _T("0#2?9"), EssRxW::FlagsRxW::F_NONE, &m),
+                rxw.match(input, _T("0#2?9"), EssRxW::EngineOptions::F_NONE, &m),
                 m
             );
             
@@ -65,7 +65,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest5)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("001-sd"), _T("#-sd"), 2, 6, m);
             assertTrueAndEqual(_T("sd-01"), _T("d-##"), 1, 5, m);
@@ -79,7 +79,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest6)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("sd-01-d2"), _T("sd-##-#2"), 0, 8, m);
             assertTrueAndEqual(_T("01-dd-02"), _T("#1-dd-0#"), 0, 8, m);
@@ -91,7 +91,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest7)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("sd-01"), _T("sd-*"), 0, 3, m); //TODO: option for -> lazy (3) ; -> greedy (5)
             assertTrueAndEqual(_T("sd-01"), _T("d-*"), 1, 3, m); //TODO: option for -> lazy (3) ; -> greedy (5)
@@ -109,7 +109,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest8)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("01-sd"), _T("+-sd"), 0, 5, m);
             assertTrueAndEqual(_T("01-sd"), _T("+-s"), 0, 4, m);
@@ -121,7 +121,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest9)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("01-dd-02"), _T("+1-dd-0+"), 0, 8, m);
 
@@ -138,7 +138,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest10)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("sd-01"), _T("sd-?"), 0, 3, m); //TODO: option for -> lazy (3) ; -> greedy (4)
             assertTrueAndEqual(_T("sd-01"), _T("d-?"), 1, 3, m); //TODO: option for -> lazy (3) ; -> greedy (4)
@@ -161,7 +161,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest11)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("sd-01"), _T("sd-#"), 0, 4, m);
             assertTrueAndEqual(_T("sd-01"), _T("d-#"), 1, 4, m);
@@ -185,7 +185,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest12)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("sd-01"), _T("sd-+"), 0, 5, m);
             assertTrueAndEqual(_T("sd-01"), _T("d-+"), 1, 5, m);
@@ -215,7 +215,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest13)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("sd-01"), _T("sd-*"), 0, 3, m);
             assertTrueAndEqual(_T("sd-01"), _T("d-*"), 1, 3, m);
@@ -239,7 +239,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest14)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("sd-01-d2"), _T("sd-??-d?"), 0, 7, m); //TODO: option for -> lazy (7) ; -> greedy (8)
             assertTrueAndEqual(_T("sd-01-d2"), _T("sd-??-?2"), 0, 8, m);
@@ -259,7 +259,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest15)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T(" 123"), _T(" "), 0, 1, m);
             assertFalse(_T("123"), _T(" "), m);
@@ -282,7 +282,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest16)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("sd-m4"), _T("s*4"), 0, 5, m);
             assertTrueAndEqual(_T("sd-m4"), _T("d*4"), 1, 5, m);
@@ -303,7 +303,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest17)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("sd"), _T("#"), 0, 1, m);
             assertTrueAndEqual(_T("sd"), _T("##"), 0, 2, m);
@@ -322,7 +322,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest18)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("012"), _T("0?1"), 0, 2, m);
             assertTrueAndEqual(_T("0123"), _T("0?2"), 0, 3, m);
@@ -356,7 +356,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest19)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("00123"), _T("0##?2"), 0, 4, m);
             assertTrueAndEqual(_T("00123"), _T("0#?2"), 0, 4, m); //TODO: option for lazy (1) -> ; greedy (0) ->
@@ -371,7 +371,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest20)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("012345"), _T("0+2>/4"), 0, 5, m);
             assertTrueAndEqual(_T("0012345"), _T("0+2>/4"), 0, 6, m);
@@ -390,7 +390,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchTest21)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("01-dd-02-ff"), _T("0?-d#-0+-*f"), 0, 10, m);
             assertTrueAndEqual(_T("001-dd-02-ff"), _T("0?-d#-0+-*f"), 1, 11, m);
@@ -401,7 +401,7 @@ namespace regXwildTest
 
         TEST_METHOD(uGreedyBalanceTest1)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             // Greedy: + # 
             // Lazy:   * ?
@@ -420,7 +420,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchBmsTest1)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             tstring data = _T("00123");
             assertTrueAndEqual(data, _T("^0012"), 0, 4, m);
@@ -437,7 +437,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchBmsTest2)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
             tstring data = _T("00123");
 
             assertTrueAndEqual(data, _T("^0+2"), 0, 4, m);
@@ -455,7 +455,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchBmsTest3)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
             tstring data = _T("001234");
 
             assertTrueAndEqual(data, _T("^00+?2"), 0, 4, m);
@@ -469,7 +469,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchBmsTest4)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
             tstring data = _T("00123");
 
             assertTrueAndEqual(data, _T("^00##3"), 0, 5, m);
@@ -487,28 +487,28 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchBmsTest5)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
             assertTrueAndEqual(_T("0123"), _T("^0>/1"), 0, 2, m);
             assertTrueAndEqual(_T("00123"), _T("^0>/3"), 0, 5, m);
 
             assertTrueAndNpos(
-                rxw.match(_T("0123"), _T("^0>/1"), EssRxW::FlagsRxW::F_NONE, &m),
+                rxw.match(_T("0123"), _T("^0>/1"), EssRxW::EngineOptions::F_NONE, &m),
                 m
             );
             assertTrueAndNpos(
-                rxw.match(_T("00123"), _T("^0>/3"), EssRxW::FlagsRxW::F_NONE, &m),
+                rxw.match(_T("00123"), _T("^0>/3"), EssRxW::EngineOptions::F_NONE, &m),
                 m
             );
 
-            assertFalse(rxw.match(_T("00/123"), _T("^0>/3"), EssRxW::FlagsRxW::F_NONE), m);
-            assertFalse(rxw.match(_T("0123"), _T("^1>/3"), EssRxW::FlagsRxW::F_NONE), m);
-            assertFalse(rxw.match(_T("0123"), _T("^0>/0"), EssRxW::FlagsRxW::F_NONE), m);
-            assertFalse(rxw.match(_T("0/123"), _T("^0>/1"), EssRxW::FlagsRxW::F_NONE), m);
+            assertFalse(rxw.match(_T("00/123"), _T("^0>/3"), EssRxW::EngineOptions::F_NONE), m);
+            assertFalse(rxw.match(_T("0123"), _T("^1>/3"), EssRxW::EngineOptions::F_NONE), m);
+            assertFalse(rxw.match(_T("0123"), _T("^0>/0"), EssRxW::EngineOptions::F_NONE), m);
+            assertFalse(rxw.match(_T("0/123"), _T("^0>/1"), EssRxW::EngineOptions::F_NONE), m);
         }
 
         TEST_METHOD(uMatchEmsTest1)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             assertTrueAndEqual(_T("43210"), _T("3#1"), 1, 4, m);
             assertTrueAndEqual(_T("43210"), _T("2#0$"), 2, 5, m);
@@ -529,7 +529,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchEmsTest2)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
             tstring data = _T("32100");
 
             assertTrueAndEqual(data, _T("2*00$"), 1, 5, m);
@@ -548,7 +548,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchEmsTest3)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
             tstring data = _T("32100");
 
             assertTrueAndEqual(data, _T("3+?00$"), 0, 5, m);
@@ -561,7 +561,7 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchEmsTest4)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
             tstring data = _T("32100");
             
             assertTrueAndEqual(data, _T("3+++0$"), 0, 5, m);
@@ -575,17 +575,17 @@ namespace regXwildTest
 
         TEST_METHOD(uMatchEmsTest5)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
             
             assertTrueAndEqual(_T("00123"), _T("0>/3$"), 0, 5, m);
             assertTrueAndEqual(_T("0123"), _T("2>/3$"), 2, 4, m);
 
             assertTrueAndNpos(
-                rxw.match(_T("00123"), _T("0>/3$"), EssRxW::FlagsRxW::F_NONE, &m),
+                rxw.match(_T("00123"), _T("0>/3$"), EssRxW::EngineOptions::F_NONE, &m),
                 m
             );
             assertTrueAndNpos(
-                rxw.match(_T("0123"), _T("2>/3$"), EssRxW::FlagsRxW::F_NONE, &m),
+                rxw.match(_T("0123"), _T("2>/3$"), EssRxW::EngineOptions::F_NONE, &m),
                 m
             );
 
@@ -597,7 +597,7 @@ namespace regXwildTest
 
         TEST_METHOD(mixTest1)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             tstring input = _T("year = 2021;");
 
@@ -619,7 +619,7 @@ namespace regXwildTest
 
         TEST_METHOD(mixTest2)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             tstring input = _T("year = 2021; age = 21; future = 'up';");
 
@@ -629,7 +629,7 @@ namespace regXwildTest
 
         TEST_METHOD(mixTest3)
         {
-            EssRxW::Match m;
+            EssRxW::MatchResult m;
 
             tstring input = _T("year = 2021; pnum = 24617; vd = 1; dd = 17; vt = 55;");
 
@@ -642,8 +642,8 @@ namespace regXwildTest
             tstring input       = _T("number = '8888'; //TODO: up");
             tstring expected    = _T("number = '9777'; //TODO: up");
 
-            EssRxW::Match m;
-            rxw.match(input, _T("'+'"), EssRxW::FlagsRxW::F_MATCH_RESULT, &m);
+            EssRxW::MatchResult m;
+            rxw.match(input, _T("'+'"), EssRxW::EngineOptions::F_MATCH_RESULT, &m);
             input = input.replace(m.start, m.end - m.start, _T("'9777'"));
 
             Assert::AreEqual(expected, input);
@@ -675,51 +675,46 @@ namespace regXwildTest
 
         EssRxW rxw;
 
-        void assertTrueAndEqual(tstring input, tstring pattern, udiff_t expectedStart, udiff_t expectedEnd, EssRxW::Match& actual)
+        void assertTrueAndEqual(tstring input, tstring pattern, udiff_t expectedStart, udiff_t expectedEnd, EssRxW::MatchResult& actual)
         {
             assertTrueAndEqual
             (
-                rxw.match(input, pattern, EssRxW::FlagsRxW::F_MATCH_RESULT, &actual),
+                rxw.match(input, pattern, EssRxW::EngineOptions::F_MATCH_RESULT, &actual),
                 expectedStart, expectedEnd, actual
             );
         }
 
-        void assertTrueAndEqual(bool result, rxwtypes::udiff_t expectedStart, rxwtypes::udiff_t expectedEnd, EssRxW::Match& actual)
+        void assertTrueAndEqual(bool result, rxwtypes::udiff_t expectedStart, rxwtypes::udiff_t expectedEnd, EssRxW::MatchResult& actual)
         {
             Assert::IsTrue(result);
             assertEqual(expectedStart, expectedEnd, actual);
         }
 
-        void assertTrueAndNpos(bool result, EssRxW::Match& actual)
+        void assertTrueAndNpos(bool result, EssRxW::MatchResult& actual)
         {
             Assert::IsTrue(result);
-            Assert::AreEqual(static_cast<rxwtypes::udiff_t>(EssRxW::Match::npos), actual.start);
+            Assert::AreEqual(static_cast<rxwtypes::udiff_t>(EssRxW::MatchResult::npos), actual.start);
         }
 
-        void assertFalse(tstring input, tstring pattern, EssRxW::Match& actual)
+        void assertFalse(tstring input, tstring pattern, EssRxW::MatchResult& actual)
         {
             assertFalse
             (
-                rxw.match(input, pattern, EssRxW::FlagsRxW::F_MATCH_RESULT, &actual),
+                rxw.match(input, pattern, EssRxW::EngineOptions::F_MATCH_RESULT, &actual),
                 actual
             );
         }
 
-        void assertFalse(bool result, EssRxW::Match& actual)
+        void assertFalse(bool result, EssRxW::MatchResult& actual)
         {
             Assert::IsFalse(result);
-            Assert::AreEqual(static_cast<rxwtypes::udiff_t>(EssRxW::Match::npos), actual.start);
+            Assert::AreEqual(static_cast<rxwtypes::udiff_t>(EssRxW::MatchResult::npos), actual.start);
         }
 
-        void assertEqual(rxwtypes::udiff_t expectedStart, rxwtypes::udiff_t expectedEnd, EssRxW::Match& actual)
+        void assertEqual(rxwtypes::udiff_t expectedStart, rxwtypes::udiff_t expectedEnd, EssRxW::MatchResult& actual)
         {
             Assert::AreEqual(static_cast<rxwtypes::udiff_t>(expectedStart), actual.start);
             Assert::AreEqual(static_cast<rxwtypes::udiff_t>(expectedEnd), actual.end);
-        }
-
-        bool searchEss(const tstring& data, const tstring& filter, bool ignoreCase = false)
-        {
-            return regXwild::common::searchEss(data, filter, ignoreCase);
         }
 
 #endif

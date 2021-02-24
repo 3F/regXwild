@@ -38,10 +38,10 @@ using namespace def;
 /// <param name="replacement">The replacement string.</param>
 /// <param name="options">A bitwise combination of the enumeration values that provide options for matching or modifications.</param>
 /// <returns>True if the match was successful.</returns>
-bool AlgorithmEss::replace(tstring& input, const tstring& pattern, const tstring& replacement, const FlagsRxW& options)
+bool AlgorithmEss::replace(tstring& input, const tstring& pattern, const tstring& replacement, const EngineOptions& options)
 {
-    Match m;
-    if(match(input, pattern, options | FlagsRxW::F_MATCH_RESULT, &m))
+    MatchResult m;
+    if(match(input, pattern, options | EngineOptions::F_MATCH_RESULT, &m))
     {
         input = input.replace(m.start, m.end - m.start, replacement);
         return true;
@@ -50,12 +50,13 @@ bool AlgorithmEss::replace(tstring& input, const tstring& pattern, const tstring
 }
 
 /// <summary>
+/// [Obsolete] This method is obsolete and can be removed in future major versions. Please use `match()`.
 /// Basic search for occurrence using filter.
 /// </summary>
 /// <returns>True if found.</returns>
 bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignoreCase)
 {
-    return match(text, filter, (ignoreCase ? FlagsRxW::F_ICASE : FlagsRxW::F_NONE) | FlagsRxW::F_LEGACY_ANYSP);
+    return match(text, filter, (ignoreCase ? EngineOptions::F_ICASE : EngineOptions::F_NONE) | EngineOptions::F_LEGACY_ANYSP);
 }
 
 /// <summary>
@@ -66,14 +67,14 @@ bool AlgorithmEss::search(const tstring& text, const tstring& filter, bool ignor
 /// <param name="options">A bitwise combination of the enumeration values that provide options for matching.</param>
 /// <param name="result">Information about the match.</param>
 /// <returns>True if the match was successful.</returns>
-bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const FlagsRxW& options, Match* result)
+bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const EngineOptions& options, MatchResult* result)
 {
     if(pattern.empty()) return set(result, options, 0, input.length());
     reset(result);
 
     tstring text, filter;
 
-    if(options & FlagsRxW::F_ICASE) {
+    if(options & EngineOptions::F_ICASE) {
         //TODO: [perfomance] char by char along with the pattern chunks as we move to the right
         text    = _lowercase(input);
         filter  = _lowercase(pattern);
@@ -83,231 +84,240 @@ bool AlgorithmEss::match(const tstring& input, const tstring& pattern, const Fla
         filter  = pattern;
     }
 
-    Item item;
+    FWord word(text);
+    Item item(filter);
 
     item.mres  = result;
     item.flags = &options;
 
-    FWord word;
-    word.len = text.length();
-
-    _newoffset: // FIXME: I don't really want labels
-
-    tstring::const_iterator it = filter.begin();
-    item.it = &it;
-
-    for(tstring::const_iterator itEnd = filter.end(); it != itEnd; item.it = &++it)
+    while(item.it.c != item.it.end)
     {
-        ++item.left;
-
-        switch(*it)
+        LoopAct act = loop(item, word, options);
+        switch(act)
         {
-            case MS_ANY:    { item.mask.curr = ANY; break;      }
-            case MS_ANYSP:  { item.mask.curr = ANYSP; break;    }
-            case MS_SPLIT:  { item.mask.curr = SPLIT; break;    }
-            case MS_ONE:    { item.mask.curr = ONE; break;      }
-            case MS_BEGIN:  { item.mask.curr = BEGIN; break;    }
-            case MS_END:    { item.mask.curr = END; break;      }
-            case MS_MORE:   { item.mask.curr = MORE; break;     }
-            case MS_SINGLE: { item.mask.curr = SINGLE; break;   }
-            default:
-            {
-                if(it + 1 == itEnd) {
-                    item.mask.curr = EOL;
-                    ++item.left;
-                }
-                else continue;
-            }
-        }
-        
-        // When previous symbol is a meta-symbol
-        if((item.delta = item.left - 1 - item.pos) == 0)
-        {
-            if(item.mask.curr & (SPLIT | EOL)) return setEnd(item, word);
-            
-            if(item.mask.curr & BEGIN && (item.mask.prev & (BOL | SPLIT)) == 0) // is not BOL^__ or SPLIT^__
-            {
-                if(jumpRight(item, word, filter, it)) { continue; } return unsetMatch(item);
-            }
-            else if(item.mask.curr & END) // combination, e.g.: *$, ??$, etc. TODO: stub - _stubENDCombination()
-            {
-                if(jumpRight(item, word, filter, it)) { continue; } return unsetMatch(item);
-            }
-
-            // ++?? and ##??
-            if(item.mask.prev & (MORE | SINGLE) && item.mask.curr & ONE) 
-            {
-                item.mixpos = item.overlay + 1;
-                item.mixms  = item.mask.prev;
-            }
-
-            // Sequential combinations of #, ?, +
-            if((item.mask.curr & SINGLE && item.mask.prev & SINGLE) 
-                || (item.mask.curr & ONE && item.mask.prev & ONE)
-                || (item.mask.curr & MORE && item.mask.prev & MORE))
-            {
-                ++item.overlay;
-            }
-            else{ item.overlay = 0; }
-
-            ++item.pos;
-
-            if((options & FlagsRxW::F_LEGACY_ANYSP) == 0 && item.mask.curr & ANYSP)
-            {
-                ++item.pos;
-                if(item.left > 1) continue;
-            }
-            else
-            {
-                if((item.mask.prev & ANYSP) == 0) item.mask.prev = item.mask.curr;
-                continue;
-            }
+            case LoopAct::ReturnFalse: return false;
+            case LoopAct::ReturnTrue: return true;
         }
 
-        /* Otherwise, work with part of the word ... */
-
-        if(item.mask.curr & BEGIN) { // __^xxx
-            if(jumpRight(item, word, filter, it)) { continue; } return unsetMatch(item);
-        }
-
-        // Actual word part between meta-symbols
-        item.curr = (item.pos < filter.length()) ? filter.substr(item.pos, item.delta) : _T("\0");
-
-        if(item.mask.prev & BEGIN)
-        {
-            if(word.left > 0) return unsetMatch(item); // means not the first attempt after curr & (EOL | END)
-
-            if(text.substr(0, item.delta).compare(item.curr) == 0)
-            {
-                if(item.mask.curr & (SPLIT | EOL)) {
-                    return setEnd(item, word);
-                }
-                if(item.mask.curr & (SINGLE | ONE | MORE)) {
-                    item.bems = BEGIN;
-                }
-                word.found = 0;
-            }
-            else
-            {
-                if(item.mask.curr & EOL) return unsetMatch(item);
-                if(item.mask.curr & SPLIT) continue;
-                if(jumpRight(item, word, filter, it)) { continue; } return unsetMatch(item);
-            }
-        }
-        else word.found = text.find
-        (
-            item.curr, 
-            (item.mask.prev & (MORE | SINGLE)) ? ++word.left + item.overlay
-                                               : word.left
-        );
-
-        if(isOnResult(result, options) && result->start == Match::npos)
-        {
-            result->start = (item.mask.prev & (SINGLE | MORE)) ? word.found - item.overlay - 1 
-                                                               : word.found;
-        }
-
-        if(word.found != tstring::npos)
-        {
-            word.roff = word.found + item.delta;
-            word.found = parseInterval(item, word, options, text, filter);
-        }
-        else { word.roff = tstring::npos; }
-
-        item.overlay = 0; //flush sequence
-
-        /* End of block control */
-
-        if(word.found == tstring::npos)
-        {
-            if(item.mask.curr & (EOL | END)) //TODO: [optimize]: ...or last split-block
-            {
-                if(word.roff != tstring::npos && word.roff + 1 < word.len)
-                {
-                    word.left = word.roff;
-                    item.pos = item.left = 0;
-                    item.mask.prev = BOL;
-                    goto _newoffset; // FIXME: use the continue operator with no ++it
-                }
-
-                return unsetMatch(item);
-            }
-
-            item.pos = item.left;
-            if(item.mask.curr & SPLIT)
-            {
-                word.left = 0;
-                item.mixpos = 0;
-                item.mask.prev = BOL;
-                continue; //to next block
-            }
-
-            if(jumpRight(item, word, filter, it, false)) { continue; } return unsetMatch(item);
-        }
-        else
-        {
-            if(item.mask.curr & END)
-            {
-                if(text.substr(word.found).compare(item.curr) == 0)
-                {
-                    const tstring::const_iterator itUp = it + 1;
-
-                    if(itUp == itEnd) return setEnd(item, word); /*EOL*/
-
-                    switch(*(itUp)) {
-                        case MS_SPLIT: return setEnd(item, word);
-                    }
-                }
-                // __$x
-                if(jumpRight(item, word, filter, it)) { continue; } return unsetMatch(item);
-            }
-        }
-
-        /* Success */
-
-        if(item.mask.curr & (SPLIT | EOL)) return setEnd(item, word);
-
-        item.pos        = item.left;
-        word.left       = word.found + item.delta;
-        item.mask.prev  = item.mask.curr;
-        item.prev       = item.curr;
+        if(act == LoopAct::Break) break;
+        if((act & LoopAct::IgnoreLoopExpression) == 0) ++item.it.c;
     }
     item.mask.curr = EOL; // it + 1 == itEnd
 
-    /* After the end of iterations */
-
     if(item.mask.prev & (MORE | SINGLE) && word.left >= text.length()) {
-        return unsetMatch(item); // {word}EOL + {1,~}
+        return convertToBool(unsetMatch(item)); // {word}EOL + {1,~}
     }
 
     if(item.mask.prev & ANYSP) { // disables MS combination if legacy mode ({word} >*) and completes >{char}{EOL} as [^{char}]*$
-        if(text.substr(word.left).find(getSPSymbol(item, options)) != tstring::npos) {
-            return unsetMatch(item);
+        if(text.substr(word.left).find(getSPChar(item, options)) != tstring::npos) {
+            return convertToBool(unsetMatch(item));
         }
     }
-    return setEnd(item, word);
+
+    return convertToBool(setEnd(item, word));
 }
 
-udiff_t AlgorithmEss::parseInterval(Item& item, FWord& word, const FlagsRxW& options, const tstring& text, const tstring& filter)
+LoopAct AlgorithmEss::loop(Item& item, FWord& word, const EngineOptions& options)
+{
+    ++item.left;
+
+    switch(*item.it.c)
+    {
+        case MS_ANY:    { item.mask.curr = ANY; break;      }
+        case MS_ANYSP:  { item.mask.curr = ANYSP; break;    }
+        case MS_SPLIT:  { item.mask.curr = SPLIT; break;    }
+        case MS_ONE:    { item.mask.curr = ONE; break;      }
+        case MS_BEGIN:  { item.mask.curr = BEGIN; break;    }
+        case MS_END:    { item.mask.curr = END; break;      }
+        case MS_MORE:   { item.mask.curr = MORE; break;     }
+        case MS_SINGLE: { item.mask.curr = SINGLE; break;   }
+        default:
+        {
+            if(item.it.c + 1 == item.it.end) {
+                item.mask.curr = EOL;
+                ++item.left;
+            }
+            else return LoopAct::Continue;
+        }
+    }
+        
+    // When previous symbol is a meta-symbol
+    if((item.delta = item.left - 1 - item.pos) == 0)
+    {
+        if(item.mask.curr & (SPLIT | EOL)) return setEnd(item, word);
+            
+        if(item.mask.curr & BEGIN && (item.mask.prev & (BOL | SPLIT)) == 0) // is not BOL^__ or SPLIT^__
+        {
+            if(jumpRight(item, word)) { return LoopAct::Continue; } return unsetMatch(item);
+        }
+        else if(item.mask.curr & END) // combination, e.g.: *$, ??$, etc. TODO: stub - _stubENDCombination()
+        {
+            if(jumpRight(item, word)) { return LoopAct::Continue; } return unsetMatch(item);
+        }
+
+        // ++?? and ##??
+        if(item.mask.prev & (MORE | SINGLE) && item.mask.curr & ONE) 
+        {
+            item.mixpos = item.overlay + 1;
+            item.mixms  = item.mask.prev;
+        }
+
+        // Sequential combinations of #, ?, +
+        if((item.mask.curr & SINGLE && item.mask.prev & SINGLE) 
+            || (item.mask.curr & ONE && item.mask.prev & ONE)
+            || (item.mask.curr & MORE && item.mask.prev & MORE))
+        {
+            ++item.overlay;
+        }
+        else{ item.overlay = 0; }
+
+        ++item.pos;
+
+        if((options & EngineOptions::F_LEGACY_ANYSP) == 0 && item.mask.curr & ANYSP)
+        {
+            ++item.pos;
+            if(item.left > 1) return LoopAct::Continue;
+        }
+        else
+        {
+            if((item.mask.prev & ANYSP) == 0) item.mask.prev = item.mask.curr;
+            return LoopAct::Continue;
+        }
+    }
+
+    /* Otherwise, work with part of the word ... */
+
+    if(item.mask.curr & BEGIN) { // __^xxx
+        if(jumpRight(item, word)) { return LoopAct::Continue; } return unsetMatch(item);
+    }
+
+    // Actual word part between meta-symbols
+    item.curr = (item.pos < item.input.length()) ? item.input.substr(item.pos, item.delta) : _T("\0");
+
+    if(item.mask.prev & BEGIN)
+    {
+        if(word.left > 0) return unsetMatch(item); // means not the first attempt after curr & (EOL | END)
+
+        if(cmp(word.text, item.curr, 0, item.delta))
+        {
+            if(item.mask.curr & (SPLIT | EOL)) {
+                return setEnd(item, word);
+            }
+            if(item.mask.curr & (SINGLE | ONE | MORE)) {
+                item.bems = BEGIN;
+            }
+            word.found = 0;
+        }
+        else
+        {
+            if(item.mask.curr & EOL) return unsetMatch(item);
+            if(item.mask.curr & SPLIT) return LoopAct::Continue;
+            if(jumpRight(item, word)) { return LoopAct::Continue; } return unsetMatch(item);
+        }
+    }
+    else word.found = word.text.find
+    (
+        item.curr, 
+        (item.mask.prev & (MORE | SINGLE)) ? ++word.left + item.overlay
+                                           : word.left
+    );
+
+    if(isOnResult(item.mres, options) && item.mres->start == MatchResult::npos)
+    {
+        item.mres->start = (item.mask.prev & (SINGLE | MORE)) ? word.found - item.overlay - 1
+                                                              : word.found;
+    }
+
+    if(word.found != tstring::npos)
+    {
+        word.roff = word.found + item.delta;
+        word.found = parseInterval(item, word, options);
+    }
+    else { word.roff = tstring::npos; }
+
+    item.overlay = 0; //flush sequence
+
+    /* End of block control */
+
+    if(word.found == tstring::npos)
+    {
+        if(item.mask.curr & (EOL | END)) //TODO: [optimize]: ...or last split-block
+        {
+            if(word.roff != tstring::npos && word.roff + 1 < word.len)
+            {
+                word.left = word.roff;
+                item.pos = item.left = 0;
+                item.mask.prev = BOL;
+
+                item.it.reset();
+                return LoopAct::Continue | LoopAct::IgnoreLoopExpression;
+            }
+
+            return unsetMatch(item);
+        }
+
+        item.pos = item.left;
+        if(item.mask.curr & SPLIT)
+        {
+            word.left = 0;
+            item.mixpos = 0;
+            item.mask.prev = BOL;
+            return LoopAct::Continue; //to next block
+        }
+
+        if(jumpRight(item, word, false)) { return LoopAct::Continue; } return unsetMatch(item);
+    }
+    else
+    {
+        if(item.mask.curr & END)
+        {
+            if(cmp(word.text, item.curr, word.found))
+            {
+                const tstring::const_iterator itUp = item.it.c + 1;
+
+                if(itUp == item.it.end) return setEnd(item, word); /*EOL*/
+
+                switch(*(itUp)) {
+                    case MS_SPLIT: return setEnd(item, word);
+                }
+            }
+            // __$x
+            if(jumpRight(item, word)) { return LoopAct::Continue; } return unsetMatch(item);
+        }
+    }
+
+    /* Success */
+
+    if(item.mask.curr & (SPLIT | EOL)) return setEnd(item, word);
+
+    item.pos        = item.left;
+    word.left       = word.found + item.delta;
+    item.mask.prev  = item.mask.curr;
+    item.prev       = item.curr;
+
+    return LoopAct::Continue;
+}
+
+udiff_t AlgorithmEss::parseInterval(Item& item, FWord& word, const EngineOptions& options)
 {
     // ">"
     if(item.mask.prev & ANYSP)
     {
-        if(text.substr(word.left, word.found - word.left).find(getSPSymbol(item, options)) != tstring::npos) {
+        if(word.text.substr(word.left, word.found - word.left).find(getSPChar(item, options)) != tstring::npos) {
             return tstring::npos;
         }
 
         // We don't need to process anything else just to get out here ASAP
-        if(options & FlagsRxW::F_LEGACY_ANYSP || (item.mask.curr & ANYSP) == 0) return word.found;
+        if(options & EngineOptions::F_LEGACY_ANYSP || (item.mask.curr & ANYSP) == 0) return word.found;
     }
     // ^v
-    if(item.mask.curr & ANYSP && (options & FlagsRxW::F_LEGACY_ANYSP) == 0)
+    if(item.mask.curr & ANYSP && (options & EngineOptions::F_LEGACY_ANYSP) == 0)
     {
-        if(item.left < filter.length())
+        if(item.left < item.input.length())
         {
             // ">" + {symbol}
-            item.anysp = filter[item.left++];
-            ++*item.it;
+            item.anysp = item.input[item.left++];
+            ++item.it.c;
         }
         return word.found;
     }
@@ -325,16 +335,16 @@ udiff_t AlgorithmEss::parseInterval(Item& item, FWord& word, const FlagsRxW& opt
         {
             diff_t lPos = word.found - len - max;
 
-            if(lPos < 0 || (item.bems & BEGIN && lPos != 0) || text.substr(lPos, len).compare(item.prev) != 0) {
+            if(lPos < 0 || (item.bems & BEGIN && lPos != 0) || !cmp(word.text, item.prev, lPos, len)) {
                 return tstring::npos;
             }
 
-            if(isOnResult(item.mres, options) && isEqPrev(text, item, len)) shiftStart(lPos, item);
+            if(isOnResult(item.mres, options) && isEqPrev(word.text, item, len)) shiftStart(lPos, item);
             return word.found;
         }
         if(/*& MORE*/delta < min) return tstring::npos;
 
-        if(text.substr(word.found - len - delta, len).compare(item.prev) == 0) {
+        if(cmp(word.text, item.prev, word.found - len - delta, len)) {
             return word.found;
         }
 
@@ -350,12 +360,12 @@ udiff_t AlgorithmEss::parseInterval(Item& item, FWord& word, const FlagsRxW& opt
         if(item.bems & BEGIN && lPos != 0) return tstring::npos;
 
         // [pro]ject ... [pro]t[ection] -> [pro]<-#-ection
-        if(lPos < 0 || text.substr(lPos, len).compare(item.prev) != 0) {
+        if(lPos < 0 || !cmp(word.text, item.prev, lPos, len)) {
             return tstring::npos;
         }
 
         // shifts the position to the current, ie. ^0->0#2
-        if(isOnResult(item.mres, options) && isEqPrev(text, item, len)) shiftStart(lPos, item);
+        if(isOnResult(item.mres, options) && isEqPrev(word.text, item, len)) shiftStart(lPos, item);
         return word.found;
     }
 
@@ -369,9 +379,9 @@ udiff_t AlgorithmEss::parseInterval(Item& item, FWord& word, const FlagsRxW& opt
 
         if(item.overlay > plim) return tstring::npos; // When filter ++++ (4 or more) is more than origin data.
 
-        if(text.substr(lPos, len).compare(item.prev) != 0) return tstring::npos;
+        if(!cmp(word.text, item.prev, lPos, len)) return tstring::npos;
 
-        if(isOnResult(item.mres, options) && isEqPrev(text, item, len)) shiftStart(lPos, item);
+        if(isOnResult(item.mres, options) && isEqPrev(word.text, item, len)) shiftStart(lPos, item);
         return word.found;
     }
 
@@ -390,9 +400,9 @@ udiff_t AlgorithmEss::parseInterval(Item& item, FWord& word, const FlagsRxW& opt
 
         do // ????? - min<->max:
         {
-            if(text.substr(lPos, len).compare(item.prev) == 0)
+            if(cmp(word.text, item.prev, lPos, len))
             {
-                if(isOnResult(item.mres, options) && isEqPrev(text, item, len))
+                if(isOnResult(item.mres, options) && isEqPrev(word.text, item, len))
                     shiftStart(len < 1 ? /*lazy*/word.found : /*greedy*/lPos, item);
 
                 return word.found;
@@ -407,22 +417,22 @@ udiff_t AlgorithmEss::parseInterval(Item& item, FWord& word, const FlagsRxW& opt
         udiff_t len = item.prev.length();
         diff_t lPos = word.found - len;
 
-        if(text.substr(lPos, len).compare(item.prev) == 0 && isEqPrev(text, item, len)) shiftStart(lPos, item);
+        if(cmp(word.text, item.prev, lPos, len) && isEqPrev(word.text, item, len)) shiftStart(lPos, item);
     }
 
     return word.found;
 }
 
-inline bool AlgorithmEss::jumpRight(Item& item, FWord& word, const tstring& filter, tstring::const_iterator& it, bool delta)
+inline bool AlgorithmEss::jumpRight(Item& item, FWord& word, bool delta)
 {
-    item.left = filter.find(MS_SPLIT, item.left);
+    item.left = item.input.find(MS_SPLIT, item.left);
     if(item.left == tstring::npos) return false; //EOL
     
     if(delta) {
-        it += ++item.left - (item.pos + item.delta) - 1; //or overload =
+        item.it.c += ++item.left - (item.pos + item.delta) - 1; //or overload =
     }
     else{
-        it += ++item.left - item.pos;
+        item.it.c += ++item.left - item.pos;
     }
 
     item.pos        = item.left;
@@ -431,37 +441,37 @@ inline bool AlgorithmEss::jumpRight(Item& item, FWord& word, const tstring& filt
     return true;
 }
 
-inline bool AlgorithmEss::set(Match* result, const FlagsRxW& options, udiff_t start, udiff_t end)
+inline bool AlgorithmEss::set(MatchResult* result, const EngineOptions& options, udiff_t start, udiff_t end)
 {
 #if _RXW_FEATURE_MATCH_RESULT
 
     if(result != nullptr)
     {
-        if(options & FlagsRxW::F_MATCH_RESULT)
+        if(options & EngineOptions::F_MATCH_RESULT)
         {
             result->start = start;
             result->end = end;
         }
-        else result->start = Match::npos;
+        else result->start = MatchResult::npos;
     }
 
 #endif
     return true;
 }
 
-inline void AlgorithmEss::reset(Match* result)
+inline void AlgorithmEss::reset(MatchResult* result)
 {
 #if _RXW_FEATURE_MATCH_RESULT
-    if(result != nullptr) result->start = Match::npos;
+    if(result != nullptr) result->start = MatchResult::npos;
 #endif
 }
 
-inline bool AlgorithmEss::unsetMatch(Item& item)
+inline LoopAct AlgorithmEss::unsetMatch(Item& item)
 {
 #if _RXW_FEATURE_MATCH_RESULT
-    setStart(item, Match::npos);
+    setStart(item, MatchResult::npos);
 #endif
-    return false;
+    return LoopAct::ReturnFalse;
 }
 
 inline void AlgorithmEss::setStart(Item& item, udiff_t start)
@@ -484,7 +494,7 @@ inline void AlgorithmEss::shiftStart(udiff_t start, Item& item)
 #endif
 }
 
-bool AlgorithmEss::setEnd(Item& item, const FWord& word)
+LoopAct AlgorithmEss::setEnd(Item& item, const FWord& word)
 {
 #ifndef _RXW_FEATURE_MATCH_RESULT
     return true;
@@ -495,13 +505,13 @@ bool AlgorithmEss::setEnd(Item& item, const FWord& word)
         udiff_t _found = (word.found == tstring::npos) ? 0 : word.found;
 
         udiff_t _end = _found;
-        if(item.mres->start == Match::npos) item.mres->start = _end;
+        if(item.mres->start == MatchResult::npos) item.mres->start = _end;
 
         if(item.mask.curr & EOL && item.mask.prev & MORE && item.pos == item.left 
             || word.len == 0)
         {
             item.mres->end = word.len;
-            return true;
+            return LoopAct::ReturnTrue;
         }
 
         if(item.delta > 0)
@@ -520,13 +530,13 @@ bool AlgorithmEss::setEnd(Item& item, const FWord& word)
             item.mres->end = _end;
         }
     }
-    return true;
+    return LoopAct::ReturnTrue;
 }
 
-inline bool AlgorithmEss::isOnResult(const Match* result, const FlagsRxW& options)
+inline bool AlgorithmEss::isOnResult(const MatchResult* result, const EngineOptions& options)
 {
 #if _RXW_FEATURE_MATCH_RESULT
-    return result != nullptr && options & FlagsRxW::F_MATCH_RESULT;
+    return result != nullptr && options & EngineOptions::F_MATCH_RESULT;
 #else
     return false;
 #endif
@@ -535,15 +545,25 @@ inline bool AlgorithmEss::isOnResult(const Match* result, const FlagsRxW& option
 inline bool AlgorithmEss::isEqPrev(const tstring& input, const Item& item, udiff_t len)
 {
 #if _RXW_FEATURE_MATCH_RESULT
-    return item.mres->start != Match::npos && input.substr(item.mres->start, len).compare(item.prev) == 0;
+    return item.mres->start != MatchResult::npos && cmp(input, item.prev, item.mres->start, len);
 #else
     return false;
 #endif
 }
 
-inline TCHAR AlgorithmEss::getSPSymbol(const Item& item, const FlagsRxW& options)
+inline bool AlgorithmEss::convertToBool(LoopAct act)
 {
-    return options & FlagsRxW::F_LEGACY_ANYSP ? ANYSP_CMP_DEFAULT : item.anysp;
+    return act == LoopAct::ReturnTrue ? true : false;
+}
+
+inline bool AlgorithmEss::cmp(const tstring& a, const tstring& b, size_t pos, size_t len) const
+{
+    return a.substr(pos, len).compare(b) == 0;
+}
+
+inline TCHAR AlgorithmEss::getSPChar(const Item& item, const EngineOptions& options) const
+{
+    return options & EngineOptions::F_LEGACY_ANYSP ? ANYSP_CMP_DEFAULT : item.anysp;
 }
 
 }}}}}

@@ -154,6 +154,10 @@
     <ClInclude Include="core\ESS\AlgorithmEss.h" />
     <ClInclude Include="core\EXT\AlgorithmExt.h" />
     <ClInclude Include="declspec.h" />
+    <ClInclude Include="core\ESS\def.h" />
+    <ClInclude Include="core\ESS\EngineOptions.h" />
+    <ClInclude Include="core\ESS\MatchResult.h" />
+    <ClInclude Include="core\ESS\LoopAct.h" />
     <ClInclude Include="regXwild.common.h" />
     <ClInclude Include="regXwild.h" />
     <ClInclude Include="regXwildAPI.h" />

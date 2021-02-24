@@ -28,27 +28,40 @@
 #include "stdafx.h"
 #include "conf.h"
 #include "typedefs.h"
-#include "RXWVersion.h"
 
-#include "./core/EXT/AlgorithmExt.h"
-#include "./core/ESS/AlgorithmEss.h"
-
-namespace net { namespace r_eg { namespace regXwild
+namespace net { namespace r_eg { namespace regXwild { namespace core { namespace ESS
 {
-    /// <summary>
-    /// ESS version (advanced EXT version).
-    /// </summary>
-    typedef core::ESS::AlgorithmEss EssRxW;
+    using namespace net::r_eg::regXwild::rxwtypes;
 
-    /// <summary>
-    /// Leading implementation for regXwild.
-    /// </summary>
-    typedef EssRxW RxW;
-    typedef core::ESS::EngineOptions FlagsRxW;
-    typedef core::ESS::MatchResult MatchRxW;
+    // TODO: consider upgrading to modern enum class
+    namespace def
+    {
+        enum MetaOp: flagmeta_t
+        {
+            NONE    = 0,
+            BOL     = 0x001,
+            ANY     = 0x002,
+            SPLIT   = 0x004,
+            ONE     = 0x008,
+            BEGIN   = 0x010,
+            END     = 0x020,
+            MORE    = 0x040,
+            SINGLE  = 0x080,
+            ANYSP   = 0x100,
+            EOL     = 0x200,
+        };
 
-    /// <summary>
-    /// EXT version (more simplified than ESS).
-    /// </summary>
-    typedef core::EXT::AlgorithmExt ExtRxW;
-}}}
+        enum MetaSymbols
+        {
+            MS_ANY      = _T('*'), // {0, ~}
+            MS_SPLIT    = _T('|'), // str1 or str2 or ...
+            MS_ONE      = _T('?'), // {0, 1}, ??? {0, 3}, ...
+            MS_BEGIN    = _T('^'), // [str... or [str1... |[str2...
+            MS_END      = _T('$'), // ...str] or ...str1]| ...str2]
+            MS_MORE     = _T('+'), // {1, ~}, +++ {3, ~}, ...
+            MS_SINGLE   = _T('#'), // {1}, ## {2}, ### {3}, ...
+            MS_ANYSP    = _T('>'), // [^/]*str|[^/]*$ (legacy); [^{symbol}]*str|[^{symbol}]*$ for ('>' + {symbol})
+        };
+    }
+
+}}}}}

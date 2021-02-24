@@ -69,7 +69,10 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
         {
             MetaOperation curr;
             MetaOperation prev;
+#pragma warning(push)
+#pragma warning(disable: 26812) // EXT version more probably will not be upgraded to enum class
             Mask(): curr(FLUSH), prev(FLUSH) { };
+#pragma warning(pop)
         };
 
         /**

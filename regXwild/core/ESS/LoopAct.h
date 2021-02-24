@@ -28,27 +28,32 @@
 #include "stdafx.h"
 #include "conf.h"
 #include "typedefs.h"
-#include "RXWVersion.h"
 
-#include "./core/EXT/AlgorithmExt.h"
-#include "./core/ESS/AlgorithmEss.h"
-
-namespace net { namespace r_eg { namespace regXwild
+namespace net { namespace r_eg { namespace regXwild { namespace core { namespace ESS
 {
-    /// <summary>
-    /// ESS version (advanced EXT version).
-    /// </summary>
-    typedef core::ESS::AlgorithmEss EssRxW;
+    using namespace net::r_eg::regXwild::rxwtypes;
 
-    /// <summary>
-    /// Leading implementation for regXwild.
-    /// </summary>
-    typedef EssRxW RxW;
-    typedef core::ESS::EngineOptions FlagsRxW;
-    typedef core::ESS::MatchResult MatchRxW;
+    RXW_ENUM_CLASS LoopAct: flagshort_t
+    {
+        Break                   = 0x01,
+        Continue                = 0x02,
+        IgnoreLoopExpression    = 0x04,
+        ReturnTrue              = 0x08,
+        ReturnFalse             = 0x10,
+    };
 
-    /// <summary>
-    /// EXT version (more simplified than ESS).
-    /// </summary>
-    typedef core::EXT::AlgorithmExt ExtRxW;
-}}}
+#if RXW_CPP11_ENUM_CLASS
+
+    inline flagcfg_t operator& (LoopAct l, LoopAct r)
+    {
+        return static_cast<flagcfg_t>(l) & static_cast<flagcfg_t>(r);
+    }
+
+    inline LoopAct operator| (LoopAct l, LoopAct r)
+    {
+        return static_cast<LoopAct>(static_cast<flagcfg_t>(l) | static_cast<flagcfg_t>(r));
+    }
+
+#endif
+
+}}}}}

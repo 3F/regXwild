@@ -59,6 +59,7 @@ namespace net { namespace r_eg { namespace regXwild { namespace rxwtypes
 
     typedef unsigned int flagmeta_t;
     typedef unsigned int flagcfg_t;
+    typedef unsigned char flagshort_t;
 
 #if _RXW_FEATURE_MATCH_MAP
     typedef std::vector<udiff_t> matchmap_t;
