@@ -55,12 +55,11 @@ bool AlgorithmEss::replace(tstring& input, const tstring& pattern, const tstring
 bool AlgorithmEss::replace(tstring& input, const tstring& pattern, const tstring& replacement, udiff_t offset, const EngineOptions& options)
 {
     MatchResult m;
-    if(match(input, pattern, offset, options | EngineOptions::F_MATCH_RESULT, &m))
-    {
-        input = input.replace(m.start, m.end - m.start, replacement);
-        return true;
-    }
-    return false;
+    bool ret = _replace(input, pattern, replacement, offset, options, m);
+    if(!ret || (options & EngineOptions::F_MATCH_ALL) == 0) return ret;
+
+    while(ret = _replace(input, pattern, replacement, m.end, options, m));
+    return true;
 }
 
 /// <summary>
@@ -283,7 +282,7 @@ LoopAct AlgorithmEss::loop(Item& item, FWord& word, const EngineOptions& options
         {
             if(word.roff != tstring::npos && word.roff + 1 < word.len)
             {
-                word.rewind(word.roff);
+                if(!word.rewind(word.roff)) return LoopAct::ReturnFalse;
 
                 item.pos = item.left = 0;
                 item.mask.prev = BOL;
@@ -603,6 +602,22 @@ inline bool AlgorithmEss::cmp(const tstring& a, const tstring& b, size_t pos, si
 inline TCHAR AlgorithmEss::getSPChar(const Item& item, const EngineOptions& options) const
 {
     return options & EngineOptions::F_LEGACY_ANYSP ? ANYSP_CMP_DEFAULT : item.anysp;
+}
+
+bool AlgorithmEss::_replace(
+                        tstring& input, 
+                        const tstring& pattern, 
+                        const tstring& replacement, 
+                        udiff_t offset, 
+                        const EngineOptions& options, 
+                        MatchResult& result)
+{
+    if(match(input, pattern, offset, options | EngineOptions::F_MATCH_RESULT, &result))
+    {
+        input = input.replace(result.start, result.end - result.start, replacement);
+        return true;
+    }
+    return false;
 }
 
 }}}}}

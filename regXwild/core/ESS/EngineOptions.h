@@ -43,23 +43,28 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
         F_ICASE         = 0x001,
 
         /// <summary>
-        /// Activates the collection of additional data for the Match result.
+        /// Collect additional data for the MatchResult.
         /// </summary>
         F_MATCH_RESULT  = 0x002,
 
+        /// <summary>
+        /// Do not finish on first match.
+        /// </summary>
+        F_MATCH_ALL     = 0x004,
+
 #if _RXW_FEATURE_MATCH_MAP
         /// <summary>
-        /// Activates the collection of the positions of all occurrences 
-        /// between each presented meta-symbol.
+        /// Collect the positions of all occurrences 
+        /// between each presented metasymbol.
         /// </summary>
-        F_MATCH_MAP     = 0x004,
+        F_MATCH_MAP     = 0x008,
 #endif
 
         /// <summary>
         /// Use MS_ANYSP as [^/]* (legacy).
         /// Otherwise as [^c]* where `c` is a symbol from the next presented symbol after MS_ANYSP.
         /// </summary>
-        F_LEGACY_ANYSP  = 0x008,
+        F_LEGACY_ANYSP  = 0x080,
     };
 
 #if RXW_CPP11_ENUM_CLASS

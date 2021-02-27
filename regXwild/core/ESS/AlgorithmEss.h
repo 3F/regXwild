@@ -184,7 +184,14 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
             //initial offset
             const udiff_t& offset;
 
-            void rewind(udiff_t opt = 0) { left = offset + opt; }
+            bool rewind(udiff_t opt = 0)
+            {
+                left = offset + opt;
+
+                if(left == _rewound) return false;
+                _rewound = left;
+                return true;
+            }
 
 #pragma warning(push)
 #pragma warning(disable: 26495)
@@ -195,6 +202,10 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
 
             }
 #pragma warning(pop)
+
+        private:
+            // to detect an unknown looping
+            udiff_t _rewound;
         };
 
         /** {word}<- ... ->{word} */
@@ -209,6 +220,16 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
 
         inline bool cmp(const tstring& a, const tstring& b, size_t pos = 0, size_t len = tstring::npos) const;
         inline TCHAR getSPChar(const Item& item, const EngineOptions& options) const;
+
+        bool _replace
+        (
+            tstring& input, 
+            const tstring& pattern, 
+            const tstring& replacement, 
+            udiff_t offset, 
+            const EngineOptions& options, 
+            MatchResult& result
+        );
 
         /* EngineOptions::F_MATCH_RESULT -> */
 

@@ -670,6 +670,41 @@ namespace regXwildTest
             Assert::AreEqual(expected, input);
         }
 
+        TEST_METHOD(uReplaceTest4)
+        {
+            tstring input;
+
+            input = _T("a = 010; b = 020; c = 030; d = 040;");
+            Assert::IsTrue(rxw.replace(input, _T(" ###;"), _T(" '';"), EssRxW::EngineOptions::F_MATCH_ALL));
+            Assert::AreEqual(static_cast<tstring>(_T("a = ''; b = ''; c = ''; d = '';")), input);
+
+            input = _T("a = 010; b = 020; c = 030; d = 040;");
+            Assert::IsTrue(rxw.replace(input, _T(" ###;"), _T(" '';"), 15, EssRxW::EngineOptions::F_MATCH_ALL));
+            Assert::AreEqual(static_cast<tstring>(_T("a = 010; b = 020; c = ''; d = '';")), input);
+
+            input = _T("a = 010; b = 020; c = 030; d = 040;");
+            Assert::IsTrue(rxw.replace(input, _T(" ###;"), _T(" '';")));
+            Assert::AreEqual(static_cast<tstring>(_T("a = ''; b = 020; c = 030; d = 040;")), input);
+        }
+
+        TEST_METHOD(uReplaceTest5)
+        {
+            tstring input = _T("a = 010; b = 020;");
+
+            Assert::IsFalse(rxw.replace(input, _T(" ####;"), _T(" '';"), EssRxW::EngineOptions::F_MATCH_ALL));
+            Assert::IsFalse(rxw.replace(input, _T(" ####;"), _T(" '';"), 1, EssRxW::EngineOptions::F_MATCH_ALL));
+
+            Assert::AreEqual(static_cast<tstring>(_T("a = 010; b = 020;")), input);
+        }
+
+        TEST_METHOD(uReplaceTest6)
+        {
+            tstring input = _T("a = 010; b = 20; c = 0030;");
+
+            Assert::IsTrue(rxw.replace(input, _T(" ##;"), _T(" '';"), EssRxW::EngineOptions::F_MATCH_ALL));
+            Assert::AreEqual(static_cast<tstring>(_T("a = 010; b = ''; c = 0030;")), input);
+        }
+
         TEST_METHOD(offsetTest1)
         {
             EssRxW::MatchResult m;
@@ -723,6 +758,7 @@ namespace regXwildTest
             assertFalse(input, pattern, m, input.length() - 1);
             assertFalse(input, pattern, m, input.length());
             assertFalse(input, pattern, m, input.length() + 1);
+            assertFalse(input, pattern, m, tstring::npos);
         }
 
         TEST_METHOD(offsetTest3)
