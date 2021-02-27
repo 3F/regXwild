@@ -212,7 +212,9 @@ LoopAct AlgorithmEss::loop(Item& item, FWord& word, const EngineOptions& options
         }
         else
         {
+            if(item.mask.prev & BEGIN && item.mask.curr & (ONE|SINGLE|MORE)) item.bems = BEGIN;
             if((item.mask.prev & ANYSP) == 0 && (item.mask.curr & END) == 0) item.mask.prev = item.mask.curr;
+
             if((item.mask.curr & END) == 0 || (item.mask.prev & (ANYSP | ANY | MORE | SINGLE | ONE)) == 0) return LoopAct::Continue;
             // continue with ms combination for ->$
             item.bems = END;

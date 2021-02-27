@@ -512,14 +512,30 @@ namespace regXwildTest
             tstring data = _T("main system");
 
             Assert::IsFalse(match(data, _T("^?in")));
+            Assert::IsFalse(match(data, _T("^#in")));
+
             Assert::IsTrue(match(data, _T("^??in")));
+            Assert::IsTrue(match(data, _T("^???in")));
             Assert::IsTrue(match(data, _T("^+in")));
             Assert::IsTrue(match(data, _T("^*in")));
-            Assert::IsFalse(match(data, _T("^#in")));
             Assert::IsTrue(match(data, _T("^##in")));
+            Assert::IsFalse(match(data, _T("^###in")));
         }
 
         TEST_METHOD(combBEGINTest2)
+        {
+            tstring data = _T("main system");
+
+            Assert::IsTrue(match(data, _T("^?main")));
+            Assert::IsTrue(match(data, _T("^??main")));
+            Assert::IsTrue(match(data, _T("^*main")));
+            Assert::IsFalse(match(data, _T("^#main")));
+            Assert::IsFalse(match(data, _T("^##main")));
+            Assert::IsFalse(match(data, _T("^+main")));
+            Assert::IsFalse(match(data, _T("^++main")));
+        }
+
+        TEST_METHOD(combBEGINTest3)
         {
             tstring data = _T("mixed data");
 
