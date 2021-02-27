@@ -238,8 +238,6 @@ namespace regXwildTest
 
         TEST_METHOD(filterAnySPTest2)
         {
-            /* with other metasymbols: */
-            
             Assert::IsTrue(match(_T("/new/user_myhid"), _T("myhid>*")));
             Assert::IsTrue(match(_T("/new/user_myhid"), _T("myhid>***")));
             Assert::IsTrue(match(_T("/new/user_myhid"), _T("myhid>?")));
@@ -257,8 +255,6 @@ namespace regXwildTest
 
         TEST_METHOD(filterAnySPTest4)
         {
-            /* with other metasymbols: */
-
             Assert::IsFalse(match(_T("/new/user_myhid_s/df.txt"), _T("myhid>*")));
             Assert::IsFalse(match(_T("/new/user_myhid_s/df.txt"), _T("myhid>***")));
             Assert::IsFalse(match(_T("/new/user_myhid_s/df.txt"), _T("myhid>?")));
@@ -444,80 +440,95 @@ namespace regXwildTest
             Assert::IsFalse(match(data, _T("project++++++10")));
         }
 
-        /* behavior by default for non-implemented combinations - END */
-        TEST_METHOD(stubENDCombinationTest1)
+        TEST_METHOD(combENDTest1)
         {
             tstring data = _T("new tes;ted project-12, and 75_protection of various systems");
             tstring datam = _T("main systems 1272/is ok");
 
-            // MS combination
+            // *
             {
-                //TODO: implement *,>,?,+,# and combination
+                Assert::IsTrue(match(data, _T("systems*$")));
+                Assert::IsTrue(match(datam, _T("main*$")));
+                Assert::IsTrue(match(datam, _T("main**$")));
+                Assert::IsTrue(match(data, _T("systems*$")));
+                Assert::IsTrue(match(data, _T("project*$")));
+                Assert::IsTrue(match(datam, _T("^main*$")));
                 {
-                    // *
-                    {
-                        Assert::IsFalse(match(data, _T("systems*$")));
-                        Assert::IsFalse(match(data, _T("systems**$")));
-                        Assert::IsFalse(match(datam, _T("main*$")));
-                        Assert::IsFalse(match(datam, _T("main**$")));
-                        Assert::IsFalse(match(data, _T("systems*$")));
-                        Assert::IsFalse(match(data, _T("project*$")));
-                        Assert::IsFalse(match(datam, _T("^main*$")));
-                        {
-                            Assert::IsFalse(match(data, _T("^*new*$")));
-                            Assert::IsFalse(match(data, _T("^*$")));
-                            Assert::IsFalse(match(data, _T("^*$")));
-                            Assert::IsFalse(match(datam, _T("^*1272*$")));
-                        }
-                    }
-
-                    // >
-                    {
-                        Assert::IsFalse(match(data, _T("systems>$")));
-                        Assert::IsFalse(match(data, _T("systems>*$")));
-                        Assert::IsFalse(match(data, _T("various>$")));
-                        Assert::IsFalse(match(data, _T("various>*$")));
-                        Assert::IsFalse(match(data, _T("various>>$")));
-                    }
-
-                    // ?
-                    {
-                        Assert::IsFalse(match(data, _T("system?$")));
-                        Assert::IsFalse(match(data, _T("systems?$")));
-                    }
-
-                    // +
-                    {
-                        Assert::IsFalse(match(data, _T("system+$")));
-                        Assert::IsFalse(match(data, _T("syste+$")));
-                    }
-
-                    // #
-                    {
-                        Assert::IsFalse(match(data, _T("system#$")));
-                        Assert::IsFalse(match(data, _T("syste##$")));
-                    }
-
-                    /* false: */
-
-                    // ?
-                    {
-                        Assert::IsFalse(match(data, _T("syste?$")));
-                    }
-
-                    // +
-                    {
-                        Assert::IsFalse(match(data, _T("systems+$")));
-                    }
-
-                    // #
-                    {
-                        Assert::IsFalse(match(data, _T("systems#$")));
-                        Assert::IsFalse(match(data, _T("system##$")));
-                        Assert::IsFalse(match(data, _T("systems##$")));
-                    }
+                    Assert::IsTrue(match(data, _T("^*new*$")));
+                    Assert::IsTrue(match(data, _T("^*$")));
+                    Assert::IsTrue(match(datam, _T("^*1272*$")));
                 }
             }
+
+            // >
+            {
+                Assert::IsTrue(match(data, _T("systems>$")));
+                Assert::IsTrue(match(data, _T("systems>*$")));
+                Assert::IsTrue(match(data, _T("various>$")));
+                Assert::IsTrue(match(data, _T("various>*$")));
+                Assert::IsTrue(match(data, _T("various>>$")));
+            }
+
+            // ?
+            {
+                Assert::IsTrue(match(data, _T("system?$")));
+                Assert::IsTrue(match(data, _T("systems?$")));
+            }
+
+            // +
+            {
+                Assert::IsTrue(match(data, _T("system+$")));
+                Assert::IsTrue(match(data, _T("syste+$")));
+            }
+
+            // #
+            {
+                Assert::IsTrue(match(data, _T("system#$")));
+                Assert::IsTrue(match(data, _T("syste##$")));
+            }
+        }
+
+        TEST_METHOD(combENDTest2)
+        {
+            tstring data = _T("various systems");
+
+            Assert::IsFalse(match(data, _T("syste?$")));
+            Assert::IsTrue(match(data, _T("system?$")));
+            Assert::IsTrue(match(data, _T("system??$")));
+            Assert::IsTrue(match(data, _T("systems??$")));
+
+            Assert::IsTrue(match(data, _T("syste*$")));
+            Assert::IsTrue(match(data, _T("syste+$")));
+
+            Assert::IsFalse(match(data, _T("systems+$")));
+
+            Assert::IsFalse(match(data, _T("systems#$")));
+            Assert::IsFalse(match(data, _T("systems##$")));
+            Assert::IsFalse(match(data, _T("system##$")));
+        }
+
+        TEST_METHOD(combBEGINTest1)
+        {
+            tstring data = _T("main system");
+
+            Assert::IsFalse(match(data, _T("^?in")));
+            Assert::IsTrue(match(data, _T("^??in")));
+            Assert::IsTrue(match(data, _T("^+in")));
+            Assert::IsTrue(match(data, _T("^*in")));
+            Assert::IsFalse(match(data, _T("^#in")));
+            Assert::IsTrue(match(data, _T("^##in")));
+        }
+
+        TEST_METHOD(combBEGINTest2)
+        {
+            tstring data = _T("mixed data");
+
+            Assert::IsFalse(match(data, _T("^?in")));
+            Assert::IsFalse(match(data, _T("^??in")));
+            Assert::IsFalse(match(data, _T("^+in")));
+            Assert::IsFalse(match(data, _T("^*in")));
+            Assert::IsFalse(match(data, _T("^#in")));
+            Assert::IsFalse(match(data, _T("^##in")));
         }
 
     private:

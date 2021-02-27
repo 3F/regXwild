@@ -178,9 +178,13 @@ LoopAct AlgorithmEss::loop(Item& item, FWord& word, const EngineOptions& options
         {
             if(jumpRight(item, word)) { return LoopAct::Continue; } return unsetMatch(item);
         }
-        else if(item.mask.curr & END) // combination, e.g.: *$, ??$, etc. TODO: stub - _stubENDCombination()
+
+        if(item.mask.curr & END) // means combination, eg. *$, ??$, etc.
         {
-            if(jumpRight(item, word)) { return LoopAct::Continue; } return unsetMatch(item);
+            if(item.mask.prev & BEGIN) return unsetMatch(item);
+            if(item.left < item.input.length()) {
+                if(jumpRight(item, word)) { return LoopAct::Continue; } return unsetMatch(item);
+            }
         }
 
         // ++?? and ##??
@@ -197,7 +201,7 @@ LoopAct AlgorithmEss::loop(Item& item, FWord& word, const EngineOptions& options
         {
             ++item.overlay;
         }
-        else{ item.overlay = 0; }
+        else if((item.mask.curr & END) == 0) { item.overlay = 0; }
 
         ++item.pos;
 
@@ -208,18 +212,20 @@ LoopAct AlgorithmEss::loop(Item& item, FWord& word, const EngineOptions& options
         }
         else
         {
-            if((item.mask.prev & ANYSP) == 0) item.mask.prev = item.mask.curr;
-            return LoopAct::Continue;
+            if((item.mask.prev & ANYSP) == 0 && (item.mask.curr & END) == 0) item.mask.prev = item.mask.curr;
+            if((item.mask.curr & END) == 0 || (item.mask.prev & (ANYSP | ANY | MORE | SINGLE | ONE)) == 0) return LoopAct::Continue;
+            // continue with ms combination for ->$
+            item.bems = END;
         }
     }
 
-    /* Otherwise, work with part of the word ... */
+    /* Parts of the words ... */
 
     if(item.mask.curr & BEGIN) { // __^xxx
         if(jumpRight(item, word)) { return LoopAct::Continue; } return unsetMatch(item);
     }
 
-    // Actual word part between meta-symbols
+    // Actual word part between metasymbols
     item.curr = (item.pos < item.input.length()) ? item.input.substr(item.pos, item.delta) : _T("\0");
 
     if(item.mask.prev & BEGIN)
@@ -243,12 +249,14 @@ LoopAct AlgorithmEss::loop(Item& item, FWord& word, const EngineOptions& options
             if(jumpRight(item, word)) { return LoopAct::Continue; } return unsetMatch(item);
         }
     }
-    else word.found = word.text.find
-    (
-        item.curr, 
-        (item.mask.prev & (MORE | SINGLE)) ? ++word.left + item.overlay
-                                           : word.left
-    );
+    else
+    {
+        word.roff = (item.mask.prev & (MORE | SINGLE)) ? ++word.left + item.overlay
+                                                       : word.left;
+
+        word.found = (item.bems & END) ? word.found = word.len
+                                       : word.text.find(item.curr, word.roff);
+    }
 
     if(isOnResult(item.mres, options) && item.mres->start == MatchResult::npos)
     {

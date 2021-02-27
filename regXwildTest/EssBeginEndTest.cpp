@@ -302,42 +302,49 @@ namespace regXwildTest
             tstring data = _T("new tes;ted project-12, and 75_protection of various systems");
             tstring datam = _T("main systems 1272/is ok");
 
-            // MS combination
+            Assert::IsFalse(match(data, _T("^^new")));
+            Assert::IsFalse(match(data, _T("systems>^")));
+            Assert::IsFalse(match(data, _T(">^new")));
+            Assert::IsFalse(match(data, _T("sys*^*^new*pro?ection")));
+            Assert::IsFalse(match(data, _T("*^*^new*pro?ection")));
+            Assert::IsFalse(match(data, _T("*^new")));
+            Assert::IsFalse(match(data, _T("+^new")));
+            Assert::IsFalse(match(data, _T("#^new")));
+            Assert::IsFalse(match(data, _T(" ^new")));
+            Assert::IsFalse(match(data, _T("systems>^*")));
+
+            // *
             {
-                Assert::IsFalse(match(data, _T("^^new")));
-                Assert::IsFalse(match(data, _T("systems>^")));
-                Assert::IsFalse(match(data, _T(">^new")));
-                Assert::IsFalse(match(data, _T("sys*^*^new*pro?ection")));
-                Assert::IsFalse(match(data, _T("*^*^new*pro?ection")));
-                Assert::IsFalse(match(data, _T("*^new")));
-                Assert::IsFalse(match(data, _T("systems>^*")));
+                Assert::IsFalse(match(datam, _T("^*notfound")));
+            }
+            // >
+            {
+                Assert::IsFalse(match(datam, _T("^>is")));
+            }
+        }
 
-                // *
-                {
-                    Assert::IsFalse(match(datam, _T("^*notfound")));
-                }
-                // >
-                {
-                    Assert::IsFalse(match(datam, _T("^>is")));
-                }
+        TEST_METHOD(filterBeginTest8)
+        {
+            tstring data = _T("main systems 1272/is ok");
 
-                //TODO: implement ?,+,# and combination
-                {
-                    //// ?
-                    //{
-                    //    Assert::IsFalse(match(datam, _T("^?in")));
-                    //}
-                    //// +
-                    //{
-                    //    Assert::IsFalse(match(datam, _T("^+main")));
-                    //}
-                    //// #
-                    //{
-                    //    Assert::IsFalse(match(datam, _T("^#main")));
-                    //    Assert::IsFalse(match(datam, _T("^##ain")));
-                    //    Assert::IsFalse(match(datam, _T("^##main")));
-                    //}
-                }
+            // ?
+            {
+                Assert::IsFalse(match(data, _T("^?in")));
+            }
+            // *
+            {
+                Assert::IsTrue(match(data, _T("^*main")));
+            }
+            // +
+            {
+                Assert::IsFalse(match(data, _T("^+main")));
+            }
+            // #
+            {
+                Assert::IsFalse(match(data, _T("^#main")));
+                Assert::IsTrue(match(data, _T("^#ain")));
+                Assert::IsFalse(match(data, _T("^##ain")));
+                Assert::IsFalse(match(data, _T("^##main")));
             }
         }
         
@@ -365,7 +372,6 @@ namespace regXwildTest
                 Assert::IsTrue(match(data, _T("^new*systems$")));
                 Assert::IsTrue(match(datam, _T("^main systems 1272/is ok$")));
                 Assert::IsTrue(match(datam, _T("^main*is ok$")));
-
             }
         }
 
@@ -401,48 +407,45 @@ namespace regXwildTest
 
             // MS combination
             {
-                //TODO: implement *,>,?,+,# and combination
+                // *
                 {
-                    //// *
-                    //{
-                    //    Assert::IsTrue(match(data, _T("systems*$")));
-                    //    Assert::IsTrue(match(data, _T("systems**$")));
-                    //    Assert::IsTrue(match(datam, _T("main*$")));
-                    //    Assert::IsTrue(match(datam, _T("main**$")));
-                    //    Assert::IsTrue(match(data, _T("systems*$")));
-                    //    Assert::IsTrue(match(data, _T("project*$")));
-                    //    Assert::IsTrue(match(datam, _T("^main*$")));
-                    //    {
-                    //        Assert::IsTrue(match(data, _T("^*new*$")));
-                    //        Assert::IsTrue(match(data, _T("^*$")));
-                    //        Assert::IsTrue(match(data, _T("^*$")));
-                    //        Assert::IsTrue(match(datam, _T("^*1272*$")));
-                    //    }
-                    //}
-                    //// >
-                    //{
-                    //    Assert::IsTrue(match(data, _T("systems>$")));
-                    //    Assert::IsTrue(match(data, _T("systems>*$")));
-                    //    Assert::IsTrue(match(data, _T("various>$")));
-                    //    Assert::IsTrue(match(data, _T("various>*$")));
-                    //    Assert::IsTrue(match(data, _T("various>>$")));
-                    //}
+                    Assert::IsTrue(match(data, _T("systems*$")));
+                    Assert::IsTrue(match(data, _T("systems**$")));
+                    Assert::IsTrue(match(datam, _T("main*$")));
+                    Assert::IsTrue(match(datam, _T("main**$")));
+                    Assert::IsTrue(match(data, _T("systems*$")));
+                    Assert::IsTrue(match(data, _T("project*$")));
+                    Assert::IsTrue(match(datam, _T("^main*$")));
+                    {
+                        Assert::IsTrue(match(data, _T("^*new*$")));
+                        Assert::IsTrue(match(data, _T("^*$")));
+                        Assert::IsTrue(match(data, _T("^*$")));
+                        Assert::IsTrue(match(datam, _T("^*1272*$")));
+                    }
+                }
+                // >
+                {
+                    Assert::IsTrue(match(data, _T("systems>$")));
+                    Assert::IsTrue(match(data, _T("systems>*$")));
+                    Assert::IsTrue(match(data, _T("various>$")));
+                    Assert::IsTrue(match(data, _T("various>*$")));
+                    Assert::IsTrue(match(data, _T("various>>$")));
+                }
 
-                    //// ?
-                    //{
-                    //    Assert::IsTrue(match(data, _T("system?$")));
-                    //    Assert::IsTrue(match(data, _T("systems?$")));
-                    //}
-                    //// +
-                    //{
-                    //    Assert::IsTrue(match(data, _T("system+$")));
-                    //    Assert::IsTrue(match(data, _T("syste+$")));
-                    //}
-                    //// #
-                    //{
-                    //    Assert::IsTrue(match(data, _T("system#$")));
-                    //    Assert::IsTrue(match(data, _T("syste##$")));
-                    //}
+                // ?
+                {
+                    Assert::IsTrue(match(data, _T("system?$")));
+                    Assert::IsTrue(match(data, _T("systems?$")));
+                }
+                // +
+                {
+                    Assert::IsTrue(match(data, _T("system+$")));
+                    Assert::IsTrue(match(data, _T("syste+$")));
+                }
+                // #
+                {
+                    Assert::IsTrue(match(data, _T("system#$")));
+                    Assert::IsTrue(match(data, _T("syste##$")));
                 }
             }
         }
@@ -532,9 +535,9 @@ namespace regXwildTest
                     Assert::IsFalse(match(data, _T("systems$*")));
                     Assert::IsFalse(match(data, _T("systems$>*")));
                     Assert::IsFalse(match(data, _T("notfound*$")));
-                    Assert::IsFalse(match(data, _T("systems*$")));
-                    Assert::IsFalse(match(data, _T("systems>$")));
-                    Assert::IsFalse(match(data, _T("systems>*$")));
+                    Assert::IsTrue(match(data, _T("systems*$")));
+                    Assert::IsTrue(match(data, _T("systems>$")));
+                    Assert::IsTrue(match(data, _T("systems>*$")));
                     Assert::IsFalse(match(datam, _T(" $|notfound")));
 
                     // *
@@ -548,24 +551,7 @@ namespace regXwildTest
                     // >
                     {
                         Assert::IsFalse(match(datam, _T("systems>$")));
-                    }
-
-                    //TODO: implement ?,+,# and combination
-                    {
-                        //// ?
-                        //{
-                        //    Assert::IsFalse(match(data, _T("syste?$")));
-                        //}
-                        //// +
-                        //{
-                        //    Assert::IsFalse(match(data, _T("systems+$")));
-                        //}
-                        //// #
-                        //{
-                        //    Assert::IsFalse(match(data, _T("systems#$")));
-                        //    Assert::IsFalse(match(data, _T("system##$")));
-                        //    Assert::IsFalse(match(data, _T("systems##$")));
-                        //}
+                        Assert::IsTrue(match(datam, _T("is>$")));
                     }
                 }
             }
@@ -604,18 +590,20 @@ namespace regXwildTest
             }
         }
 
-        TEST_METHOD(filterEndTest11)
+        TEST_METHOD(filterLengthTest1)
         {
-            // test of filter length
-            {
-                Assert::IsFalse(match(_T("system"), _T("systems$")));
-                Assert::IsFalse(match(_T("systems"), _T("system$")));
-                Assert::IsTrue(match(_T("s"), _T("s$")));
-                Assert::IsFalse(match(_T(""), _T("s$")));
+            Assert::IsTrue(match(_T(""), _T("$")));
+            Assert::IsTrue(match(_T("s"), _T("$")));
+            Assert::IsTrue(match(_T(""), _T("^")));
+            Assert::IsTrue(match(_T("s"), _T("^")));
+        }
 
-                //Assert::IsFalse(match(_T("s"), _T("$")));
-                //Assert::IsFalse(match(_T(""), _T("$")));
-            }
+        TEST_METHOD(filterLengthTest2)
+        {
+            Assert::IsFalse(match(_T("system"), _T("systems$")));
+            Assert::IsFalse(match(_T("systems"), _T("system$")));
+            Assert::IsTrue(match(_T("s"), _T("s$")));
+            Assert::IsFalse(match(_T(""), _T("s$")));
         }
 
     private:
