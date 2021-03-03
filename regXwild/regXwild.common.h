@@ -29,7 +29,99 @@
 
 namespace net { namespace r_eg { namespace regXwild { namespace common
 {
-    // NOTE: ref + pointers signatures for PE/Invoke outside environment etc.
+    /// <summary>
+    /// In a specified input, replaces first substring that match a specified pattern with a specified replacement string.
+    /// </summary>
+    /// <param name="input">
+    /// The input string that will be modified if matched.
+    /// Allocated memory must be enough for modified result.
+    /// </param>
+    /// <param name="pattern">Compatible pattern to match.</param>
+    /// <param name="replacement">The replacement string.</param>
+    /// <param name="options">A bitwise combination of the enumeration values that provide options for matching or modifications.</param>
+    /// <returns>True if the match was successful.</returns>
+    REGXWILD_API_L bool replace
+    (
+        rxwtypes::TCHAR* input,
+        const rxwtypes::TCHAR* pattern,
+        const rxwtypes::TCHAR* replacement,
+        rxwtypes::flagcfg_t options = 0
+    );
+
+    /// <summary>
+    /// In a specified input, replaces first substring that match a specified pattern with a specified replacement string.
+    /// </summary>
+    /// <param name="input">
+    /// The input string that will be modified if matched.
+    /// Allocated memory must be enough for modified result.
+    /// </param>
+    /// <param name="pattern">Compatible pattern to match.</param>
+    /// <param name="replacement">The replacement string.</param>
+    /// <param name="offset">The starting position to start matching.</param>
+    /// <param name="options">A bitwise combination of the enumeration values that provide options for matching or modifications.</param>
+    /// <returns>True if the match was successful.</returns>
+    REGXWILD_API_L bool replaceOfs
+    (
+        rxwtypes::TCHAR* input,
+        const rxwtypes::TCHAR* pattern,
+        const rxwtypes::TCHAR* replacement,
+        rxwtypes::udiff_t offset = 0,
+        rxwtypes::flagcfg_t options = 0
+    );
+
+    /// <summary>
+    /// Searches an input string for a substring that matches a pattern.
+    /// </summary>
+    /// <param name="input">The string to search for a match.</param>
+    /// <param name="pattern">Compatible pattern to match.</param>
+    /// <param name="options">A bitwise combination of the enumeration values that provide options for matching.</param>
+    /// <param name="result">Information about the match.</param>
+    /// <returns>True if the match was successful.</returns>
+    REGXWILD_API_L bool match
+    (
+        const rxwtypes::TCHAR* input,
+        const rxwtypes::TCHAR* pattern,
+        rxwtypes::flagcfg_t options = 0,
+        EssRxW::MatchResult* result = nullptr
+    );
+
+    /// <summary>
+    /// Searches an input string for a substring that matches a pattern.
+    /// </summary>
+    /// <param name="input">The string to search for a match.</param>
+    /// <param name="pattern">Compatible pattern to match.</param>
+    /// <param name="offset">The starting position to start matching.</param>
+    /// <param name="options">A bitwise combination of the enumeration values that provide options for matching.</param>
+    /// <param name="result">Information about the match.</param>
+    /// <returns>True if the match was successful.</returns>
+    REGXWILD_API_L bool matchOfs
+    (
+        const rxwtypes::TCHAR* input,
+        const rxwtypes::TCHAR* pattern,
+        rxwtypes::udiff_t offset = 0,
+        rxwtypes::flagcfg_t options = 0,
+        EssRxW::MatchResult* result = nullptr
+    );
+
+    /// <summary>
+    /// In a specified input, replaces first substring that match a specified pattern with a specified replacement string.
+    /// </summary>
+    /// <param name="input">The string to search for a match.</param>
+    /// <param name="pattern">Compatible pattern to match.</param>
+    /// <param name="replacement">The replacement string.</param>
+    /// <param name="to">Output string using pre-allocated memory if the match was successful, or null.</param>
+    /// <param name="offset">The starting position to start matching.</param>
+    /// <param name="options">A bitwise combination of the enumeration values that provide options for matching or modifications.</param>
+    /// <returns>True if the match was successful.</returns>
+    REGXWILD_API_L bool replaceTo
+    (
+        const rxwtypes::TCHAR* input,
+        const rxwtypes::TCHAR* pattern,
+        const rxwtypes::TCHAR* replacement,
+        rxwtypes::TCHAR* to,
+        rxwtypes::udiff_t offset = 0,
+        rxwtypes::flagcfg_t options = 0
+    );
 
     /**
     * To search substring in data with filter by the rules of ESS algorithm.

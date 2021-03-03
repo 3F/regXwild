@@ -27,6 +27,10 @@ namespace regXwildTest
             Assert::IsFalse(rxw.match(_T("system"), _T("sy*Stem"), opt));
             Assert::IsFalse(rxw.match(_T("system"), _T("syS*tem"), opt));
             Assert::IsTrue(rxw.match(_T("system"), _T("sy*stem"), opt));
+
+            Assert::IsFalse(rxw.match(_T("end"), _T("N"), opt));
+            Assert::IsFalse(rxw.match(_T("eNd"), _T("n"), opt));
+            Assert::IsTrue(rxw.match(_T("end"), _T("n"), opt));
         }
 
         TEST_METHOD(underscoreTest1)

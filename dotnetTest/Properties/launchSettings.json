@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "dotnetTest": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
