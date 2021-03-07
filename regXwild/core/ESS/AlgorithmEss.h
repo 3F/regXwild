@@ -90,8 +90,13 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
         /// <returns>True if the match was successful.</returns>
         REGXWILD_API bool match(const tstring& input, const tstring& pattern, udiff_t offset, const EngineOptions& options = EngineOptions::F_NONE, MatchResult* result = nullptr);
 
+#if _CPP11_OR_ABOVE
         using EngineOptions = core::ESS::EngineOptions;
         using MatchResult = core::ESS::MatchResult;
+#else
+        typedef core::ESS::EngineOptions EngineOptions;
+        typedef core::ESS::MatchResult MatchResult;
+#endif
 
     protected:
 

@@ -35,7 +35,7 @@ namespace net { namespace r_eg { namespace regXwild { namespace core { namespace
 
     struct MatchResult
     {
-        const static udiff_t npos = -1;
+        static const udiff_t npos = static_cast<udiff_t>(-1);
 
         /// <summary>
         /// Position of the first occurrence or MatchResult::npos.

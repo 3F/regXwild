@@ -1,0 +1,27 @@
+﻿<Project>
+
+  <PropertyGroup>
+    <CharacterSet Condition="'$(CharacterSet)'==''">Unicode</CharacterSet>
+    <DefineConstants Condition="'$(CharacterSet)'=='Unicode'">$(DefineConstants);RXW_UNICODE</DefineConstants>
+
+    <PlatformArch>$(Platform)</PlatformArch>
+    <PlatformArch Condition="'$(PlatformArch)'=='x86'">Win32</PlatformArch> <!-- unified paths due to regXwild.vcxproj -->
+
+    <OutRawDir>bin\raw\$(Configuration)\$(PlatformArch)\$(CharacterSet)\</OutRawDir>
+    <IntermediateOutputPath>..\bin\obj\$(MSBuildProjectName)\$(Configuration)\$(PlatformArch)\$(CharacterSet)\</IntermediateOutputPath>
+
+    <OutputPath>..\$(OutRawDir)\</OutputPath>
+    <OutDir>$([MSBuild]::Escape($([System.IO.Path]::GetFullPath(`$([System.IO.Path]::Combine(`$(SolutionDir)`, `$(OutRawDir)`))`))))</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(CharacterSet)'=='Unicode'">
+    <ClCompile>
+      <PreprocessorDefinitions>RXW_UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <DisableSpecificWarnings>4480;4482;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+</Project>

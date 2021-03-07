@@ -1,39 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\common.props" />
+
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <Platforms>AnyCPU;x64;x86</Platforms>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <CharacterSet Condition="'$(CharacterSet)'==''">Unicode</CharacterSet>
-    <DefineConstants Condition="'$(CharacterSet)'=='Unicode'">$(DefineConstants);RXW_UNICODE</DefineConstants>
+    <Platforms>x64;x86</Platforms>
+    <Configurations>Debug;Release;PublicRelease</Configurations>
     <NoWarn>1701;1702;CS1591;IDE1006</NoWarn>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutputPath>..\bin\raw\Debug\x64\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutputPath>..\bin\raw\Release\x64\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-    <OutputPath>..\bin\raw\Debug\Win32\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <OutputPath>..\bin\raw\Release\Win32\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\bin\raw\Debug\Win32\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\bin\raw\Release\Win32\</OutputPath>
+    <OutDir>$(OutDir)\$(MSBuildProjectName)\</OutDir>
   </PropertyGroup>
 
   <ItemGroup>

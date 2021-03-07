@@ -7,6 +7,7 @@
     <regXwildRootPkg>$(MSBuildThisFileDirectory)..\..\</regXwildRootPkg> <!-- [root]\build\[net-target]\regXwild.targets -->
     <PathToBin_regXwild>$(regXwildRootPkg)lib\native\</PathToBin_regXwild>
     <CharacterSet Condition="'$(CharacterSet)'==''">MultiByte</CharacterSet>
+    <DefineConstants Condition="'$(CharacterSet)'=='Unicode'">$(DefineConstants);RXW_UNICODE</DefineConstants>
   </PropertyGroup>
   
   <ItemGroup Condition="Exists('$(PathToBin_regXwild)\Win32-$(CharacterSet)')">

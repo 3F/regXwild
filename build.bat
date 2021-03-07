@@ -14,8 +14,8 @@ call %_gnt% /p:wpath="%cd%" /p:ngconfig="packages.config;snet\\packages.config" 
         set "__InitBuild=1" & call :build Win32 Unicode
     endlocal
 
-    call :build x64 Unicode
     call :build Win32 MultiByte
+    call :build x64 Unicode
 
     setlocal
         set "__FinalBuild=1" & call :build x64 MultiByte
