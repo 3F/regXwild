@@ -120,12 +120,12 @@ Play with our actual **Unit-Tests**.
 1.4+
 
 ```cpp
-EssRxW::Match m;
+EssRxW::MatchResult m;
 rxw.match
 (
     _T("number = '8888'; //TODO: up"),
     _T("'+'"),
-    EssRxW::FlagsRxW::F_MATCH_RESULT,
+    EssRxW::EngineOptions::F_MATCH_RESULT,
     &m
 );
 //m.start = 9

@@ -255,7 +255,7 @@ namespace net { namespace r_eg { namespace regXwild { namespace common
     */
     REGXWILD_API_L const rxwtypes::TCHAR* versionString()
     {
-        return /*vsSBE*/_T("1.3.0");
+        return /*vsSBE*/_T("1.4.0");
     }
 
 }}}}

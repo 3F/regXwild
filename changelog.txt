@@ -2,6 +2,90 @@
 regXwild - https://github.com/3F/regXwild
 - - - - - - - - - - - - - - - - - - - - - 
 
+[v1.4] 2021.03.07
+
+    * NEW: Modern `match()` method for ESS implementation with bitwise options:
+            ```
+            bool match(const tstring& input, const tstring& pattern, const EngineOptions& options, MatchResult* result);
+            ```
+            Searches an input string for a substring that matches a pattern.
+            Use F_ICASE = 0x001 to ignore case sensitivity when matching.
+          
+    * NEW: Implemented `>c` metasymbol.
+           Modern `>` as [^c]*str | [^c]*$
+           
+           This is default behavior using match().
+           To activate legacy `>` as [^/]*str | [^/]*$ use F_LEGACY_ANYSP = 0x080
+           
+    * NEW: Implemented F_MATCH_RESULT = 0x002 flag to collect additional data for the MatchResult.
+            ```
+            EssRxW::MatchResult m;
+            rxw.match
+            (
+                _T("number = '8888'; //TODO: up"),
+                _T("'+'"),
+                EssRxW::EngineOptions::F_MATCH_RESULT,
+                &m
+            );
+            //m.start = 9
+            //m.end = 15
+            ```
+    
+    * NEW: Added `replace()` method for ESS implementation.
+            ```
+            bool replace(tstring& input, const tstring& pattern, const tstring& replacement, const EngineOptions& options);
+            ```
+            In a specified input, replaces first substring that match a specified pattern with a specified replacement string.
+            
+    * NEW: Implemented optional offset for `match()` and `replace()` methods. ESS impl.
+            ```
+            bool replace(tstring& input, const tstring& pattern, const tstring& replacement, udiff_t offset, const EngineOptions& options)
+            bool match(const tstring& input, const tstring& pattern, udiff_t offset, const EngineOptions& options, MatchResult* result)
+            ```
+            udiff_t offset - The starting position to start matching.
+            
+    * NEW: Implemented F_MATCH_ALL = 0x004. Do not finish on first match in replace() method.
+    
+    * NEW: New C-export functions in common.h PE/Invoke or other outside environments.
+           ```
+            bool replace(TCHAR* input, const TCHAR* pattern, const TCHAR* replacement, flagcfg_t options);    
+            bool replaceOfs(TCHAR* input, const TCHAR* pattern, const TCHAR* replacement, udiff_t offset, flagcfg_t options);    
+            bool match(const TCHAR* input, const TCHAR* pattern, flagcfg_t options, EssRxW::MatchResult* result);    
+            bool matchOfs(const TCHAR* input, const TCHAR* pattern, udiff_t offset, flagcfg_t options, EssRxW::MatchResult* result);    
+            bool replaceTo(const TCHAR* input, const TCHAR* pattern, const TCHAR* replacement, TCHAR* to, udiff_t offset, flagcfg_t options);
+           ```
+           
+    * FIXED: Fixed SINGLE ms for +++ and `system+` or like.
+    
+    * FIXED: Fixed END ms `$` and BEGIN ms `^` when using other available ms.
+    
+    * FIXED: Fixed ##?? ++?? for " = 12" -> "= 123".
+    
+    * FIXED: Fixed an early return when matching.
+    
+    * FIXED: Fixed Compiler Error such C2758 etc for C99/MSVC10 compilers (VS2010).
+    
+    * FIXED: Fixed NuGet package use for native C/C++ projects.
+    
+    * CHANGED: Implemented MS combinations for END $ such as *$, ??$, +$.
+    
+    * CHANGED: Implemented MS combinations for BEGIN ^ such as ^+, ^#, ^?.
+    
+    * CHANGED: Added aliases EssRxW/ExtRxW/RxW to the main algorithms.
+    
+    * CHANGED: Added RXW_UNICODE for user targets when CharacterSet is Unicode.
+    
+    * CHANGED: `AlgorithmEss::search()` was marked as obsolete and can be removed in future major versions.
+    
+    * CHANGED: regXwildAPI.h was marked as obsolete. Please use regXwild.common.h or regXwild.h.
+               
+    * CHANGED: Most our types are spaced now as regXwild::rxwtypes.
+    
+    * NOTE: You can find various flexible use for .NET in our new dotnet-test project through Conari engine:
+            https://github.com/3F/Conari
+            https://github.com/3F/regXwild
+
+
 [v1.3] 2020.08.10
     
     * NEW: Quantifiers are now standardized as follows:

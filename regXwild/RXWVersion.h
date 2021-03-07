@@ -19,7 +19,7 @@ namespace net { namespace r_eg { namespace regXwild
             const int patch;
             const int build;
 
-            TNum() : major(1), minor(3), patch(0), build(0) { }
+            TNum() : major(1), minor(4), patch(0), build(0) { }
 
         } number;
 
@@ -27,7 +27,7 @@ namespace net { namespace r_eg { namespace regXwild
         const rxwtypes::TCHAR* config;
         const rxwtypes::TCHAR* product;
 
-        RXWVersion() : bSha1(_T("")), config(_T("")), product(_T("1.3.0")) { }
+        RXWVersion() : bSha1(_T("")), config(_T("")), product(_T("1.4.0")) { }
     };
 }}}
 
