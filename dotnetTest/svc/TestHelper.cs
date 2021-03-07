@@ -35,5 +35,7 @@ namespace dotnetTest.svc
             d = l;
             return l;
         }
+
+        internal static nuint n(nuint v) => v;
     }
 }

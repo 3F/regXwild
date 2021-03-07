@@ -109,6 +109,7 @@
           "#define _RXW_VERSION_",
           "",
           "#include \"stdafx.h\"",
+          "#include \"typedefs.h\"",
           "",
           "namespace net { namespace r_eg { namespace regXwild",
           "{",
@@ -146,7 +147,7 @@
       }
     },
     {
-      "Enabled": false,
+      "Enabled": true,
       "Name": "ActSubmodules",
       "Caption": "submodules and packages",
       "Mode": {
@@ -156,6 +157,17 @@
           "##[( !(#[IO exists.file(\"$(pConari)/Conari.sln\")]) )",
           "{",
           "    #[File call(\"git\", \"submodule update --init --recursive Conari\", 1000)]",
+          "}]",
+          "",
+          "",
+          "#[\" Packages \"]",
+          "",
+          "#[( !(#[IO exists.file(\"packages/__checked\")]) )",
+          "{",
+          "    #[File call(\"tools\\hmsbuild.bat\", \"-t:restore /v:q /nologo /p:Configuration=$(Configuration)\", 1000)]",
+          "    ",
+          "    #[IO copy.directory(\"\", \"packages/\", true)]",
+          "    #[File write(\"packages/__checked\"): ]",
           "}]"
         ]
       }

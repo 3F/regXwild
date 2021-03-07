@@ -54,9 +54,9 @@ if(rxw.match(_T("regXwild"), _T("reg?wild"))) {
 
 C# if [ [Conari](https://github.com/3F/Conari) ]
 ```csharp
-using(var l = new ConariL("regXwild.dll")) 
+using(var l = new ConariX("regXwild.dll")) 
 {
-    if(l.DLR.searchEssC<bool>("regXwild", "reg?wild", true)) {
+    if(l.match<bool>("regXwild", "reg?wild")) {
         // ...
     }
 }

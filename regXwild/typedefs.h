@@ -32,7 +32,7 @@
 namespace net { namespace r_eg { namespace regXwild { namespace rxwtypes
 {
 
-#ifdef UNICODE
+#ifdef RXW_UNICODE
 
     typedef std::wstring tstring;
     #define __toxlower towlower

@@ -46,7 +46,7 @@ namespace dotnetTest.svc
 
         public NativeString(string str, int add = 0x1F) => pointer = AllocString(ref str, add);
 
-        private IntPtr AllocString(ref string str, int buffer = 0)
+        private static IntPtr AllocString(ref string str, int buffer = 0)
         {
 #if RXW_UNICODE
             //str.ToCharArray()

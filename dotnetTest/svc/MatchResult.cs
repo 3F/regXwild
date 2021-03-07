@@ -30,18 +30,18 @@ namespace dotnetTest.svc
     [StructLayout(LayoutKind.Sequential)]
     internal struct MatchResult
     {
-        public const ulong npos = ulong.MaxValue;
+        public static readonly nuint npos = nuint.MaxValue;
 
         /// <summary>
         /// Position of the first occurrence or MatchResult::npos.
         /// It also will be MatchResult::npos if not EngineOptions::F_MATCH_RESULT.
         /// </summary>
-        public ulong start;
+        public nuint start;
 
         /// <summary>
         /// Position of the last occurrence.
         /// Valid only if `MatchResult::start` != MatchResult::npos.
         /// </summary>
-        public ulong end;
+        public nuint end;
     }
 }

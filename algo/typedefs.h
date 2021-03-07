@@ -37,7 +37,7 @@ namespace net { namespace r_eg { namespace regXwild
 
     typedef basic_regex<TCHAR> tregex;
 
-#ifdef UNICODE
+#ifdef RXW_UNICODE
 
     typedef wstringstream tstringStream;
     #define __toxupper towupper

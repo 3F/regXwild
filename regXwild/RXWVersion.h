@@ -6,6 +6,7 @@
 #define _RXW_VERSION_
 
 #include "stdafx.h"
+#include "typedefs.h"
 
 namespace net { namespace r_eg { namespace regXwild
 {

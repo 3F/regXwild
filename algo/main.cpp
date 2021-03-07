@@ -32,7 +32,7 @@
 using namespace net::r_eg::regXwild;
 
 
-int _tmain(int argc, _TCHAR* argv[])
+int main()
 {
 
     TRACE("https://github.com/3F/regXwild \n\n");
@@ -42,7 +42,7 @@ int _tmain(int argc, _TCHAR* argv[])
     Algorithms alg;
     alg.mainTest();
 
-    TRACE("\nUse Release cfg. and try to execute outside VS IDE algo.exe for comparison speed.\n\n");
+    TRACE("\n[WARN] You need use Release-based configurations.\n\n");
 
 #else
 
