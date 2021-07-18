@@ -15,7 +15,11 @@ namespace dotnetTest._svc
         public InitTests(IMessageSink messageSink)
             : base(messageSink)
         {
+#if RXW_UNICODE
             TCharPtr.Unicode = true;
+#else
+            TCharPtr.Unicode = false;
+#endif
         }
     }
 }
