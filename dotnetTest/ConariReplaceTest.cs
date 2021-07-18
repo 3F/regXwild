@@ -1,7 +1,9 @@
 using System;
-using dotnetTest.svc;
+using dotnetTest._svc;
+using net.r_eg.Conari;
+using net.r_eg.Conari.Types;
 using Xunit;
-using static dotnetTest.svc.TestHelper;
+using static dotnetTest._svc.TestHelper;
 
 namespace dotnetTest
 {
@@ -10,47 +12,46 @@ namespace dotnetTest
         [Fact]
         public void replaceTest1()
         {
-            using var c = NewConariX(out dynamic l);
+            using var c = ConariX.Make(new(Library), out dynamic l);
             using var data = new NativeString<TCharPtr>("numberStr = '+12'");
 
-            bool res = l.replace<bool>((IntPtr)data, c._T("str*'+'"), c._T(" = '008888';"), EngineOptions.F_NONE);
+            bool res = l.replace<bool>(data, "str*'+'", " = '008888';", EngineOptions.F_NONE);
             Assert.False(res);
-            Assert.Equal("numberStr = '+12'", (TCharPtr)data);
+            Assert.True("numberStr = '+12'" == data);
 
-            res = l.replace<bool>((IntPtr)data, c._T("str*'+'"), c._T(" = '008888';"), EngineOptions.F_ICASE);
+            res = l.replace<bool>(data, "str*'+'", " = '008888';", EngineOptions.F_ICASE);
             Assert.True(res);
-            Assert.Equal("number = '008888';", (TCharPtr)data);
+            Assert.True("number = '008888';" == data);
         }
 
         [Fact]
         public void replaceTest2()
         {
-            using var c = NewConariX(out dynamic l);
-            c.Cache = false; // because of diff signatures 3 -> 5 / https://github.com/3F/Conari/issues/10#issue-202540865
+            using var c = ConariX.Make(new(Library), out dynamic l);
 
-            Assert.False(l.replace<bool>(IntPtr.Zero, c._T("str*'+'"), c._T(" = '008888';")));
+            Assert.False(l.replace<bool>(IntPtr.Zero, "str*'+'", " = '008888';"));
 
             using var data = new NativeString<TCharPtr>("number_str = '+12'");
-            Assert.False(l.replaceOfs<bool>((IntPtr)data, c._T("_str*'+'"), c._T(" = '';"), n(7)));
-            Assert.True(l.replaceOfs<bool>((IntPtr)data, c._T("_str*'+'"), c._T(" = '';"), n(6)));
-            Assert.Equal("number = '';", (TCharPtr)data);
+            Assert.False(l.replaceOfs<bool>(data, "_str*'+'", " = '';", n(7)));
+            Assert.True(l.replaceOfs<bool>(data, "_str*'+'", " = '';", n(6)));
+            Assert.True("number = '';" == data);
         }
 
         [Fact]
         public void replaceToTest1()
         {
-            using var c = NewConariX(out dynamic l);
+            using var c = ConariX.Make(new(Library), out dynamic l);
 
             using(var to = new NativeString<TCharPtr>())
             {
-                bool res = l.replaceTo<bool>(c._T("numberStr = '+12'"), c._T("str*'+'"), c._T(" = '008888';"), (IntPtr)to, n(0), EngineOptions.F_ICASE);
+                bool res = l.replaceTo<bool>("numberStr = '+12'", "str*'+'", " = '008888';", to, n(0), EngineOptions.F_ICASE);
                 Assert.True(res);
-                Assert.Equal("number = '008888';", (TCharPtr)to);
+                Assert.True("number = '008888';" == to);
             }
 
             using(var to = new NativeString<TCharPtr>())
             {
-                bool res = l.replaceTo<bool>(c._T("numberStr = '+12'"), c._T("str*'+'"), c._T(" = '008888';"), (IntPtr)to, n(0), EngineOptions.F_NONE);
+                bool res = l.replaceTo<bool>("numberStr = '+12'", "str*'+'", " = '008888';", to, n(0), EngineOptions.F_NONE);
                 Assert.False(res);
             }
         }
@@ -58,22 +59,21 @@ namespace dotnetTest
         [Fact]
         public void replaceToTest2()
         {
-            using var c = NewConariX(out dynamic l);
-            c.Cache = false;
+            using var c = ConariX.Make(new(Library), out dynamic l);
 
-            Assert.False(l.replaceTo<bool>(IntPtr.Zero, c._T("'+'"), c._T("''"), IntPtr.Zero));
+            Assert.False(l.replaceTo<bool>(IntPtr.Zero, "'+'", "''", IntPtr.Zero));
 
             using var data = new NativeString<TCharPtr>("number_str = '+12'");
-            Assert.True(l.replaceTo<bool>((IntPtr)data, c._T("_str*'+'"), c._T(" = '';"), IntPtr.Zero, n(0)));
-            Assert.Equal("number_str = '+12'", (TCharPtr)data);
+            Assert.True(l.replaceTo<bool>(data, "_str*'+'", " = '';", IntPtr.Zero, n(0)));
+            Assert.True("number_str = '+12'" == data);
 
-            Assert.False(l.replaceTo<bool>((IntPtr)data, c._T("_str*'+'"), c._T(" = '';"), IntPtr.Zero, n(7), EngineOptions.F_ICASE));
-            Assert.Equal("number_str = '+12'", (TCharPtr)data);
+            Assert.False(l.replaceTo<bool>(data, "_str*'+'", " = '';", IntPtr.Zero, n(7), EngineOptions.F_ICASE));
+            Assert.True("number_str = '+12'" == data);
 
             using var to = new NativeString<TCharPtr>();
-            Assert.True(l.replaceTo<bool>((IntPtr)data, c._T("_str*'+'"), c._T(" = '';"), (IntPtr)to, n(6), EngineOptions.F_ICASE));
-            Assert.Equal("number_str = '+12'", (TCharPtr)data);
-            Assert.Equal("number = '';", (TCharPtr)to);
+            Assert.True(l.replaceTo<bool>(data, "_str*'+'", " = '';", to, n(6), EngineOptions.F_ICASE));
+            Assert.True("number_str = '+12'" == data);
+            Assert.True("number = '';" == to);
         }
     }
 }
